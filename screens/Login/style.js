@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
   },
   bottomLabelRow1Text: {
     fontSize: 22,
-    fontFamily: "sans-serif",
     fontWeight: "bold",
     color: "#413e54",
     marginTop: 10,

@@ -52,17 +52,10 @@ const UpdateProfile = () => {
       </View>
       <View style={styles.button}>
         <Button
-          title="Save Changes"
-          icon={{
-            name: "save",
-            type: "font-awesome",
-            size: 15,
-            color: "white",
-          }}
           iconContainerStyle={{ marginRight: 10 }}
           titleStyle={{ fontWeight: "700" }}
           buttonStyle={{
-            backgroundColor: "rgba(90, 154, 230, 1)",
+            backgroundColor: "rgb(179, 55, 225)",
             borderColor: "transparent",
             borderWidth: 0,
             borderRadius: 30,
@@ -71,6 +64,13 @@ const UpdateProfile = () => {
             width: 200,
             marginHorizontal: 50,
             marginVertical: 10,
+          }}
+          title="Save Changes"
+          icon={{
+            name: "save",
+            type: "font-awesome",
+            size: 15,
+            color: "white",
           }}
         />
       </View>

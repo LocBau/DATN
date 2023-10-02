@@ -8,8 +8,10 @@ import {
 } from "react-native";
 import React from "react";
 import styles from "./style";
+import { useNavigation } from "@react-navigation/core";
 
 const Login = () => {
+  const naviRegister = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -46,7 +48,9 @@ const Login = () => {
           <Text style={styles.emailLabel}> Mail address</Text>
           <TextInput style={styles.textInput}></TextInput>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => naviRegister.navigate("registerScreen")}
+        >
           <View style={styles.continueButton}>
             <Text style={styles.continueButtonText}>Continue</Text>
           </View>

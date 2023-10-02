@@ -3,61 +3,58 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     felx: 1,
-    backgroudColor: "red",
     marginTop: 50,
+    justifyContent: "center",
     alignItems: "center",
   },
   titleScreen: {
     marginHorizontal: 20,
     marginVertical: 20,
+    alignItems: "center",
   },
   titleScreenText: {
-    fontSize: 30,
-    fontWeight: "bold",
-  },
-  avatarText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "blue",
   },
-  name: {
-    marginTop: 30,
-    width: "80%",
+  topLabelRow1: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  nameText: {
-    fontSize: 15,
+  topLabelText1: {
+    color: "#8040bf",
+    fontSize: 40,
+    fontWeight: "bold",
+  },
+  topLabelText2: {
+    color: "#272e35",
+    fontSize: 40,
     fontWeight: "bold",
   },
   email: {
-    marginTop: 5,
+    marginTop: 30,
     width: "80%",
   },
   emailText: {
     fontSize: 15,
     fontWeight: "bold",
   },
-  phone: {
-    marginTop: 5,
+  password: {
+    marginTop: 10,
     width: "80%",
   },
-  phoneText: {
+  passText: {
     fontSize: 15,
     fontWeight: "bold",
   },
-  changePass: {
-    marginTop: 5,
+  confirmPassword: {
+    marginTop: 10,
     width: "80%",
   },
-  changePasstext: {
+  confirmPasswordText: {
     fontSize: 15,
     fontWeight: "bold",
   },
-  changePasstextlink: {
-    fontSize: 15,
-    fontStyle: "italic",
-    color: "purple",
-    textDecorationLine: "underline",
-  },
+
   button: {
     marginTop: 20,
   },

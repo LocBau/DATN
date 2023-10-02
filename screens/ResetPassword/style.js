@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
     felx: 1,
     backgroudColor: "red",
     marginTop: 50,
+    justifyContent: "center",
     alignItems: "center",
   },
   titleScreen: {
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "blue",
   },
-  name: {
+  newpass: {
     marginTop: 30,
     width: "80%",
   },
@@ -28,36 +29,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
   },
-  email: {
+  confirmPassword: {
     marginTop: 5,
     width: "80%",
   },
-  emailText: {
+  confirmPasswordText: {
     fontSize: 15,
     fontWeight: "bold",
   },
-  phone: {
-    marginTop: 5,
-    width: "80%",
-  },
-  phoneText: {
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-  changePass: {
-    marginTop: 5,
-    width: "80%",
-  },
-  changePasstext: {
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-  changePasstextlink: {
-    fontSize: 15,
-    fontStyle: "italic",
-    color: "purple",
-    textDecorationLine: "underline",
-  },
+
   button: {
     marginTop: 20,
   },
