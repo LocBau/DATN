@@ -25,6 +25,7 @@ const Register = () => {
           }
         />
       </View>
+
       <View style={styles.password}>
         <Text style={styles.passText}>Password</Text>
         <Input
