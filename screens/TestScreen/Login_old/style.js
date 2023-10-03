@@ -34,18 +34,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   topEmail: {
-    marginTop: 5,
-    width: "80%",
+    marginTop: 30,
   },
-  emailText: {
-    fontSize: 15,
-    fontWeight: "bold",
+  topPass: {
+    marginTop: 10,
   },
-  password: {
-    marginTop: 5,
-    width: "80%",
-  },
-  passText: {
+  emailLabel: {
     fontSize: 15,
     fontWeight: "bold",
   },
@@ -59,14 +53,32 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#d3b1ff",
   },
+  passLabel: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
   passForgot: {
+    marginTop: 3,
     fontSize: 15,
     fontStyle: "italic",
     textDecorationLine: "underline",
     textAlign: "right",
-    color: "#3638dd",
+    color: "#9e9fed",
   },
-
+  loginButton: {
+    marginTop: 50,
+    height: 40,
+    width: 150,
+    backgroundColor: "#7a6fbe",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loginText: {
+    fontSize: 20,
+    color: "#ffff",
+    fontWeight: "bold",
+  },
   horizontalLine: {
     marginTop: 50,
     width: "80%",
@@ -78,6 +90,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#413e54",
     marginTop: 5,
+  },
+  continueButton: {
+    marginTop: 20,
+    height: 40,
+    width: 150,
+    backgroundColor: "#7a6fbe",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  continueButtonText: {
+    fontSize: 20,
+    color: "#ffff",
+    fontWeight: "bold",
   },
 });
 export default styles;

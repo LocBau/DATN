@@ -2,9 +2,11 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/core";
 import styles from "./style";
 
 const ForgetPass = () => {
+  const navi = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.titleScreen}>
@@ -26,6 +28,7 @@ const ForgetPass = () => {
       </View>
       <View style={styles.button}>
         <Button
+          onPress={() => navi.navigate("Reset Password")}
           iconContainerStyle={{ marginRight: 10 }}
           titleStyle={{ fontWeight: "700" }}
           buttonStyle={{

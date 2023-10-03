@@ -3,6 +3,7 @@ import React from "react";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from "./style";
+import { useNavigation } from "@react-navigation/core";
 
 const ResetPassword = () => {
   return (

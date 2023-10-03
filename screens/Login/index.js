@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import React from "react";
 import styles from "./style";
+import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 
 const Login = () => {
@@ -19,23 +21,64 @@ const Login = () => {
           <Text style={styles.topLabelText1}>Time</Text>
           <Text style={styles.topLabelText2}>Table</Text>
         </View>
-        <View style={styles.topLabelRow2}>
-          <Text style={styles.topLabelText3}>Login</Text>
-        </View>
+        <Text style={styles.topLabelText3}>Login</Text>
+        <MaterialIcons name="login" size={40} color="purple" />
+
         <View style={styles.topEmail}>
-          <Text style={styles.emailLabel}> Mail address</Text>
-          <TextInput style={styles.textInput}></TextInput>
+          <Text style={styles.emailText}>Mail Address</Text>
+          <Input
+            placeholder="Email Address"
+            leftIcon={
+              <MaterialCommunityIcons name="email" size={22} color="purple" />
+            }
+          />
         </View>
-        <View style={styles.topPass}>
-          <Text style={styles.passLabel}> Password</Text>
-          <TextInput style={styles.textInput}></TextInput>
-          <Text style={styles.passForgot}>Forgot your password?</Text>
+
+        <View style={styles.password}>
+          <Text style={styles.passText}>Password</Text>
+          <Input
+            placeholder="Password"
+            leftIcon={
+              <MaterialCommunityIcons
+                name="form-textbox-password"
+                size={24}
+                color="purple"
+              />
+            }
+          />
+          <Text
+            style={styles.passForgot}
+            onPress={() => naviRegister.navigate("Forget Password")}
+          >
+            Forgot your password?
+          </Text>
         </View>
-        <TouchableOpacity>
-          <View style={styles.loginButton}>
-            <Text style={styles.loginText}>Login</Text>
-          </View>
-        </TouchableOpacity>
+
+        <View style={styles.button}>
+          <Button
+            iconContainerStyle={{ marginRight: 10 }}
+            titleStyle={{ fontWeight: "700" }}
+            buttonStyle={{
+              marginTop: 10,
+              backgroundColor: "rgb(179, 55, 225)",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              width: 200,
+              marginHorizontal: 50,
+              marginVertical: 10,
+            }}
+            title="Login"
+            icon={{
+              name: "login",
+              type: "MaterialCommunityIcons",
+              size: 15,
+              color: "white",
+            }}
+          />
+        </View>
 
         <View style={styles.horizontalLine}></View>
       </View>
@@ -44,17 +87,49 @@ const Login = () => {
         <View style={styles.bottomLabelRow1}>
           <Text style={styles.bottomLabelRow1Text}>No account yet?</Text>
         </View>
+
         <View style={styles.topEmail}>
-          <Text style={styles.emailLabel}> Mail address</Text>
-          <TextInput style={styles.textInput}></TextInput>
+          <Text style={styles.emailText}>Mail Address</Text>
+          <Input
+            placeholder="Email Registration"
+            leftIcon={
+              <MaterialCommunityIcons name="email" size={22} color="purple" />
+            }
+          />
         </View>
-        <TouchableOpacity
-          onPress={() => naviRegister.navigate("registerScreen")}
-        >
-          <View style={styles.continueButton}>
-            <Text style={styles.continueButtonText}>Continue</Text>
-          </View>
-        </TouchableOpacity>
+
+        <View style={styles.button}>
+          <Button
+            onPress={() => naviRegister.navigate("Registration")}
+            iconContainerStyle={{ marginRight: 10 }}
+            titleStyle={{ fontWeight: "700" }}
+            buttonStyle={{
+              marginTop: 10,
+              backgroundColor: "rgb(179, 55, 225)",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              width: 200,
+              marginHorizontal: 50,
+              marginVertical: 10,
+            }}
+            title="Continue"
+            icon={
+              // name: "account-plus",
+              // type: "MaterialCommunityIcons",
+              // size: 15,
+              // color: "white",
+              <MaterialCommunityIcons
+                name={"account-plus-outline"}
+                marginRight={10}
+                size={22}
+                color="white"
+              />
+            }
+          />
+        </View>
       </View>
     </View>
   );
