@@ -10,23 +10,35 @@ import Register from "./screens/Register";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import testNavi from "./testNavi";
+import Home from "./screens/Home";
+import { useState } from "react";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [tasklist, setTasklist] = useState([]);
+
+  const handleAddTask = (task) => {
+    setTasklist([...tasklist, task]);
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerTitleAlign: "center",
-        }}
-      >
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Registration" component={Register} />
-        <Stack.Screen name="Forget Password" component={ForgetPass} />
-        <Stack.Screen name="Reset Password" component={ResetPassword} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Home onAddTask1={handleAddTask} onTasklist={tasklist} />
+
+    // part using React Navigation:
+    // <NavigationContainer>
+    //   <Stack.Navigator
+    //     screenOptions={{
+    //       headerTitleAlign: "center",
+    //     }}
+    //   >
+    //     <Stack.Screen name="Home" component={Home} />
+    //     {/* <Stack.Screen name="Login" component={Login} />
+    //     <Stack.Screen name="Registration" component={Register} />
+    //     <Stack.Screen name="Forget Password" component={ForgetPass} />
+    //     <Stack.Screen name="Reset Password" component={ResetPassword} /> */}
+    //   </Stack.Navigator>
+    // </NavigationContainer>
   );
 }
 
