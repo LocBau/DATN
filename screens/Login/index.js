@@ -11,9 +11,19 @@ import styles from "./style";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect, useRef } from 'react';
+async function checkIfLoggedIn(naviRegister) {
+  let user =  await AsyncStorage.getItem("currentUser");
+  
+  if (!user) naviRegister.navigate("Registration");
+}
 const Login = () => {
   const naviRegister = useNavigation();
+  useEffect(()=>{
+    checkIfLoggedIn(naviRegister);
+    console.log("test1");
+  },[Login])
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>

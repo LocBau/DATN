@@ -1,10 +1,42 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert} from "react-native";
 import React from "react";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import styles from "./style";
-
+import { useNavigation } from "@react-navigation/core";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect, useRef } from 'react';
+import SignUpApi from "../../api/signupApi";
 const Register = () => {
+  const naviRegister = useNavigation();
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  // const [username, setusername] = useState("");
+  const sendData = async () => {
+    console.log(email);
+    console.log(password);
+    if (email !== "" && password !== ""  ) {
+      const res = await SignUpApi( email, password);
+
+      if (!res || res.status!== 200) {
+          // console.log("noti: invalid");
+          Alert.alert('Invalid', 'Invalid Login', [
+
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ]);
+          // AsyncStorage.setItem("user")
+          return
+      }
+
+
+    } else {
+      Alert.alert('email are required', 'email are required', [
+
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]);
+
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.titleScreen}>
@@ -20,6 +52,8 @@ const Register = () => {
         <Text style={styles.emailText}>Mail Address</Text>
         <Input
           placeholder="Email Address"
+          value={email}
+          onChangeText={(e) =>setemail(e)}
           leftIcon={
             <MaterialCommunityIcons name="email" size={22} color="purple" />
           }
@@ -29,6 +63,8 @@ const Register = () => {
       <View style={styles.password}>
         <Text style={styles.passText}>Password</Text>
         <Input
+          value={password}
+          onChangeText={(e) =>setpassword(e)}
           placeholder="Password"
           leftIcon={
             <MaterialCommunityIcons
@@ -74,6 +110,7 @@ const Register = () => {
             size: 15,
             color: "white",
           }}
+          onPress={sendData}
         />
       </View>
     </View>

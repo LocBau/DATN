@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import Login from "./screens/Login";
 import UpdateProfile from "./screens/UpdateProfile";
@@ -10,6 +11,7 @@ import Register from "./screens/Register";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import testNavi from "./testNavi";
+import AgendaPage from "./screens/Agenda";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,10 +23,11 @@ export default function App() {
           headerTitleAlign: "center",
         }}
       >
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Agenda" component={AgendaPage} />
+        {/* <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Registration" component={Register} />
         <Stack.Screen name="Forget Password" component={ForgetPass} />
-        <Stack.Screen name="Reset Password" component={ResetPassword} />
+        <Stack.Screen name="Reset Password" component={ResetPassword} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
