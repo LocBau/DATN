@@ -22,7 +22,14 @@ const AddTask = (props) => {
       alert("Please input ....");
       return false;
     }
-    props.onAddTask2(task);
+    let _task = {
+      title: task,
+      done: false,
+      due: null,
+      reminder: false,
+      repeat: null,
+    };
+    props.onAddTask(_task);
     setTask("");
     Keyboard.dismiss();
   };
