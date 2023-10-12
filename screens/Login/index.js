@@ -56,6 +56,7 @@ const Login = () => {
 
         <View style={styles.button}>
           <Button
+            onPress={() => naviRegister.navigate("Home")}
             iconContainerStyle={{ marginRight: 10 }}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{

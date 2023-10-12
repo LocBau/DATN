@@ -27,6 +27,9 @@ const styles = StyleSheet.create({
   contentText2: {
     fontSize: 12,
   },
+  contentText1Done: {
+    textDecorationLine: "line-through",
+  },
   icon: {
     flex: 1,
     flexDirection: "row",
