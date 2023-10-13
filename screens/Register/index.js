@@ -1,10 +1,34 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text, Alert } from "react-native";
+import React, { useState } from "react";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import styles from "./style";
+import { useNavigation } from "@react-navigation/native";
+import SignUpApi from "../../api/signupApi";
 
 const Register = () => {
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const naviRegister = useNavigation();
+  const handleRegister = async () => {
+    if(email =="" && password == "") {
+      Alert.alert("Invalid input","email or password cannot be blank");
+      return;
+    }
+    console.log(password);
+    console.log(email);
+    let res = await SignUpApi(email, password);
+    if (!res || res.status!==200) {
+      Alert.alert("Error","Server Error");
+    }
+    Alert.alert("Email verification","Please check your mail and verify", [{
+      text: 'OK',
+      onPress: () => naviRegister.navigate("Login"),
+      style: 'OK',
+    },]);
+    
+
+  }
   return (
     <View style={styles.container}>
       <View style={styles.titleScreen}>
@@ -20,6 +44,9 @@ const Register = () => {
         <Text style={styles.emailText}>Mail Address</Text>
         <Input
           placeholder="Email Address"
+          value = {email}
+          autoCapitalize='none'
+          onChangeText={(e)=>setEmail(e)}
           leftIcon={
             <MaterialCommunityIcons name="email" size={22} color="purple" />
           }
@@ -30,6 +57,10 @@ const Register = () => {
         <Text style={styles.passText}>Password</Text>
         <Input
           placeholder="Password"
+          autoCapitalize='none'
+          secureTextEntry={true}
+          value = {password}
+          onChangeText={(e)=>setPassword(e)}
           leftIcon={
             <MaterialCommunityIcons
               name="form-textbox-password"
@@ -43,6 +74,8 @@ const Register = () => {
         <Text style={styles.confirmPasswordText}>Confirm Password</Text>
         <Input
           placeholder="Confirm PassWord"
+          autoCapitalize='none'
+          secureTextEntry={true}
           leftIcon={
             <MaterialCommunityIcons
               name="form-textbox-password"
@@ -67,6 +100,7 @@ const Register = () => {
             marginHorizontal: 50,
             marginVertical: 10,
           }}
+          onPress={handleRegister}
           title="Registration"
           icon={{
             name: "autorenew",

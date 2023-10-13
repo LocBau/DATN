@@ -5,15 +5,38 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import styles from "./style";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
+import LoginApi from "../../api/loginApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = () => {
   const naviRegister = useNavigation();
+  const [email,setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const HandleLogin = async () => {
+    console.log(email);
+    console.log(password);
+    if(email =="" && password == "") {
+      Alert.alert("Invalid input","email or password cannot be blank");
+      return;
+    };
+    let res = await LoginApi(email,password);
+    if(!res || res.status !== 200) {
+      Alert.alert("Error","Server Error");
+      return;
+    }
+    await AsyncStorage.setItem('user',res.data.user);
+    await AsyncStorage.setItem('token',res.data.token);
+    let a = await AsyncStorage.getItem('token');
+    console.log(a);
+    naviRegister.navigate("Home");
+  }
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -28,6 +51,9 @@ const Login = () => {
           <Text style={styles.emailText}>Mail Address</Text>
           <Input
             placeholder="Email Address"
+            autoCapitalize='none'
+            value = {email}
+            onChangeText={(e)=>setEmail(e)}
             leftIcon={
               <MaterialCommunityIcons name="email" size={22} color="purple" />
             }
@@ -38,6 +64,10 @@ const Login = () => {
           <Text style={styles.passText}>Password</Text>
           <Input
             placeholder="Password"
+            autoCapitalize='none'
+            value = {password}
+            secureTextEntry={true}
+            onChangeText={(e)=>setPassword(e)}
             leftIcon={
               <MaterialCommunityIcons
                 name="form-textbox-password"
@@ -56,7 +86,7 @@ const Login = () => {
 
         <View style={styles.button}>
           <Button
-            onPress={() => naviRegister.navigate("Home")}
+            onPress={HandleLogin}
             iconContainerStyle={{ marginRight: 10 }}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{

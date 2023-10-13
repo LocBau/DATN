@@ -1,0 +1,1 @@
+export const serverUrl = "https://9b3a-113-161-74-106.ngrok-free.app"
