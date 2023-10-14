@@ -47,7 +47,24 @@ const styles = StyleSheet.create({
     color: "white",
   },
   bodyDone: {
-    flex: 1,
+    // flex: 1,
+  },
+  viewTaskDone: {
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginLeft: 10,
+    width: 150,
+    height: 25,
+    borderRadius: 8,
+    backgroundColor: "rgb(185, 229, 228)",
+  },
+  taskdonetext: {
+    textAlign: "center",
+    alignContent: "center",
+    fontSize: 20,
+    color: "purple",
   },
   footer: {
     flex: 1,

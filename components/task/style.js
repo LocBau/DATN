@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: "center",
   },
+  containerDone: {
+    backgroundColor: "rgb(110, 227, 166)",
+  },
   status: {
     flex: 1,
     alignItems: "center",

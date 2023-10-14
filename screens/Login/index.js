@@ -35,7 +35,10 @@ const Login = () => {
     await AsyncStorage.setItem('token',res.data.token);
     let a = await AsyncStorage.getItem('token');
     console.log(a);
-    naviRegister.navigate("Home");
+    naviRegister.reset({
+                index: 0,
+                routes: [{ name: "Home" }],
+              })
   }
   return (
     <View style={styles.container}>
@@ -86,7 +89,17 @@ const Login = () => {
 
         <View style={styles.button}>
           <Button
+
             onPress={HandleLogin}
+
+            // onPress={() => naviRegister.navigate("Home")}
+            onPress={() =>
+              naviRegister.reset({
+                index: 0,
+                routes: [{ name: "Home" }],
+              })
+            }
+
             iconContainerStyle={{ marginRight: 10 }}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{
