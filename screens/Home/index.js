@@ -20,6 +20,8 @@ import AddTask from "../../components/addTask";
 const Home = () => {
   const [tasklist, setTasklist] = useState([]);
   const [trigger, setTrigger] = useState(0);
+  const [viewTaskDone, setviewTaskDone] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const handleAddTask = (task) => {
     setTasklist([...tasklist, task]);
   };
@@ -35,16 +37,26 @@ const Home = () => {
     }
     console.log(newTasklist[index]);
     setTasklist(newTasklist);
-    console.log(tasklist[index]);
+    // console.log(tasklist[index]);
+    setviewTaskDone(true);
   };
 
-  useEffect(() => {
-    console.log("chay..1");
+  const handleViewTaskListDone = () => {
+    if (isVisible) {
+      // setviewTaskDone(false);
+      setIsVisible(false);
+    } else {
+      // setviewTaskDone(true);
+      setIsVisible(true);
+    }
+  };
+  // useEffect(() => {
+  //   console.log("chay..1");
 
-    return () => {
-      console.log("chay..2");
-    };
-  }, [tasklist]);
+  //   return () => {
+  //     console.log("chay..2");
+  //   };
+  // }, [tasklist]);
   const [check, setCheck] = useState(false);
 
   return (
@@ -55,7 +67,7 @@ const Home = () => {
         source={require("../../assets/bg1.png")}
       >
         <View style={styles.header}>
-          <View style={styles.headerLeft}>
+          <TouchableOpacity style={styles.headerLeft}>
             <MaterialCommunityIcons
               name="arrow-collapse-left"
               size={24}
@@ -63,7 +75,7 @@ const Home = () => {
               style={{ marginRight: 5 }}
             />
             <Text style={styles.headerText}>Menu</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.headerRight}>
             <MaterialCommunityIcons name="apps" size={24} color="purple" />
           </View>
@@ -86,24 +98,63 @@ const Home = () => {
                   />
                 );
             })}
+            <View style={styles.bodyDone}>
+              <TouchableOpacity onPress={handleViewTaskListDone}>
+                {viewTaskDone && (
+                  <View style={styles.viewTaskDone}>
+                    <MaterialCommunityIcons
+                      name={isVisible === false ? "arrow-right" : "arrow-down"}
+                      size={24}
+                      color="purple"
+                      style={{ marginRight: 5 }}
+                    />
+                    <Text style={styles.taskdonetext}> Task Done</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+              {isVisible &&
+                tasklist.map((item, index) => {
+                  if (item.done)
+                    return (
+                      <Task
+                        key={index}
+                        id={index}
+                        title={item.title}
+                        status={item.done}
+                        onUpdate={hanldeUpdate}
+                        trigger={triggerF}
+                      />
+                    );
+                })}
+            </View>
           </ScrollView>
-
-          <ScrollView style={styles.bodyDone}>
-            <Text> Done</Text>
-            {tasklist.map((item, index) => {
-              if (item.done)
-                return (
-                  <Task
-                    key={index}
-                    id={index}
-                    title={item.title}
-                    status={item.done}
-                    onUpdate={hanldeUpdate}
-                    trigger={triggerF}
-                  />
-                );
-            })}
-          </ScrollView>
+          {/* <ScrollView style={styles.bodyDone}>
+            <TouchableOpacity onPress={handleViewTaskDone}>
+              <View style={styles.viewTaskDone}>
+                <MaterialCommunityIcons
+                  name={viewTaskDone === false ? "arrow-right" : "arrow-down"}
+                  size={24}
+                  color="purple"
+                  style={{ marginRight: 5 }}
+                />
+                <Text style={styles.taskdonetext}> Task Done</Text>
+              </View>
+            </TouchableOpacity>
+            {isVisible &&
+              tasklist.map((item, index) => {
+                if (item.done)
+                  return (
+                    <Task
+                      key={index}
+                      id={index}
+                      title={item.title}
+                      status={item.done}
+                      onUpdate={hanldeUpdate}
+                      trigger={triggerF}
+                    />
+                  );
+              })}
+          </ScrollView> */}
         </View>
 
         <AddTask onAddTask={handleAddTask} />

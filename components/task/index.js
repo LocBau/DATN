@@ -32,8 +32,10 @@ const Task = (props) => {
   };
   const checktaskStyles =
     checktask == true ? styles.contentText1Done : styles.contentText1;
+  const containerDoneStyle =
+    checktask == false ? styles.container : styles.containerDone;
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerDoneStyle]}>
       <View style={styles.status}>
         <TouchableOpacity onPress={handleCheck}>
           <MaterialCommunityIcons
