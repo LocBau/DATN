@@ -12,25 +12,25 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import testNavi from "./testNavi";
 import Home from "./screens/Home";
 import { useState } from "react";
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
-  useEffect(()=>{
+  useEffect(() => {
     async function registerForPushNotificationsAsync() {
       let token;
       if (Device.isDevice) {
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        const { status: existingStatus } =
+          await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
+        if (existingStatus !== "granted") {
           const { status } = await Notifications.requestPermissionsAsync();
           finalStatus = status;
         }
-        if (finalStatus !== 'granted') {
-          alert('Failed to get push token for push notification!');
+        if (finalStatus !== "granted") {
+          alert("Failed to get push token for push notification!");
           return;
         }
         token = await Notifications.getExpoPushTokenAsync({
@@ -38,23 +38,22 @@ export default function App() {
         });
         console.log(token);
       } else {
-        alert('Must use physical device for Push Notifications');
+        alert("Must use physical device for Push Notifications");
       }
-    
-      if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
+
+      if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+          name: "default",
           importance: Notifications.AndroidImportance.MAX,
           vibrationPattern: [0, 250, 250, 250],
-          lightColor: '#FF231F7C',
+          lightColor: "#FF231F7C",
         });
       }
       console.log(token);
       return token;
     }
     registerForPushNotificationsAsync();
-
-  })
+  });
   // const [tasklist, setTasklist] = useState([]);
   // const [tasklistDone, settasklistDone] = useState([]);
   // const handleAddTask = (task) => {
@@ -76,7 +75,13 @@ export default function App() {
         }}
       >
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen name="Registration" component={Register} />
         <Stack.Screen name="Forget Password" component={ForgetPass} />
         <Stack.Screen name="Reset Password" component={ResetPassword} />

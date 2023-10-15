@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    marginTop: 40,
     flex: 1,
     flexDirection: "row",
     //backgroundColor: "gray",
