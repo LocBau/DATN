@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import GetTaskApi from "../../api/getTaskApi";
 const Home = () => {
   // console.log();
   async function registerForPushNotificationsAsync() {
@@ -56,24 +57,58 @@ const Home = () => {
   const [tasklist, setTasklist] = useState([]);
   const [trigger, setTrigger] = useState(0);
 
+  const [viewTaskDone, setviewTaskDone] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   useEffect( ()=>{
     async function fetchToken() {
-      let a = await AsyncStorage.getItem('token');
-      console.log(a);
+      // console.log(tasklist);
+      let flag = await AsyncStorage.getItem('flag');
+      // console.log(flag);
+      if(flag) return;
+      // let token = await AsyncStorage.getItem('token');
+      // let res = await GetTaskApi(token);
+      // if(!res || res.status !=200) {
+      //   console.log("cannot get tasks");
+      //   return;
+      // }
+      // console.log(res.data);
+
+      // let _newTask = res.data
+
+      let _newTask = await AsyncStorage.getItem('task');
+      _newTask = JSON.parse(_newTask).task;
+      console.log(_newTask);
+      for (const i of _newTask) {
+        // console.log(i.title);
+        // console.log(i.done);
+        if(i.done) {
+          setviewTaskDone(true);
+          // console.log("set");
+          break;
+      }
+
+      }
+      setTasklist(_newTask);
+
+      setTasklist(_newTask);
+      await AsyncStorage.setItem('flag',"true");
+      // console.log(tasklist);
     }
     fetchToken();
   })
 
-  const [viewTaskDone, setviewTaskDone] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
 
-  const handleAddTask = (task) => {
-    setTasklist([...tasklist, task]);
+  const handleAddTask = async (task) => {
+    let t = [...tasklist, task];
+    setTasklist(t);
+    await AsyncStorage.setItem('task',JSON.stringify({task:t}));
+    // let a = await AsyncStorage.getItem('task');
+    // console.log(JSON.parse(a).task);
   };
   const triggerF = () => {
     setTrigger(trigger + 1);
   };
-  const hanldeUpdate = (index) => {
+  const hanldeUpdate = async (index) => {
     let newTasklist = tasklist;
     if (newTasklist[index].done) {
       newTasklist[index].done = false;
@@ -82,6 +117,7 @@ const Home = () => {
     }
     console.log(newTasklist[index]);
     setTasklist(newTasklist);
+    AsyncStorage.setItem("task",JSON.stringify({task:newTasklist}))
     // console.log(tasklist[index]);
     setviewTaskDone(true);
   };
@@ -138,6 +174,7 @@ const Home = () => {
                   <Task
                     key={index}
                     id={index}
+                    _id={item._id}
                     title={item.title}
                     status={item.done}
                     onUpdate={hanldeUpdate}
@@ -166,6 +203,7 @@ const Home = () => {
                       <Task
                         key={index}
                         id={index}
+                        _id={item._id}
                         title={item.title}
                         status={item.done}
                         onUpdate={hanldeUpdate}

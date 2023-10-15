@@ -12,17 +12,25 @@ import styles from "./style";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
+import UpdateTaskApi from "../../api/updateTaskApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Task = (props) => {
   // const { task } = props;
   console.log(props.id);
   // const { check } = props.status;
   const [checktask, setChecktask] = useState(props.status);
-  const handleCheck = () => {
-    // checkTask = checktask === false ? true : false;
-    // setChecktask(checkTask);
-    // console.log(checkTask);
+  const handleCheck = async () => {
+    let token = await AsyncStorage.getItem('token');
+
+    // let res = await UpdateTaskApi(token,{_id:props._id,status: props.status ? "notdone": "done"})
     props.onUpdate(props.id);
+    
+    // if(!res || res.status !== 200) {
+    //   alert("failed to add task");
+    //   return;
+    // }
+    // await AsyncStorage.setItem("flag","true");
     props.trigger();
     if (checktask === false) {
       setChecktask(true);

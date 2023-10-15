@@ -1,11 +1,36 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text, Alert } from "react-native";
+import React, { useState } from "react";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from "./style";
 import { useNavigation } from "@react-navigation/core";
+import ResetPasswordApi from "../../api/resetPasswordApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ResetPassword = () => {
+  const navi = useNavigation();
+  const [password, setPassword] = useState('');
+  const HandleResetPassword = async () => {
+    console.log(password);
+    if (!password) {
+      Alert.alert("Error", "Password cannot be blank");
+      return;
+    }
+    let email = await AsyncStorage.getItem("reset");
+    
+    let res = await ResetPasswordApi(email,password);
+    if(!res || res.status !=200) {
+      Alert.alert("Error","Failed to reset password");
+      return;
+    }
+    Alert.alert("successful","password successfully reset");
+
+    await AsyncStorage.removeItem('reset')
+    navi.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    })
+  }
   return (
     <View style={styles.container}>
       <View style={styles.titleScreen}>
@@ -16,6 +41,10 @@ const ResetPassword = () => {
         <Text style={styles.nameText}>New Password</Text>
         <Input
           placeholder="New password"
+          value = {password}
+          onChangeText={setPassword}
+          autoCapitalize="none"
+          secureTextEntry={true}
           leftIcon={
             <MaterialCommunityIcons
               name="onepassword"
@@ -29,6 +58,8 @@ const ResetPassword = () => {
         <Text style={styles.confirmPasswordText}>Confirm Password</Text>
         <Input
           placeholder="Confirm Password"
+          secureTextEntry={true}
+          autoCapitalize="none"
           leftIcon={
             <MaterialCommunityIcons
               name="onepassword"
@@ -54,6 +85,7 @@ const ResetPassword = () => {
             marginHorizontal: 50,
             marginVertical: 10,
           }}
+          onPress={HandleResetPassword}
           title="Reset Password"
           icon={{
             name: "autorenew",

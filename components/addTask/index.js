@@ -14,10 +14,12 @@ import styles from "./style";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
+import CreateTaskApi from "../../api/createTaskAPi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddTask = (props) => {
   const [task, setTask] = useState("");
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     if (task.length == 0) {
       alert("Please input ....");
       return false;
@@ -29,6 +31,13 @@ const AddTask = (props) => {
       reminder: false,
       repeat: null,
     };
+    // let token = await AsyncStorage.getItem('token');
+    // let res = await CreateTaskApi(token,task, "description",111,222,undefined);
+    // if(!res || res.status !=200) {
+    //   alert("failed to add task");
+    //   return;
+    // }
+    // await AsyncStorage.removeItem('flag');
     props.onAddTask(_task);
     setTask("");
     Keyboard.dismiss();

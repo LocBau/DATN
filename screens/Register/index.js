@@ -19,7 +19,8 @@ const Register = () => {
     console.log(email);
     let res = await SignUpApi(email, password);
     if (!res || res.status!==200) {
-      Alert.alert("Error","Server Error");
+      Alert.alert("Error","Email already used");
+      return;
     }
     Alert.alert("Email verification","Please check your mail and verify", [{
       text: 'OK',

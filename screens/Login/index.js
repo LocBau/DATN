@@ -33,8 +33,8 @@ const Login = () => {
     }
     await AsyncStorage.setItem('user',res.data.user);
     await AsyncStorage.setItem('token',res.data.token);
-    let a = await AsyncStorage.getItem('token');
-    console.log(a);
+    await AsyncStorage.removeItem('flag');
+    // console.log(a);
     naviRegister.reset({
                 index: 0,
                 routes: [{ name: "Home" }],
@@ -93,12 +93,12 @@ const Login = () => {
             onPress={HandleLogin}
 
             // onPress={() => naviRegister.navigate("Home")}
-            onPress={() =>
-              naviRegister.reset({
-                index: 0,
-                routes: [{ name: "Home" }],
-              })
-            }
+            // onPress={() =>
+            //   naviRegister.reset({
+            //     index: 0,
+            //     routes: [{ name: "Home" }],
+            //   })
+            // }
 
             iconContainerStyle={{ marginRight: 10 }}
             titleStyle={{ fontWeight: "700" }}
