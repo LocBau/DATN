@@ -17,23 +17,28 @@ import { useNavigation } from "@react-navigation/core";
 import Task from "../../components/task";
 import AddTask from "../../components/addTask";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 import GetTaskApi from "../../api/getTaskApi";
-const Home = () => {
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import Calendar from "../Calendar";
+import { useDrawerStatus } from "@react-navigation/drawer";
+
+const Home = ({ navigation }) => {
   // console.log();
   async function registerForPushNotificationsAsync() {
     let token;
     if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
+      if (existingStatus !== "granted") {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
         return;
       }
       token = await Notifications.getExpoPushTokenAsync({
@@ -41,30 +46,31 @@ const Home = () => {
       });
       console.log(token);
     } else {
-      alert('Must use physical device for Push Notifications');
+      alert("Must use physical device for Push Notifications");
     }
-  
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
+        lightColor: "#FF231F7C",
       });
     }
     console.log(token);
-    return token;}
+    return token;
+  }
   const [tasklist, setTasklist] = useState([]);
   const [trigger, setTrigger] = useState(0);
 
   const [viewTaskDone, setviewTaskDone] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  useEffect( ()=>{
+  useEffect(() => {
     async function fetchToken() {
       // console.log(tasklist);
-      let flag = await AsyncStorage.getItem('flag');
+      let flag = await AsyncStorage.getItem("flag");
       // console.log(flag);
-      if(flag) return;
+      if (flag) return;
       // let token = await AsyncStorage.getItem('token');
       // let res = await GetTaskApi(token);
       // if(!res || res.status !=200) {
@@ -75,33 +81,31 @@ const Home = () => {
 
       // let _newTask = res.data
 
-      let _newTask = await AsyncStorage.getItem('task');
+      let _newTask = await AsyncStorage.getItem("task");
       _newTask = JSON.parse(_newTask).task;
       console.log(_newTask);
       for (const i of _newTask) {
         // console.log(i.title);
         // console.log(i.done);
-        if(i.done) {
+        if (i.done) {
           setviewTaskDone(true);
           // console.log("set");
           break;
-      }
-
+        }
       }
       setTasklist(_newTask);
 
       setTasklist(_newTask);
-      await AsyncStorage.setItem('flag',"true");
+      await AsyncStorage.setItem("flag", "true");
       // console.log(tasklist);
     }
     fetchToken();
-  })
-
+  });
 
   const handleAddTask = async (task) => {
     let t = [...tasklist, task];
     setTasklist(t);
-    await AsyncStorage.setItem('task',JSON.stringify({task:t}));
+    await AsyncStorage.setItem("task", JSON.stringify({ task: t }));
     // let a = await AsyncStorage.getItem('task');
     // console.log(JSON.parse(a).task);
   };
@@ -117,11 +121,10 @@ const Home = () => {
     }
     console.log(newTasklist[index]);
     setTasklist(newTasklist);
-    AsyncStorage.setItem("task",JSON.stringify({task:newTasklist}))
+    AsyncStorage.setItem("task", JSON.stringify({ task: newTasklist }));
     // console.log(tasklist[index]);
     setviewTaskDone(true);
   };
-
 
   const handleViewTaskListDone = () => {
     if (isVisible) {
@@ -140,7 +143,19 @@ const Home = () => {
   //   };
   // }, [tasklist]);
 
-  const [check, setCheck] = useState(false);
+  // const [check, setCheck] = useState(false);
+
+  // const Drawer = createDrawerNavigator();
+  // const isDrawerOpen = useDrawerStatus() === "open";
+  // const HomeDrawerScreen = () => {
+  //   return (
+  //     <Drawer.Navigator>
+  //       <Drawer.Screen name="Home" component={Home} />
+  //       {/* <Drawer.Screen name="Analytisc" component={} /> */}
+  //       <Drawer.Screen name="Calendar" component={Calendar} />
+  //     </Drawer.Navigator>
+  //   );
+  // };
 
   return (
     <View style={styles.container}>
@@ -150,7 +165,12 @@ const Home = () => {
         source={require("../../assets/bg1.png")}
       >
         <View style={styles.header}>
-          <TouchableOpacity style={styles.headerLeft}>
+          <TouchableOpacity
+            style={styles.headerLeft}
+            onPress={() => {
+              navigation.toggleDrawer();
+            }}
+          >
             <MaterialCommunityIcons
               name="arrow-collapse-left"
               size={24}
@@ -163,6 +183,7 @@ const Home = () => {
             <MaterialCommunityIcons name="apps" size={24} color="purple" />
           </View>
         </View>
+
         <View style={styles.body}>
           <ScrollView style={styles.bodyAdd}>
             <Text style={styles.bodyAddText1}>My day</Text>
