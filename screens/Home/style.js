@@ -71,5 +71,15 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     justifyContent: "center",
   },
+  containerBottomSheet: {
+    // flex: 1,
+    // padding: 24,
+    justifyContent: "center",
+    // backgroundColor: "grey",
+  },
+  contentContainerBottomSheet: {
+    // flex: 1,
+    alignItems: "center",
+  },
 });
 export default styles;

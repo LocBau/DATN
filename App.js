@@ -15,6 +15,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import testNavi from "./testNavi";
 import Home from "./screens/Home";
+import TaskLocation from "./screens/TaskLocation";
+
 import { useState } from "react";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -85,9 +87,12 @@ export default function App() {
         }}
         drawerContent={() => <DrawerContentComponent />}
       >
-        <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen name="HomeDrawer" component={Home} />
         {/* <Drawer.Screen name="Analytisc" component={} /> */}
         <Drawer.Screen name="Calendar" component={Calendar} />
+        <Drawer.Screen name="TaskLocation" component={TaskLocation} />
+        <Drawer.Screen name="UpdateProfile" component={UpdateProfile} />
+        <Drawer.Screen name="Setting" component={Setting} />
       </Drawer.Navigator>
     );
   };

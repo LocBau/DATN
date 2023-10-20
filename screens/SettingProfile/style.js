@@ -79,14 +79,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleFrame: {
-    fontSize: 22,
+    fontSize: 19,
     fontWeight: "bold",
     marginBottom: 10,
     marginLeft: 20,
   },
   frameText: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 18,
+
     marginLeft: 20,
   },
   button: {

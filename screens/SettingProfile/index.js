@@ -144,7 +144,7 @@ const Setting = () => {
           iconContainerStyle={{ marginRight: 10 }}
           titleStyle={{ fontWeight: "700" }}
           buttonStyle={{
-            backgroundColor: "#7a6fbe",
+            backgroundColor: "rgb(179, 55, 225)",
             borderColor: "transparent",
             borderWidth: 0,
             borderRadius: 30,

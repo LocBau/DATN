@@ -8,8 +8,15 @@ import {
   ScrollView,
   ImageBackground,
   KeyboardAvoidingView,
+  LogBox,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import styles from "./style";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
@@ -24,6 +31,15 @@ import GetTaskApi from "../../api/getTaskApi";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Calendar from "../Calendar";
 import { useDrawerStatus } from "@react-navigation/drawer";
+import {
+  BottomSheet,
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
+import BackGround from "../../components/backGround";
+import RealTimeFormatDate from "../../components/realTimeFormatDate";
 
 const Home = ({ navigation }) => {
   // console.log();
@@ -135,34 +151,78 @@ const Home = ({ navigation }) => {
       setIsVisible(true);
     }
   };
-  // useEffect(() => {
-  //   console.log("chay..1");
 
-  //   return () => {
-  //     console.log("chay..2");
-  //   };
-  // }, [tasklist]);
+  /**
+   * code using for BottomSheetModal:
+   *
+   */
+  // ref;
+  const bottomSheetModalRef = useRef(null);
+  // state
+  const [isSheetClosed, setIsSheetClosed] = useState(true);
+  // variables
+  const snapPoints = useMemo(() => ["50%", "50%"], []);
 
-  // const [check, setCheck] = useState(false);
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    setIsSheetClosed(false);
+    bottomSheetModalRef.current?.present();
+  }, []);
 
-  // const Drawer = createDrawerNavigator();
-  // const isDrawerOpen = useDrawerStatus() === "open";
-  // const HomeDrawerScreen = () => {
-  //   return (
-  //     <Drawer.Navigator>
-  //       <Drawer.Screen name="Home" component={Home} />
-  //       {/* <Drawer.Screen name="Analytisc" component={} /> */}
-  //       <Drawer.Screen name="Calendar" component={Calendar} />
-  //     </Drawer.Navigator>
-  //   );
-  // };
+  const handleSheetClose = () => {
+    console.log("da bam");
+    bottomSheetModalRef.current?.dismiss(); // Đóng BottomSheet khi người dùng bấm bên ngoài
+  };
+  const handleSheetChanges = useCallback((index) => {
+    if (index === -1) {
+      bottomSheetModalRef.current?.dismiss();
+      console.log("da dong");
+    } else {
+      console.log("da mo");
+      bottomSheetModalRef.current?.present();
+    }
+  }, []);
 
+  /**
+   * code using for BottomSheetModal:
+   *
+   */
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleItemSelect = (item) => {
+    setSelectedItem(item);
+    console.log("component cha:", item);
+    setBackground(item);
+    setIsButton1Pressed(false);
+  };
+
+  const handleSelectImage = () => {};
+
+  const [isButton1Pressed, setIsButton1Pressed] = useState(true);
+  const [background, setBackground] = useState(require("../../assets/bg1.png")); // Sử dụng require ngay từ ban đầu
+
+  useEffect(() => {
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+  }, []); // doan code nay de giấu lỗi : 'VirtualizedLists should never be
+  // nested inside plain ScrollViews with the same orientation because it
+  // can break windowing and other functionality -
+  //use another VirtualizedList-backed container instead '
   return (
     <View style={styles.container}>
       <ImageBackground
         style={styles.containerBg}
         //source={{ uri: 'https://your-unsplash-image-url.jpg' } // case for address Unsplash
-        source={require("../../assets/bg1.png")}
+        //source={require("../../assets/bg1.png")} // case for Image in folder Assets
+        source={
+          isButton1Pressed
+            ? background // Sử dụng require ở đây
+            : { uri: background } // Sử dụng URI ở đây nếu cần
+        }
+        // source={
+        //   isButton1Pressed
+        //     ? require({ uribackground })
+        //     : { uri: "https://source.unsplash.com/random" }
+        // }
       >
         <View style={styles.header}>
           <TouchableOpacity
@@ -179,15 +239,20 @@ const Home = ({ navigation }) => {
             />
             <Text style={styles.headerText}>Menu</Text>
           </TouchableOpacity>
-          <View style={styles.headerRight}>
+
+          <TouchableOpacity
+            style={styles.headerRight}
+            onPress={handlePresentModalPress}
+          >
             <MaterialCommunityIcons name="apps" size={24} color="purple" />
-          </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.body}>
           <ScrollView style={styles.bodyAdd}>
             <Text style={styles.bodyAddText1}>My day</Text>
-            <Text style={styles.bodyAddText2}>Sunday, 28 April</Text>
+            {/* <Text style={styles.bodyAddText2}>Sunday, 28 April</Text> */}
+            <RealTimeFormatDate />
             {tasklist.map((item, index) => {
               console.log(item.done);
               if (!item.done)
@@ -234,36 +299,25 @@ const Home = ({ navigation }) => {
                 })}
             </View>
           </ScrollView>
-          {/* <ScrollView style={styles.bodyDone}>
-            <TouchableOpacity onPress={handleViewTaskDone}>
-              <View style={styles.viewTaskDone}>
-                <MaterialCommunityIcons
-                  name={viewTaskDone === false ? "arrow-right" : "arrow-down"}
-                  size={24}
-                  color="purple"
-                  style={{ marginRight: 5 }}
-                />
-                <Text style={styles.taskdonetext}> Task Done</Text>
-              </View>
-            </TouchableOpacity>
-            {isVisible &&
-              tasklist.map((item, index) => {
-                if (item.done)
-                  return (
-                    <Task
-                      key={index}
-                      id={index}
-                      title={item.title}
-                      status={item.done}
-                      onUpdate={hanldeUpdate}
-                      trigger={triggerF}
-                    />
-                  );
-              })}
-          </ScrollView> */}
         </View>
 
         <AddTask onAddTask={handleAddTask} />
+        <BottomSheetModalProvider>
+          <View style={styles.containerBottomSheet}>
+            <BottomSheetModal
+              ref={bottomSheetModalRef}
+              index={1}
+              snapPoints={snapPoints}
+              enableDismissOnClose={true}
+              onChange={handleSheetChanges}
+              // onClose={handleSheetClose}
+            >
+              <BottomSheetScrollView>
+                <BackGround onItemSelect={handleItemSelect} />
+              </BottomSheetScrollView>
+            </BottomSheetModal>
+          </View>
+        </BottomSheetModalProvider>
       </ImageBackground>
     </View>
   );

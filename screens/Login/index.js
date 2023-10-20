@@ -35,11 +35,12 @@ const Login = ({ navigation }) => {
     await AsyncStorage.setItem("token", res.data.token);
     await AsyncStorage.removeItem("flag");
     // console.log(a);
-    // naviRegister.reset({
-    //             index: 0,
-    //             routes: [{ name: "Home" }],
-    //           })
-    navigation.navigate("Home", {}, { replace: true });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }],
+    });
+    // navigation.navigate("Home", {}, { replace: true });
+    // navigation.navigate("Home");
   };
   return (
     <View style={styles.container}>

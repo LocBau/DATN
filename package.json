@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^4.5.1",
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-navigation/drawer": "^6.6.4",
     "@react-navigation/native": "^6.1.8",
@@ -16,6 +17,7 @@
     "@rneui/base": "^4.0.0-rc.7",
     "@rneui/themed": "^4.0.0-rc.8",
     "axios": "^1.5.1",
+    "date-fns": "^2.30.0",
     "expo": "^49.0.13",
     "expo-constants": "^14.4.2",
     "expo-device": "~5.4.0",
@@ -32,6 +34,7 @@
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "react-native-vector-icons": "^10.0.0",
+    "react-native-virtualized-view": "^1.0.0",
     "rn-crypto-js": "^1.1.2"
   },
   "devDependencies": {
