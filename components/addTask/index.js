@@ -16,8 +16,15 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import CreateTaskApi from "../../api/createTaskAPi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import DateTimePicker from "@react-native-community/datetimepicker"
 const AddTask = (props) => {
+  const [date, setDate] = useState(new Date(Date.now()));
+  const [flag, setFlag] = useState(false);
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+    setFlag(true);
+  };
   const [task, setTask] = useState("");
   const handleAddTask = async () => {
     if (task.length == 0) {
@@ -27,7 +34,7 @@ const AddTask = (props) => {
     let _task = {
       title: task,
       done: false,
-      due: null,
+      due: flag ? date : null,
       reminder: false,
       repeat: null,
     };
@@ -43,17 +50,28 @@ const AddTask = (props) => {
     Keyboard.dismiss();
   };
   return (
+    
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={5}
       style={styles.container}
     >
+
+<Text>
+<DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode="time"
+          is24Hour={true}
+          onChange={onChangeDate}
+        />
+</Text>
       <TextInput
         placeholder="Add quick task"
         style={styles.inputTask}
         value={task}
         onChangeText={(text) => setTask(text)}
-      />
+      />      
       <TouchableOpacity onPress={handleAddTask}>
         <MaterialIcons
           name="add-circle"
@@ -63,6 +81,7 @@ const AddTask = (props) => {
         />
       </TouchableOpacity>
     </KeyboardAvoidingView>
+    
   );
 };
 export default AddTask;

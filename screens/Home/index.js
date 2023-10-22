@@ -40,6 +40,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import BackGround from "../../components/backGround";
 import RealTimeFormatDate from "../../components/realTimeFormatDate";
+import UpdateTaskApi from "../../api/updateTaskApi";
 
 const Home = ({ navigation }) => {
   // console.log();
@@ -84,22 +85,65 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     async function fetchToken() {
       // console.log(tasklist);
+      // await AsyncStorage.removeItem("task");
       let flag = await AsyncStorage.getItem("flag");
       // console.log(flag);
       if (flag) return;
-      // let token = await AsyncStorage.getItem('token');
-      // let res = await GetTaskApi(token);
-      // if(!res || res.status !=200) {
-      //   console.log("cannot get tasks");
-      //   return;
-      // }
+      let token = await AsyncStorage.getItem('token');
+      let res = await GetTaskApi(token);
+      if(!res || res.status !=200) {
+        console.log("cannot get tasks");
+        
+      }
+      res = res.data
       // console.log(res.data);
 
       // let _newTask = res.data
 
       let _newTask = await AsyncStorage.getItem("task");
-      _newTask = JSON.parse(_newTask).task;
-      console.log(_newTask);
+      _newTask = JSON.parse(_newTask);
+      if(!_newTask) _newTask = {};
+      if(!res) res = {};
+      if (_newTask.timestamp && res.timestamp){
+        if (res.timestamp < _newTask.timestamp) {
+          
+          _newTask = _newTask.task;
+          UpdateTaskApi(token,_newTask);
+        } else if(res.timestamp == _newTask.timestamp) {
+          
+          _newTask = _newTask.task;
+        } else {
+          
+          _newTask = res.task;
+          await AsyncStorage.setItem('tasks', JSON.stringify(res));
+        }
+      } else {
+        console.log(res.timestamp);
+        if (res.timestamp) {
+          
+          await AsyncStorage.setItem('tasks', JSON.stringify(res));
+          _newTask = res.task;
+        } else {
+          if(_newTask) {
+            _newTask.timestamp = Date.now();
+          } else {
+            _newTask = {
+              timestamp: Date.now(),
+              task: []
+            }
+          }
+          UpdateTaskApi(token,_newTask);
+          
+          await AsyncStorage.setItem('tasks', JSON.stringify(_newTask));
+          _newTask = _newTask.task;
+          
+        }
+        
+      }
+      
+      
+      
+      
       for (const i of _newTask) {
         // console.log(i.title);
         // console.log(i.done);
@@ -121,7 +165,9 @@ const Home = ({ navigation }) => {
   const handleAddTask = async (task) => {
     let t = [...tasklist, task];
     setTasklist(t);
-    await AsyncStorage.setItem("task", JSON.stringify({ task: t }));
+    let token = await AsyncStorage.getItem('token');
+    await AsyncStorage.setItem("task", JSON.stringify({ timestamp:Date.now(), task: t }));
+    UpdateTaskApi(token,{timestamp:Date.now(), task: t });
     // let a = await AsyncStorage.getItem('task');
     // console.log(JSON.parse(a).task);
   };
@@ -137,9 +183,11 @@ const Home = ({ navigation }) => {
     }
     console.log(newTasklist[index]);
     setTasklist(newTasklist);
-    AsyncStorage.setItem("task", JSON.stringify({ task: newTasklist }));
+    AsyncStorage.setItem("task", JSON.stringify({timestamp:Date.now(), task: newTasklist }));
+    let token = await AsyncStorage.getItem('token');
     // console.log(tasklist[index]);
     setviewTaskDone(true);
+    UpdateTaskApi(token,{timestamp:Date.now(), task: newTasklist });
   };
 
   const handleViewTaskListDone = () => {
@@ -263,6 +311,7 @@ const Home = ({ navigation }) => {
                     _id={item._id}
                     title={item.title}
                     status={item.done}
+                    due={item.due}
                     onUpdate={hanldeUpdate}
                     trigger={triggerF}
                   />
@@ -292,6 +341,7 @@ const Home = ({ navigation }) => {
                         _id={item._id}
                         title={item.title}
                         status={item.done}
+                        due={item.due}
                         onUpdate={hanldeUpdate}
                         trigger={triggerF}
                       />

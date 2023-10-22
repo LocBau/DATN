@@ -1,13 +1,16 @@
 import { serverUrl } from './link';
 import axios from 'axios';
 
-const UpdateTaskApi = async (token, tasks) => {
+const UpdateSetingApi = async (token, settings, device) => {
 
-    var data = JSON.stringify({tasks:tasks});
+    var data = JSON.stringify({
+      settings: settings,
+      device: device
+      });
       
       var config = {
         method: 'post',
-        url: serverUrl + "/task/update",
+        url: serverUrl + "/users/settings",
         headers: { 
           Authorization: "Bearer " + token,
           'Content-Type': 'application/json'
@@ -26,4 +29,4 @@ const UpdateTaskApi = async (token, tasks) => {
 
 }
 
-export default UpdateTaskApi;
+export default UpdateSetingApi;

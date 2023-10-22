@@ -22,18 +22,22 @@ const Login = ({ navigation }) => {
   const HandleLogin = async () => {
     console.log(email);
     console.log(password);
+    let device = await AsyncStorage.getItem('device');
+    console.log(device);
     if (email == "" && password == "") {
       Alert.alert("Invalid input", "email or password cannot be blank");
       return;
     }
-    let res = await LoginApi(email, password);
+    let res = await LoginApi(email, password, device);
     if (!res || res.status !== 200) {
       Alert.alert("Error", "Server Error");
       return;
     }
     await AsyncStorage.setItem("user", res.data.user);
     await AsyncStorage.setItem("token", res.data.token);
+    await AsyncStorage.setItem("settings",JSON.stringify(res.data.settings))
     await AsyncStorage.removeItem("flag");
+    await AsyncStorage.removeItem("flag1");
     // console.log(a);
     navigation.reset({
       index: 0,

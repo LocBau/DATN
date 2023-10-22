@@ -21,6 +21,7 @@ import { useState } from "react";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -45,8 +46,10 @@ export default function App() {
           projectId: Constants.expoConfig.extra.eas.projectId,
         });
         console.log(token);
+        await AsyncStorage.setItem('device',token.data);
       } else {
         alert("Must use physical device for Push Notifications");
+        return;
       }
 
       if (Platform.OS === "android") {

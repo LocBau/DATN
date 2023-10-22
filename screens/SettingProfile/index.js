@@ -1,12 +1,72 @@
 import { View, Text } from "react-native";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import styles from "./style";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import UpdateSetingApi from "../../api/updateSettingApi";
 const Setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
+  const [appNotification, setAppNotification] = useState(false);
+  const [emailNotification, setEmailNotification] = useState(false);
+  useEffect(()=> {
+    async function fetchSettings()  {
+      let settings = await AsyncStorage.getItem('settings');
+      let flag1 = await AsyncStorage.getItem('flag1');
+      console.log("setting"+settings);
+      if(settings && !flag1){
+        try {
+          
+          settings = JSON.parse(settings);
+          setAppNotification(settings.appNotification);
+          setEmailNotification(settings.emailNotification);
+          await AsyncStorage.setItem("flag1","true");
+        } catch (e) {
+          
+        }
+      }
+
+    }
+    fetchSettings();
+  })
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const toggleAppNotification = async () => {
+    let state = appNotification;
+    let settings = await AsyncStorage.getItem('settings');
+    let device = await AsyncStorage.getItem('device');
+    let token = await AsyncStorage.getItem('token');
+    if (settings) {
+      try {
+        settings= JSON.parse(settings);
+        settings.appNotification = !state
+        await AsyncStorage.setItem("settings",JSON.stringify(settings))
+        setAppNotification((previousState)=>!previousState)
+        UpdateSetingApi(token, settings, device);
+
+      } catch (e) {
+        
+      }
+    }
+  }
+  const toggleEmailNotification  = async () => {
+    let state = emailNotification;
+    let settings = await AsyncStorage.getItem('settings');
+    let device = await AsyncStorage.getItem('device');
+    let token = await AsyncStorage.getItem('token');
+    if (settings) {
+      try {
+        settings= JSON.parse(settings);
+        settings.emailNotification = !state
+        await AsyncStorage.setItem("settings",JSON.stringify(settings))
+        setEmailNotification((previousState)=>!previousState)
+        UpdateSetingApi(token, settings, device);
+
+      } catch (e) {
+        
+      }
+    }
+  }
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -108,10 +168,10 @@ const Setting = () => {
           <View style={styles.viewSwitch}>
             <Switch
               trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+              thumbColor={appNotification ? "#f5dd4b" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}
+              onValueChange={toggleAppNotification}
+              value={appNotification}
             />
           </View>
         </View>
@@ -131,10 +191,10 @@ const Setting = () => {
           <View style={styles.viewSwitch}>
             <Switch
               trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+              thumbColor={emailNotification ? "#f5dd4b" : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}
+              onValueChange={toggleEmailNotification}
+              value={emailNotification}
             />
           </View>
         </View>
