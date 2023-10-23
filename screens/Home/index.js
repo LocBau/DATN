@@ -100,7 +100,7 @@ const Home = ({ navigation }) => {
 
       // let _newTask = res.data
 
-      let _newTask = await AsyncStorage.getItem("task");
+      let _newTask = await AsyncStorage.getItem("tasks");
       _newTask = JSON.parse(_newTask);
       if(!_newTask) _newTask = {};
       if(!res) res = {};
@@ -166,7 +166,7 @@ const Home = ({ navigation }) => {
     let t = [...tasklist, task];
     setTasklist(t);
     let token = await AsyncStorage.getItem('token');
-    await AsyncStorage.setItem("task", JSON.stringify({ timestamp:Date.now(), task: t }));
+    await AsyncStorage.setItem("tasks", JSON.stringify({ timestamp:Date.now(), task: t }));
     UpdateTaskApi(token,{timestamp:Date.now(), task: t });
     // let a = await AsyncStorage.getItem('task');
     // console.log(JSON.parse(a).task);
@@ -183,7 +183,7 @@ const Home = ({ navigation }) => {
     }
     console.log(newTasklist[index]);
     setTasklist(newTasklist);
-    AsyncStorage.setItem("task", JSON.stringify({timestamp:Date.now(), task: newTasklist }));
+    AsyncStorage.setItem("tasks", JSON.stringify({timestamp:Date.now(), task: newTasklist }));
     let token = await AsyncStorage.getItem('token');
     // console.log(tasklist[index]);
     setviewTaskDone(true);

@@ -16,7 +16,6 @@ import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import testNavi from "./testNavi";
 import Home from "./screens/Home";
 import TaskLocation from "./screens/TaskLocation";
-
 import { useState } from "react";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -114,6 +113,7 @@ export default function App() {
           headerTitleAlign: "center",
         }}
       >
+        {/* <Stack.Screen name="Home" component={MapScreen} /> */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen
           name="Home"
