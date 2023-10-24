@@ -106,6 +106,13 @@ const DrawerContentComponent = () => {
             onPress={() => {}}
           />
         </Drawer.Section>
+        <DrawerItem
+            icon={() => <Ionicons name="location" size={22} color="purple" />}
+            label="Microphone"
+            onPress={() => {
+              navigation.navigate("Microphone");
+            }}
+          />
       </View>
     </DrawerContentScrollView>
   );

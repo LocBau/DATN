@@ -25,6 +25,7 @@
     "expo-device": "~5.4.0",
     "expo-location": "~16.1.0",
     "expo-notifications": "~0.20.1",
+    "expo-speech": "~11.3.0",
     "expo-status-bar": "~1.6.0",
     "expo-task-manager": "~11.3.0",
     "latest-version": "^7.0.0",
@@ -40,7 +41,9 @@
     "react-native-screens": "~3.22.0",
     "react-native-vector-icons": "^10.0.0",
     "react-native-virtualized-view": "^1.0.0",
-    "rn-crypto-js": "^1.1.2"
+    "rn-crypto-js": "^1.1.2",
+    "expo-av": "~13.4.1",
+    "expo-file-system": "~15.4.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

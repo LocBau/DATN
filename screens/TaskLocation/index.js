@@ -258,22 +258,3 @@ const styles = StyleSheet.create({
 });
 
 export default MapScreen;
-
-// import React, { Component } from 'react';
-// import { Button } from 'react-native';
-// import openMap from 'react-native-open-maps';
-
-// export default class App extends Component {
-//   _goToYosemite() {
-//     openMap({ provider: 'google', end:  "10.84976867020503, 106.7691192987673" , travelType:"drive"});
-//   }
-
-//   render() {
-//     return (
-//       <Button
-//         color={'#bdc3c7'}
-//         onPress={this._goToYosemite}
-//         title="Click To Open Maps 🗺" />
-//     );
-//   }
-// }

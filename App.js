@@ -21,6 +21,7 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MicroPhone from "./screens/Microphone";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -95,6 +96,7 @@ export default function App() {
         <Drawer.Screen name="TaskLocation" component={TaskLocation} />
         <Drawer.Screen name="UpdateProfile" component={UpdateProfile} />
         <Drawer.Screen name="Setting" component={Setting} />
+        <Drawer.Screen name="Microphone" component={MicroPhone} />
       </Drawer.Navigator>
     );
   };
