@@ -15,31 +15,37 @@ import { useNavigation } from "@react-navigation/core";
 import LoginApi from "../../api/loginApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Login = () => {
-  const naviRegister = useNavigation();
-  const [email,setEmail] = useState("");
+const Login = ({ navigation }) => {
+  // const naviRegister = useNavigation();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const HandleLogin = async () => {
     console.log(email);
     console.log(password);
-    if(email =="" && password == "") {
-      Alert.alert("Invalid input","email or password cannot be blank");
-      return;
-    };
-    let res = await LoginApi(email,password);
-    if(!res || res.status !== 200) {
-      Alert.alert("Error","Server Error");
+    let device = await AsyncStorage.getItem('device');
+    console.log(device);
+    if (email == "" && password == "") {
+      Alert.alert("Invalid input", "email or password cannot be blank");
       return;
     }
-    await AsyncStorage.setItem('user',res.data.user);
-    await AsyncStorage.setItem('token',res.data.token);
-    await AsyncStorage.removeItem('flag');
+    let res = await LoginApi(email, password, device);
+    if (!res || res.status !== 200) {
+      Alert.alert("Error", "Server Error");
+      return;
+    }
+    await AsyncStorage.setItem("user", res.data.user);
+    await AsyncStorage.setItem("token", res.data.token);
+    await AsyncStorage.setItem("settings",JSON.stringify(res.data.settings))
+    await AsyncStorage.removeItem("flag");
+    await AsyncStorage.removeItem("flag1");
     // console.log(a);
-    naviRegister.reset({
-                index: 0,
-                routes: [{ name: "Home" }],
-              })
-  }
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }],
+    });
+    // navigation.navigate("Home", {}, { replace: true });
+    // navigation.navigate("Home");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -54,9 +60,9 @@ const Login = () => {
           <Text style={styles.emailText}>Mail Address</Text>
           <Input
             placeholder="Email Address"
-            autoCapitalize='none'
-            value = {email}
-            onChangeText={(e)=>setEmail(e)}
+            autoCapitalize="none"
+            value={email}
+            onChangeText={(e) => setEmail(e)}
             leftIcon={
               <MaterialCommunityIcons name="email" size={22} color="purple" />
             }
@@ -67,10 +73,10 @@ const Login = () => {
           <Text style={styles.passText}>Password</Text>
           <Input
             placeholder="Password"
-            autoCapitalize='none'
-            value = {password}
+            autoCapitalize="none"
+            value={password}
             secureTextEntry={true}
-            onChangeText={(e)=>setPassword(e)}
+            onChangeText={(e) => setPassword(e)}
             leftIcon={
               <MaterialCommunityIcons
                 name="form-textbox-password"
@@ -81,7 +87,7 @@ const Login = () => {
           />
           <Text
             style={styles.passForgot}
-            onPress={() => naviRegister.navigate("Forget Password")}
+            onPress={() => navigation.navigate("Forget Password")}
           >
             Forgot your password?
           </Text>
@@ -89,9 +95,7 @@ const Login = () => {
 
         <View style={styles.button}>
           <Button
-
             onPress={HandleLogin}
-
             // onPress={() => naviRegister.navigate("Home")}
             // onPress={() =>
             //   naviRegister.reset({
@@ -144,7 +148,7 @@ const Login = () => {
 
         <View style={styles.button}>
           <Button
-            onPress={() => naviRegister.navigate("Registration")}
+            onPress={() => navigation.navigate("Registration")}
             iconContainerStyle={{ marginRight: 10 }}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{

@@ -1,5 +1,13 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
+    ],
     "name": "TimeTable_App",
     "slug": "TimeTable_App",
     "version": "1.0.0",
@@ -15,13 +23,29 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    },
+      "supportsTablet": true,
+      "infoPlist":{
+        "NSLocation*UsageDescription":"Allow $(PRODUCT_NAME) to use your location",
+        "NSLocationUsageDescription":"Allow $(PRODUCT_NAME) to use your location",
+        "NSLocationWhenInUseUsageDescription":"Allow $(PRODUCT_NAME) to use your location",
+        "NSLocationAlwaysUsageDescription":"Allow $(PRODUCT_NAME) to use your location",
+        "NSLocationAlwaysAndWhenInUseUsageDescription":"Allow $(PRODUCT_NAME) to use your location",
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera.",
+        "NSPhotoLibraryUsageDescription":"Allow $(PRODUCT_NAME) to access your photos",
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      }
+    },  
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+          "ACCESS_BACKGROUND_LOCATION"
+        ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

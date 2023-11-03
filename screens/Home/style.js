@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     flexDirection: "row",
-    //backgroundColor: "gray",
+    marginTop: 40,
     alignItems: "center",
     marginHorizontal: 5,
   },
@@ -70,6 +70,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "gray",
     justifyContent: "center",
+  },
+  containerBottomSheet: {
+    // flex: 1,
+    // padding: 24,
+    justifyContent: "center",
+    // backgroundColor: "grey",
+  },
+  contentContainerBottomSheet: {
+    // flex: 1,
+    alignItems: "center",
   },
 });
 export default styles;

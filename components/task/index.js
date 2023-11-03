@@ -20,6 +20,7 @@ const Task = (props) => {
   console.log(props.id);
   // const { check } = props.status;
   const [checktask, setChecktask] = useState(props.status);
+  let date = null;
   const handleCheck = async () => {
     let token = await AsyncStorage.getItem('token');
 
@@ -38,6 +39,10 @@ const Task = (props) => {
       setChecktask(false);
     }
   };
+  if (props.due) {
+    date = new Date(props.due);
+    date = "due: " + date.getHours() + ":" +date.getMinutes();
+  }
   const checktaskStyles =
     checktask == true ? styles.contentText1Done : styles.contentText1;
   const containerDoneStyle =
@@ -61,7 +66,7 @@ const Task = (props) => {
         <Text style={[styles.contentText1, checktaskStyles]}>
           {props.title}
         </Text>
-        <Text style={styles.contentText2}>09am - 10am</Text>
+        <Text style={styles.contentText2}>{props.due ? date : "09am - 10am" }</Text>
       </View>
       <View style={styles.icon}>
         <MaterialIcons

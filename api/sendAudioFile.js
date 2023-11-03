@@ -1,24 +1,27 @@
 import { serverUrl } from './link';
 import axios from 'axios';
 
-const UpdateTaskApi = async (token, tasks) => {
 
-    var data = JSON.stringify({tasks:tasks});
+
+const SendAudioFile = async (audio) => {
+
+
+
+
       
-      var config = {
+      var config = {  
         method: 'post',
-        url: serverUrl + "/task/update",
+        url: serverUrl + "/audio",
         headers: { 
-          Authorization: "Bearer " + token,
           'Content-Type': 'application/json'
         },
-        data : data
+        data : {audio:audio}
       };
-      console.log(config);
+      // console.log(config);
       try {
         const res = await axios(config)
         console.log(res.data)
-        return res;
+        return res.data;
       } catch (e) {
           console.log(e)
           return e
@@ -26,4 +29,4 @@ const UpdateTaskApi = async (token, tasks) => {
 
 }
 
-export default UpdateTaskApi;
+export default SendAudioFile;
