@@ -20,9 +20,11 @@
     "axios": "^1.5.1",
     "date-fns": "^2.30.0",
     "expo": "^49.0.13",
+    "expo-av": "~13.4.1",
     "expo-background-fetch": "~11.3.0",
     "expo-constants": "^14.4.2",
     "expo-device": "~5.4.0",
+    "expo-file-system": "~15.4.4",
     "expo-location": "~16.1.0",
     "expo-notifications": "~0.20.1",
     "expo-speech": "~11.3.0",
@@ -31,6 +33,7 @@
     "latest-version": "^7.0.0",
     "react": "18.2.0",
     "react-native": "0.72.6",
+    "react-native-calendars": "^1.1302.0",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-maps": "1.7.1",
@@ -42,8 +45,8 @@
     "react-native-vector-icons": "^10.0.0",
     "react-native-virtualized-view": "^1.0.0",
     "rn-crypto-js": "^1.1.2",
-    "expo-av": "~13.4.1",
-    "expo-file-system": "~15.4.4"
+    "expo-camera": "~13.4.4",
+    "expo-image-picker": "~14.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
