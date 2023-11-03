@@ -1,5 +1,13 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
+    ],
     "name": "TimeTable_App",
     "slug": "TimeTable_App",
     "version": "1.0.0",
@@ -22,6 +30,8 @@
         "NSLocationWhenInUseUsageDescription":"Allow $(PRODUCT_NAME) to use your location",
         "NSLocationAlwaysUsageDescription":"Allow $(PRODUCT_NAME) to use your location",
         "NSLocationAlwaysAndWhenInUseUsageDescription":"Allow $(PRODUCT_NAME) to use your location",
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera.",
+        "NSPhotoLibraryUsageDescription":"Allow $(PRODUCT_NAME) to access your photos",
         "UIBackgroundModes": [
           "location",
           "fetch"
