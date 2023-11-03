@@ -22,6 +22,7 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MicroPhone from "./screens/Microphone";
+import DetailTask from "./screens/DetailTask";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -46,7 +47,7 @@ export default function App() {
           projectId: Constants.expoConfig.extra.eas.projectId,
         });
         console.log(token);
-        await AsyncStorage.setItem('device',token.data);
+        await AsyncStorage.setItem("device", token.data);
       } else {
         alert("Must use physical device for Push Notifications");
         return;
@@ -97,6 +98,7 @@ export default function App() {
         <Drawer.Screen name="UpdateProfile" component={UpdateProfile} />
         <Drawer.Screen name="Setting" component={Setting} />
         <Drawer.Screen name="Microphone" component={MicroPhone} />
+        <Drawer.Screen name="DetailTask" component={DetailTask} />
       </Drawer.Navigator>
     );
   };

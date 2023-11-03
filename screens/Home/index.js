@@ -41,6 +41,7 @@ import {
 import BackGround from "../../components/backGround";
 import RealTimeFormatDate from "../../components/realTimeFormatDate";
 import UpdateTaskApi from "../../api/updateTaskApi";
+import DetailTask from "../../screens/DetailTask";
 
 const Home = ({ navigation }) => {
   // console.log();
@@ -89,61 +90,51 @@ const Home = ({ navigation }) => {
       let flag = await AsyncStorage.getItem("flag");
       // console.log(flag);
       if (flag) return;
-      let token = await AsyncStorage.getItem('token');
+      let token = await AsyncStorage.getItem("token");
       let res = await GetTaskApi(token);
-      if(!res || res.status !=200) {
+      if (!res || res.status != 200) {
         console.log("cannot get tasks");
-        
       }
-      res = res.data
+      res = res.data;
       // console.log(res.data);
 
       // let _newTask = res.data
 
       let _newTask = await AsyncStorage.getItem("tasks");
       _newTask = JSON.parse(_newTask);
-      if(!_newTask) _newTask = {};
-      if(!res) res = {};
-      if (_newTask.timestamp && res.timestamp){
+      if (!_newTask) _newTask = {};
+      if (!res) res = {};
+      if (_newTask.timestamp && res.timestamp) {
         if (res.timestamp < _newTask.timestamp) {
-          
           _newTask = _newTask.task;
-          UpdateTaskApi(token,_newTask);
-        } else if(res.timestamp == _newTask.timestamp) {
-          
+          UpdateTaskApi(token, _newTask);
+        } else if (res.timestamp == _newTask.timestamp) {
           _newTask = _newTask.task;
         } else {
-          
           _newTask = res.task;
-          await AsyncStorage.setItem('tasks', JSON.stringify(res));
+          await AsyncStorage.setItem("tasks", JSON.stringify(res));
         }
       } else {
         console.log(res.timestamp);
         if (res.timestamp) {
-          
-          await AsyncStorage.setItem('tasks', JSON.stringify(res));
+          await AsyncStorage.setItem("tasks", JSON.stringify(res));
           _newTask = res.task;
         } else {
-          if(_newTask) {
+          if (_newTask) {
             _newTask.timestamp = Date.now();
           } else {
             _newTask = {
               timestamp: Date.now(),
-              task: []
-            }
+              task: [],
+            };
           }
-          UpdateTaskApi(token,_newTask);
-          
-          await AsyncStorage.setItem('tasks', JSON.stringify(_newTask));
+          UpdateTaskApi(token, _newTask);
+
+          await AsyncStorage.setItem("tasks", JSON.stringify(_newTask));
           _newTask = _newTask.task;
-          
         }
-        
       }
-      
-      
-      
-      
+
       for (const i of _newTask) {
         // console.log(i.title);
         // console.log(i.done);
@@ -165,9 +156,12 @@ const Home = ({ navigation }) => {
   const handleAddTask = async (task) => {
     let t = [...tasklist, task];
     setTasklist(t);
-    let token = await AsyncStorage.getItem('token');
-    await AsyncStorage.setItem("tasks", JSON.stringify({ timestamp:Date.now(), task: t }));
-    UpdateTaskApi(token,{timestamp:Date.now(), task: t });
+    let token = await AsyncStorage.getItem("token");
+    await AsyncStorage.setItem(
+      "tasks",
+      JSON.stringify({ timestamp: Date.now(), task: t })
+    );
+    UpdateTaskApi(token, { timestamp: Date.now(), task: t });
     // let a = await AsyncStorage.getItem('task');
     // console.log(JSON.parse(a).task);
   };
@@ -183,11 +177,14 @@ const Home = ({ navigation }) => {
     }
     console.log(newTasklist[index]);
     setTasklist(newTasklist);
-    AsyncStorage.setItem("tasks", JSON.stringify({timestamp:Date.now(), task: newTasklist }));
-    let token = await AsyncStorage.getItem('token');
+    AsyncStorage.setItem(
+      "tasks",
+      JSON.stringify({ timestamp: Date.now(), task: newTasklist })
+    );
+    let token = await AsyncStorage.getItem("token");
     // console.log(tasklist[index]);
     setviewTaskDone(true);
-    UpdateTaskApi(token,{timestamp:Date.now(), task: newTasklist });
+    UpdateTaskApi(token, { timestamp: Date.now(), task: newTasklist });
   };
 
   const handleViewTaskListDone = () => {
@@ -305,16 +302,20 @@ const Home = ({ navigation }) => {
               console.log(item.done);
               if (!item.done)
                 return (
-                  <Task
-                    key={index}
-                    id={index}
-                    _id={item._id}
-                    title={item.title}
-                    status={item.done}
-                    due={item.due}
-                    onUpdate={hanldeUpdate}
-                    trigger={triggerF}
-                  />
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("DetailTask")}
+                  >
+                    <Task
+                      key={index}
+                      id={index}
+                      _id={item._id}
+                      title={item.title}
+                      status={item.done}
+                      due={item.due}
+                      onUpdate={hanldeUpdate}
+                      trigger={triggerF}
+                    />
+                  </TouchableOpacity>
                 );
             })}
             <View style={styles.bodyDone}>
