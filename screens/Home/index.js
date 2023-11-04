@@ -42,7 +42,7 @@ import BackGround from "../../components/backGround";
 import RealTimeFormatDate from "../../components/realTimeFormatDate";
 import UpdateTaskApi from "../../api/updateTaskApi";
 import DetailTask from "../../screens/DetailTask";
-
+import { useIsFocused } from '@react-navigation/native'
 const Home = ({ navigation }) => {
   // console.log();
   async function registerForPushNotificationsAsync() {
@@ -83,12 +83,15 @@ const Home = ({ navigation }) => {
 
   const [viewTaskDone, setviewTaskDone] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const isFocused = useIsFocused()
   useEffect(() => {
     async function fetchToken() {
       // console.log(tasklist);
-      // await AsyncStorage.removeItem("task");
+      // await AsyncStorage.removeItem("tasks");
+      console.log("focus"+ isFocused);
+      if (!isFocused) return;
       let flag = await AsyncStorage.getItem("flag");
-      // console.log(flag);
+      console.log(flag);
       if (flag) return;
       let token = await AsyncStorage.getItem("token");
       let res = await GetTaskApi(token);
@@ -151,7 +154,7 @@ const Home = ({ navigation }) => {
       // console.log(tasklist);
     }
     fetchToken();
-  });
+  },[isFocused]);
 
   const handleAddTask = async (task) => {
     let t = [...tasklist, task];
@@ -303,7 +306,9 @@ const Home = ({ navigation }) => {
               if (!item.done)
                 return (
                   <TouchableOpacity
-                    onPress={() => navigation.navigate("DetailTask")}
+                    onPress={() => navigation.navigate("DetailTask" , {
+                      task:item
+                    }) }
                   >
                     <Task
                       key={index}

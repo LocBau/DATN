@@ -23,6 +23,9 @@ import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MicroPhone from "./screens/Microphone";
 import DetailTask from "./screens/DetailTask";
+import CameraScreen from "./components/camera";
+import AccessGallery from "./components/accessGallery";
+import AddLocation from "./components/addLocation";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -99,6 +102,9 @@ export default function App() {
         <Drawer.Screen name="Setting" component={Setting} />
         <Drawer.Screen name="Microphone" component={MicroPhone} />
         <Drawer.Screen name="DetailTask" component={DetailTask} />
+        <Drawer.Screen name="Camera" component={CameraScreen} />
+        <Drawer.Screen name="AccessGallery" component={AccessGallery} />
+        <Drawer.Screen name="AddLocation" component={AddLocation} />
       </Drawer.Navigator>
     );
   };
@@ -117,7 +123,7 @@ export default function App() {
           headerTitleAlign: "center",
         }}
       >
-        {/* <Stack.Screen name="Home" component={MapScreen} /> */}
+        {/* <Stack.Screen name="Home" component={AddLocation} /> */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen
           name="Home"

@@ -39,11 +39,40 @@ import BSMDueTo from "../../components/bsmDueTo";
 import BSMRepeat from "../../components/bsmRepeat";
 import BSMAttach from "../../components/bsmAttachFile";
 import { bs } from "date-fns/locale";
-const DetailTask = () => {
+import UpdateTaskFrontEnd from "../../api/updateTaskFrontEnd";
+import { useIsFocused } from "@react-navigation/native";
+const DetailTask = ({ route, navigation }) => {
   /**
    * code using for BottomSheetModalReminder:
    */
   // ref;
+  const isFocused = useIsFocused();
+
+  useEffect(()=>{
+    setTask(route.params.task);
+    setLocation(route.params.task.location);
+    console.log("detail focus"+isFocused);
+  },[isFocused])
+
+  const [task, setTask] = useState(route.params.task);
+  const [note, setNote] = useState("");
+  const [title, setTitle] = useState(route.params.task.title);
+  const [due, setdue] = useState(route.params.task.due);
+  const [location, setLocation] = useState(route.params.task.location);
+
+  console.log(task);
+  const convertDate = (date) => {
+    console.log(date);
+    if (!date) return "Not set";
+    if(typeof(date)=='string') {
+      let d = date.split('T');
+      let t = new Date(date);
+      return d[0] + " / " +t.toTimeString().split(" ")[0];
+    }
+    
+    // if (typeo)
+
+  }
   const bottomSheetModalReminderRef = useRef(null);
   // state
   const [isSheetClosedReminder, setIsSheetClosedReminder] = useState(true);
@@ -55,6 +84,17 @@ const DetailTask = () => {
     setIsSheetClosedReminder(false);
     bottomSheetModalReminderRef.current?.present();
   }, []);
+
+ 
+
+  const handleSaveTask = async () => {
+    let update = task;
+    update.title = title;
+    update.due = due;
+    update.note = note;
+    update.location = location;
+    await UpdateTaskFrontEnd(update);
+  }
 
   const handleSheetClose = () => {
     console.log("da bam");
@@ -97,9 +137,8 @@ const DetailTask = () => {
   const [selectedItemDueTo, setSelectedItemDueTo] = useState(null);
 
   const handleItemSelectDueTo = (item) => {
-    setSelectedItemDueTo(item);
-    console.log("component cha:", item);
-    setSelectedItemDueTo(item);
+    console.log(item.toISOString());
+    setdue(item.toISOString());
   };
   /*code using for BottomSheetModalDueTo:*/
 
@@ -148,6 +187,12 @@ const DetailTask = () => {
     setSelectedItemAttach(item);
   };
   /*code using for BottomSheetModalRepeat:*/
+  
+  const handlePresentModalPressLocation= () => {
+    navigation.navigate("AddLocation" , {
+      task:task
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -160,6 +205,8 @@ const DetailTask = () => {
           <Input
             color="blue"
             placeholder="Title task"
+            value={title}
+            onChangeText={(text)=>setTitle(text)}
             leftIcon={
               <MaterialCommunityIcons
                 name="format-title"
@@ -183,6 +230,19 @@ const DetailTask = () => {
           />
           <Text>Reminder me</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.reminder}
+          onPress={handlePresentModalPressLocation}
+        >
+          <MaterialIcons
+            name="circle-notifications"
+            size={25}
+            color="purple"
+            marginHorizontal={5}
+            marginVertical={5}
+          />
+          <Text>{location ? location.name : "Not set" }</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.dueto}
@@ -195,7 +255,11 @@ const DetailTask = () => {
             marginHorizontal={5}
             marginVertical={5}
           />
-          <Text>Due to</Text>
+          <Text
+          >Due:  {
+            due? convertDate(due) : "Not set"
+            }
+            </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.repeat}
@@ -231,12 +295,16 @@ const DetailTask = () => {
             marginHorizontal={5}
             marginVertical={5}
           />
-          <TextInput multiline> Note</TextInput>
+          <TextInput multiline
+          value={note}
+          onChangeText={(e)=>setNote(e)}
+          /> 
         </View>
 
         <View style={styles.button}>
           <Button
             iconContainerStyle={{ marginRight: 10 }}
+            onPress={handleSaveTask}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{
               backgroundColor: "rgb(179, 55, 225)",
@@ -283,7 +351,7 @@ const DetailTask = () => {
             // onChange={handleSheetChangesDueTo}
             // onClose={handleSheetClose}
           >
-            <BSMDueTo onItemSelectDueTo={handleItemSelectDueTo} />
+            <BSMDueTo onItemSelectDueTo={handleItemSelectDueTo} due={due} />
           </BottomSheetModal>
         </View>
         <View style={styles.containerBottomSheetRepeat}>
@@ -310,9 +378,9 @@ const DetailTask = () => {
             // onChange={handleSheetChangesRepeat}
             // onClose={handleSheetClose}
           >
-            <BSMAttach onItemSelectAttach={handleItemSelectAttach} />
+            <BSMAttach navigation={navigation} task={task} />
           </BottomSheetModal>
-        </View>
+        </View> 
       </BottomSheetModalProvider>
     </View>
   );

@@ -73,7 +73,9 @@ const DrawerContentComponent = () => {
             icon={() => <Ionicons name="location" size={22} color="purple" />}
             label="Task Location"
             onPress={() => {
-              navigation.navigate("TaskLocation");
+              navigation.navigate("TaskLocation", {
+                task:null
+              });
             }}
           />
         </Drawer.Section>

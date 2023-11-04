@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button, Image, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UpdateTaskFrontEnd from '../../api/updateTaskFrontEnd';
 
-export default function AccessGallery(props) {
+export default function AccessGallery({navigation, route}) {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
@@ -18,18 +19,29 @@ export default function AccessGallery(props) {
     // console.log(result);
 
     if (!result.canceled) {
-      // let tasks = await AsyncStorage.getItem('tasks');
-      // tasks = JSON.parse(tasks);
-      // tasks = tasks.task;
-
       setImage(result.assets[0].uri);
     }
   };
+
+  const handleSave = async () => {
+    let task = route.params.task;
+    if(task.attachments) {
+      task.attachments.push(image)
+    } else {
+      task.attachments = [image]
+    }
+
+    // UpdateTaskFrontEnd(task);
+    navigation.navigate("DetailTask" , {
+      task:task
+    })
+  }
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      {image && <Button title="Save image" onPress={handleSave} />}
     </View>
   );
 }

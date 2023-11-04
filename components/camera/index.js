@@ -3,24 +3,32 @@ import React from 'react'
 import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground} from 'react-native'
 import {Camera} from 'expo-camera'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import UpdateTaskFrontEnd from '../../api/updateTaskFrontEnd'
 
 let camera = Camera
-export default function CameraScreen() {
-  const [startCamera, setStartCamera] = React.useState(false)
+export default function CameraScreen({navigation, route}) {
   const [previewVisible, setPreviewVisible] = React.useState(false)
   const [capturedImage, setCapturedImage] = React.useState(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
+  console.log(route);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
 
-  const __startCamera = async () => {
-    const {status} = await Camera.requestCameraPermissionsAsync()
-    console.log(status)
-    if (status === 'granted') {
-      setStartCamera(true)
-    } else {
-      Alert.alert('Access denied')
-    }
+  if (!permission) {
+    // Camera permissions are still loading
+    return <View />;
   }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
+  
   const __takePicture = async () => {
     const photo  = await camera.takePictureAsync()
     console.log(photo)
@@ -32,7 +40,7 @@ export default function CameraScreen() {
   const __retakePicture = () => {
     setCapturedImage(null)
     setPreviewVisible(false)
-    __startCamera()
+
   }
   const __handleFlashMode = () => {
     if (flashMode === 'on') {
@@ -51,18 +59,24 @@ export default function CameraScreen() {
     }
   }
   const __savePhoto = async () => {
-    // let tasks = await AsyncStorage.getItem('tasks');
-    // tasks = JSON.parse(tasks);
-    // tasks = tasks.task;
-    // for (const i of tasks) {
-    //   // props id compare add task here
-    // }
+    let task = route.params.task;
+    if(task.attachments) {
+      task.attachments.push(capturedImage.uri)
+    } else {
+      task.attachments = [capturedImage.uri]
+    }
+    console.log(task);
+    console.log(capturedImage);
+    // UpdateTaskFrontEnd(task);
+    navigation.navigate("DetailTask" , {
+      task:task
+    })
 
 
   }
   return (
     <View style={styles.container}>
-      {startCamera ? (
+      {permission ? (
         <View
           style={{
             flex: 1,
@@ -177,18 +191,7 @@ export default function CameraScreen() {
             alignItems: 'center'
           }}
         >
-          <TouchableOpacity
-            onPress={__startCamera}
-            style={{
-              width: 130,
-              borderRadius: 4,
-              backgroundColor: '#14274e',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 40
-            }}
-          >
+          
             <Text
               style={{
                 color: '#fff',
@@ -196,9 +199,9 @@ export default function CameraScreen() {
                 textAlign: 'center'
               }}
             >
-              Take picture
+              No permission
             </Text>
-          </TouchableOpacity>
+
         </View>
       )}
 

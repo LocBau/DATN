@@ -2,23 +2,37 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-const BSMAttach = () => {
+const BSMAttach = ({navigation, task}) => {
+
   return (
     <View style={styles.container}>
       <View style={styles.title}>
         <Text style={styles.title}> Upload Attach Files</Text>
       </View>
-      <TouchableOpacity style={[styles.row]}>
+      <TouchableOpacity style={[styles.row]}
+                          onPress={() => {
+                            navigation.navigate("Camera" , {
+                            task:task
+                          })}
+                        }
+      >
         <MaterialCommunityIcons
           style={[styles.row11]}
           name="calendar-today"
           size={30}
           color="purple"
+          
         />
         <Text style={[styles.row12]}>Take a picture</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.row]}>
+      <TouchableOpacity style={[styles.row]}
+      onPress={() => {
+        navigation.navigate("AccessGallery" , {
+        task:task
+      })}
+    }
+      >
         <MaterialCommunityIcons
           style={[styles.row11]}
           name="calendar-week"
