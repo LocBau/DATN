@@ -9,6 +9,7 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   LogBox,
+  Alert,
 } from "react-native";
 import React, {
   useState,
@@ -51,26 +52,48 @@ const DetailTask = ({ route, navigation }) => {
   useEffect(()=>{
     setTask(route.params.task);
     setLocation(route.params.task.location);
+    setRepeat(route.params.task.repeat);
+    setreminder(route.params.task.reminder);
+    setdue(route.params.task.due);
+    setTitle(route.params.task.title);
+    setNote(route.params.task.note);
+
     console.log("detail focus"+isFocused);
   },[isFocused])
 
   const [task, setTask] = useState(route.params.task);
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState(route.params.note);
   const [title, setTitle] = useState(route.params.task.title);
   const [due, setdue] = useState(route.params.task.due);
+  const [reminder, setreminder] = useState(route.params.task.reminder);
   const [location, setLocation] = useState(route.params.task.location);
+  const [repeat, setRepeat] = useState(route.params.task.repeat);
 
-  console.log(task);
+  const convertRepeat = (rep) => {
+    if (!rep || !rep.type || !rep.hour) return "Not set";
+    if (rep.type=='Daily') {
+      let t = new Date(rep.hour);
+      return "Daily: " + t.toTimeString().split(" ")[0];
+    }
+    if (rep.type=='Weekly') {
+      let t = new Date(rep.hour);
+      return "Weekly: Every Monday " + t.toTimeString().split(" ")[0];
+    }
+    if (rep.type=='Monthly') {
+      let t = new Date(rep.hour);
+      return "Monthly: Every 15th " + t.toTimeString().split(" ")[0];
+    }
+  }
+
   const convertDate = (date) => {
     console.log(date);
     if (!date) return "Not set";
     if(typeof(date)=='string') {
-      let d = date.split('T');
+      let d = new Date(date);
       let t = new Date(date);
-      return d[0] + " / " +t.toTimeString().split(" ")[0];
+      return t.toLocaleDateString() + " - " +t.toTimeString().split(" ")[0];
     }
-    
-    // if (typeo)
+
 
   }
   const bottomSheetModalReminderRef = useRef(null);
@@ -93,7 +116,13 @@ const DetailTask = ({ route, navigation }) => {
     update.due = due;
     update.note = note;
     update.location = location;
+    update.repeat = repeat;
+    update.reminder = reminder;
     await UpdateTaskFrontEnd(update);
+    console.log("saved");
+    navigation.navigate("HomeDrawer", {
+      task:null
+    });
   }
 
   const handleSheetClose = () => {
@@ -112,9 +141,30 @@ const DetailTask = ({ route, navigation }) => {
   const [selectedItemReminder, setSelectedItemReminder] = useState(null);
 
   const handleItemSelectReminder = (item) => {
-    selectedItemReminder(item);
-    console.log("component cha:", item);
-    setSelectedItemReminder(item);
+    if(!due) {
+      alert("cannot set reminder if due is not set");
+      return;
+    }
+    let check = new Date(due);
+    if(check.getTime()-item.getTime() <= 360000) {
+      console.log(check.getTime());
+      console.log(item.getTime());
+      console.log(check.getTime()-item.getTime() );
+      alert("cannot set reminder prior less than 1 hour");
+      return;
+
+    }
+    if (check.getTime()-Date.now() <= 0){
+      alert("cannot set reminder when due is passed");
+      return;
+    }
+
+    if (item.getTime()-Date.now() <= 0){
+      alert("cannot set reminder when prior than moment");
+      return;
+    }
+    console.log(item.toISOString());
+    setreminder(item.toISOString());
   };
   /**
    * code using for BottomSheetModalReminder:
@@ -159,9 +209,7 @@ const DetailTask = ({ route, navigation }) => {
   const [selectedItemRepeat, setSelectedItemRepeat] = useState(null);
 
   const handleItemSelectRepeat = (item) => {
-    setSelectedItemRepeat(item);
-    console.log("component cha:", item);
-    setSelectedItemRepeat(item);
+    setRepeat(item);
   };
   /*code using for BottomSheetModalRepeat:*/
 
@@ -228,7 +276,7 @@ const DetailTask = ({ route, navigation }) => {
             marginHorizontal={5}
             marginVertical={5}
           />
-          <Text>Reminder me</Text>
+          <Text>Reminder: {reminder? convertDate(reminder) : "Not set"}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.reminder}
@@ -272,7 +320,7 @@ const DetailTask = ({ route, navigation }) => {
             marginHorizontal={5}
             marginVertical={5}
           />
-          <Text>Repeat</Text>
+          <Text>Repeat: {convertRepeat(repeat)}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.attackfile}
@@ -338,7 +386,7 @@ const DetailTask = ({ route, navigation }) => {
             // onChange={handleSheetChangesReminder}
             // onClose={handleSheetClose}
           >
-            <BSMReminder onItemSelectReminder={handleItemSelectReminder} />
+            <BSMReminder onItemSelectReminder={handleItemSelectReminder} reminder={reminder} />
           </BottomSheetModal>
         </View>
         <View style={styles.containerBottomSheetDueTo}>
@@ -364,7 +412,7 @@ const DetailTask = ({ route, navigation }) => {
             // onChange={handleSheetChangesRepeat}
             // onClose={handleSheetClose}
           >
-            <BSMRepeat onItemSelectRepeat={handleItemSelectRepeat} />
+            <BSMRepeat onItemSelectRepeat={handleItemSelectRepeat} repeat={repeat} />
           </BottomSheetModal>
         </View>
 

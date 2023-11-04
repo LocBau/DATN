@@ -22,7 +22,7 @@ export default function AccessGallery({navigation, route}) {
       setImage(result.assets[0].uri);
     }
   };
-
+  pickImage();
   const handleSave = async () => {
     let task = route.params.task;
     if(task.attachments) {
@@ -42,6 +42,9 @@ export default function AccessGallery({navigation, route}) {
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
       {image && <Button title="Save image" onPress={handleSave} />}
+      <Button title="Back to task" onPress={()=>navigation.navigate("DetailTask",{
+      task:route.params.task
+    })} />
     </View>
   );
 }

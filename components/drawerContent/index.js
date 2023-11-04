@@ -34,8 +34,8 @@ const DrawerContentComponent = () => {
             }}
           />
           <View style={styles.userInfoSection2}>
-            <Title style={styles.title}>Tran Bau Loc</Title>
-            <Caption style={styles.caption}>@loc.tran</Caption>
+            <Title style={styles.title}>Trung Tran</Title>
+            <Caption style={styles.caption}>tqtrung1210@gmail.com</Caption>
           </View>
         </View>
 

@@ -25,7 +25,7 @@ import MicroPhone from "./screens/Microphone";
 import DetailTask from "./screens/DetailTask";
 import CameraScreen from "./components/camera";
 import AccessGallery from "./components/accessGallery";
-import AddLocation from "./components/addLocation";
+import AddLocation from "./components/addLocation/addLocation";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();

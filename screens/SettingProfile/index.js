@@ -89,8 +89,8 @@ const Setting = () => {
           />
         </View>
         <View style={styles.viewTextUser}>
-          <Text style={styles.usersName}>Tran Bau Loc</Text>
-          <Text style={styles.email}>loc.tran86@hcmut.edu.vn</Text>
+          <Text style={styles.usersName}>Trung Tran</Text>
+          <Text style={styles.email}>tqtrung1210@gmail.com</Text>
         </View>
         <View style={styles.viewButton}>
           <Button

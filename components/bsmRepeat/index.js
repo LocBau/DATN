@@ -1,8 +1,30 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+const BSMRepeat = ({onItemSelectRepeat, repeat}) => {
 
-const BSMRepeat = () => {
+  handleDaily = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    onItemSelectRepeat({
+      type:"Daily",
+      hour: currentDate
+    })
+  }
+  handleWeekly = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    onItemSelectRepeat({
+      type:"Weekly",
+      hour: currentDate
+    })
+  }
+  handlMonthly = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    onItemSelectRepeat({
+      type:"Monthly",
+      hour: currentDate
+    })
+  }
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -17,8 +39,16 @@ const BSMRepeat = () => {
           marginVertical={5}
         />
         <Text style={[styles.row1, styles.row12]}>Daily</Text>
-        <Text style={[styles.row1, styles.row13]}>09:00 </Text>
-        <Text style={[styles.row1, styles.row14]}>Next day </Text>
+        <Text style={[styles.row1, styles.row12]}>{(repeat && repeat.type=="Daily" && repeat.hour) ? "✅" : "" }</Text>
+        <Text style={[styles.row1, styles.row12]}></Text>
+        <DateTimePicker
+            testID="dateTimePicker"
+            value={(repeat && repeat.type=="Daily" && repeat.hour) ? new Date(repeat.hour) : new Date('2023-11-05T02:00:00.000Z')}
+            mode="time"
+            is24Hour={true}
+            onChange={handleDaily}
+          />
+
       </TouchableOpacity>
       <TouchableOpacity style={[styles.row1, styles.row11]}>
         <MaterialCommunityIcons
@@ -28,8 +58,17 @@ const BSMRepeat = () => {
           marginHorizontal={5}
         />
         <Text style={[styles.row1, styles.row12]}>Weekly</Text>
-        <Text style={[styles.row1, styles.row13]}>09:00 </Text>
-        <Text style={[styles.row1, styles.row14]}>next-week </Text>
+        <Text style={[styles.row1, styles.row12]}>{(repeat && repeat.type=="Weekly" && repeat.hour) ? "✅" : "" }</Text>
+        <Text style={[styles.row1, styles.row12]}>Monday</Text>
+        
+        <DateTimePicker
+            testID="dateTimePicker"
+            value={(repeat && repeat.type=="Weekly" && repeat.hour) ? new Date(repeat.hour) : new Date('2023-11-05T02:00:00.000Z')}
+            mode="time"
+            is24Hour={true}
+            onChange={handleWeekly}
+          />
+
       </TouchableOpacity>
       <TouchableOpacity style={[styles.row1, styles.row11]}>
         <MaterialCommunityIcons
@@ -39,8 +78,16 @@ const BSMRepeat = () => {
           marginHorizontal={5}
         />
         <Text style={[styles.row1, styles.row12]}>Monthly</Text>
-        <Text style={[styles.row1, styles.row13]}>09:00 </Text>
-        <Text style={[styles.row1, styles.row14]}>next-mm </Text>
+        <Text style={[styles.row1, styles.row12]}>{(repeat && repeat.type=="Monthly" && repeat.hour) ? "✅" : "" }</Text>
+        <Text style={[styles.row1, styles.row12]}>15th</Text>
+        <DateTimePicker
+            testID="dateTimePicker"
+            value={(repeat && repeat.type=="Monthly" && repeat.hour) ? new Date(repeat.hour) : new Date('2023-11-05T02:00:00.000Z')}
+            mode="time"
+            is24Hour={true}
+            onChange={handlMonthly}
+          />
+
       </TouchableOpacity>
     </View>
   );

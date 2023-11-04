@@ -1,9 +1,8 @@
 import {StatusBar} from 'expo-status-bar'
-import React from 'react'
-import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Button} from 'react-native'
 import {Camera} from 'expo-camera'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import UpdateTaskFrontEnd from '../../api/updateTaskFrontEnd'
+
 
 let camera = Camera
 export default function CameraScreen({navigation, route}) {
@@ -71,8 +70,12 @@ export default function CameraScreen({navigation, route}) {
     navigation.navigate("DetailTask" , {
       task:task
     })
+  }
+  const backtoTask =  () => {
 
-
+    navigation.navigate("DetailTask" , {
+      task:route.params.task
+    })
   }
   return (
     <View style={styles.container}>
@@ -84,7 +87,7 @@ export default function CameraScreen({navigation, route}) {
           }}
         >
           {previewVisible && capturedImage ? (
-            <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
+            <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture}  backtoTask={backtoTask}/>
           ) : (
             
             <Camera
@@ -146,6 +149,27 @@ export default function CameraScreen({navigation, route}) {
                       {cameraType === 'front' ? '🤳' : '📷'}
                     </Text>
                   </TouchableOpacity>
+                  <TouchableOpacity
+              onPress={()=> {    navigation.navigate("DetailTask" , {
+                task:route.params.task
+              })}}
+              style={{
+                width: 130,
+                height: 40,
+
+                alignItems: 'center',
+                borderRadius: 4
+              }}
+            >
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: 20
+                }}
+              >
+                Back to task
+              </Text>
+            </TouchableOpacity>
                 </View>
                 <View
                   style={{
@@ -201,6 +225,27 @@ export default function CameraScreen({navigation, route}) {
             >
               No permission
             </Text>
+            <TouchableOpacity
+              onPress={()=> {    navigation.navigate("DetailTask" , {
+                task:route.params.task
+              })}}
+              style={{
+                width: 130,
+                height: 40,
+
+                alignItems: 'center',
+                borderRadius: 4
+              }}
+            >
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: 20
+                }}
+              >
+                Back to task
+              </Text>
+            </TouchableOpacity>
 
         </View>
       )}
@@ -219,7 +264,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const CameraPreview = ({photo, retakePicture, savePhoto}) => {
+const CameraPreview = ({photo, retakePicture, savePhoto ,backtoTask}) => {
   console.log('sdsfds', photo)
   return (
     <View
@@ -285,7 +330,26 @@ const CameraPreview = ({photo, retakePicture, savePhoto}) => {
                   fontSize: 20
                 }}
               >
-                save photo
+                Save photo
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={backtoTask}
+              style={{
+                width: 130,
+                height: 40,
+
+                alignItems: 'center',
+                borderRadius: 4
+              }}
+            >
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: 20
+                }}
+              >
+                Back to task
               </Text>
             </TouchableOpacity>
           </View>

@@ -5,7 +5,7 @@ import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import { Input } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
-import UpdateTaskFrontEnd from '../api/updateTaskFrontEnd';
+import UpdateTaskFrontEnd from '../../api/updateTaskFrontEnd';
 export default function AddLocation({navigation, route}) {
 
     const [flag1, setFlag1] = useState(true);
