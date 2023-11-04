@@ -5,8 +5,9 @@ import {StyleSheet, Alert, View, Text, TouchableOpacity, Button} from 'react-nat
 
 
 const AgendaItem = (props) => {
-  const {item} = props;
+  const {item, info} = props;
   console.log(item);
+
   const testIDs = {
     menu: {
       CONTAINER: 'menu',
@@ -34,11 +35,11 @@ const AgendaItem = (props) => {
     weekCalendar: {CONTAINER: 'weekCalendar'}
   };
   const buttonPressed = useCallback(() => {
-    Alert.alert('Show me more');
+    info(item);
   }, []);
 
   const itemPressed = useCallback(() => {
-    Alert.alert(item.title);
+    info(item);
   }, []);
 
   if (!item) {

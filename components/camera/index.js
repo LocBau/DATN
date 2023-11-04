@@ -59,10 +59,10 @@ export default function CameraScreen({navigation, route}) {
   }
   const __savePhoto = async () => {
     let task = route.params.task;
-    if(task.attachments) {
-      task.attachments.push(capturedImage.uri)
+    if(task.photos) {
+      task.photos.push(capturedImage.uri)
     } else {
-      task.attachments = [capturedImage.uri]
+      task.photos = [capturedImage.uri]
     }
     console.log(task);
     console.log(capturedImage);

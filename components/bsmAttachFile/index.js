@@ -41,7 +41,12 @@ const BSMAttach = ({navigation, task}) => {
         />
         <Text style={[styles.row12]}>Select From Gallery</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.row]}>
+      <TouchableOpacity style={[styles.row]}
+            onPress={() => {
+              navigation.navigate("LinkFile" , {
+              task:task
+            })}}
+      >
         <MaterialCommunityIcons
           style={[styles.row11]}
           name="calendar-month"

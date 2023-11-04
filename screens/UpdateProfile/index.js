@@ -18,11 +18,11 @@ const UpdateProfile = () => {
           uri: "https://images.unsplash.com/photo-1679679008383-6f778fe07828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2127&q=80",
         }}
       />
-      <Text style={styles.avatarText}>Bau Loc</Text>
+      <Text style={styles.avatarText}>Trung Tran</Text>
       <View style={styles.name}>
         <Text style={styles.nameText}>Name</Text>
         <Input
-          placeholder="Tran Bau Loc"
+          placeholder="Trung Tran"
           leftIcon={
             <MaterialCommunityIcons name="account" size={24} color="purple" />
           }
@@ -31,7 +31,7 @@ const UpdateProfile = () => {
       <View style={styles.email}>
         <Text style={styles.emailText}>Email</Text>
         <Input
-          placeholder="loc.tran86@hcmut.edu.vn"
+          placeholder="tqtrung1210@gmail.com"
           leftIcon={
             <MaterialCommunityIcons name="email" size={24} color="purple" />
           }

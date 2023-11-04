@@ -11,7 +11,7 @@ const timeToString = (time) => {
 
 
 
-const Calendar = () => {
+const Calendar = ({navigation, route}) => {
     const testIDs = {
       menu: {
         CONTAINER: 'menu',
@@ -77,6 +77,12 @@ const Calendar = () => {
     const [items, setItems] = useState([]);
     const[load, setLoad] = useState(false);
 
+    const info = (item) => {
+      console.log(item.data);
+      navigation.navigate('DetailTask' ,{
+        task:item.data
+      })
+    }
     useEffect(()=> {
       console.log(items);
       if(load) return;
@@ -146,7 +152,7 @@ const Calendar = () => {
     //   return <AgendaItem item={item}/>
     // }
     const renderItem = useCallback(({item}) => {
-      return <AgendaItem item={item}/>;
+      return <AgendaItem item={item} info={info}/>;
     }, []);
 
       return (

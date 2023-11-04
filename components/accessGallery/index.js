@@ -25,10 +25,10 @@ export default function AccessGallery({navigation, route}) {
   pickImage();
   const handleSave = async () => {
     let task = route.params.task;
-    if(task.attachments) {
-      task.attachments.push(image)
+    if(task.photos) {
+      task.photos.push(image)
     } else {
-      task.attachments = [image]
+      task.photos = [image]
     }
 
     // UpdateTaskFrontEnd(task);
