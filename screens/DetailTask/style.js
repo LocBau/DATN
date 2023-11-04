@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    felx: 1,
+    flex: 1,
     marginTop: 50,
     alignItems: "center",
     // justifyContent: "center",
@@ -73,7 +73,18 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 20,
   },
-  containerBottomSheet: {},
+  containerBottomSheetReminder: {
+    flex: 1,
+  },
+  containerBottomSheetDueTo: {
+    flex: 1,
+  },
+  containerBottomSheetRepeat: {
+    flex: 1,
+  },
+  containerBottomSheetAttach: {
+    flex: 1,
+  },
 });
 
 export default styles;

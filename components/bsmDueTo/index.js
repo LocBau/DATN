@@ -2,11 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-const BSMReminder = () => {
+const BSMDueTo = () => {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
-        <Text style={styles.title}> Reminder Me</Text>
+        <Text style={styles.title}> Due To</Text>
       </View>
       <TouchableOpacity style={[styles.row1, styles.row11]}>
         <MaterialCommunityIcons
@@ -53,7 +53,7 @@ const BSMReminder = () => {
   );
 };
 
-export default BSMReminder;
+export default BSMDueTo;
 
 const styles = StyleSheet.create({
   container: {
