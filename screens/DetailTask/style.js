@@ -32,6 +32,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
   },
+  location: {
+    flexDirection: "row",
+    width: "100%",
+    height: 40,
+    borderColor: "gray",
+    borderBottomWidth: 2,
+    alignContent: "center",
+    alignItems: "center",
+    marginVertical: 5,
+  },
   dueto: {
     flexDirection: "row",
     width: "100%",
