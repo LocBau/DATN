@@ -49,7 +49,7 @@ const DetailTask = ({ route, navigation }) => {
   // ref;
   const isFocused = useIsFocused();
 
-  useEffect(()=>{
+  useEffect(() => {
     setTask(route.params.task);
     setLocation(route.params.task.location);
     setRepeat(route.params.task.repeat);
@@ -58,8 +58,8 @@ const DetailTask = ({ route, navigation }) => {
     setTitle(route.params.task.title);
     setNote(route.params.task.note);
 
-    console.log("detail focus"+isFocused);
-  },[isFocused])
+    console.log("detail focus" + isFocused);
+  }, [isFocused]);
 
   const [task, setTask] = useState(route.params.task);
   const [note, setNote] = useState(route.params.note);
@@ -71,31 +71,29 @@ const DetailTask = ({ route, navigation }) => {
 
   const convertRepeat = (rep) => {
     if (!rep || !rep.type || !rep.hour) return "Not set";
-    if (rep.type=='Daily') {
+    if (rep.type == "Daily") {
       let t = new Date(rep.hour);
       return "Daily: " + t.toTimeString().split(" ")[0];
     }
-    if (rep.type=='Weekly') {
+    if (rep.type == "Weekly") {
       let t = new Date(rep.hour);
       return "Weekly: Every Monday " + t.toTimeString().split(" ")[0];
     }
-    if (rep.type=='Monthly') {
+    if (rep.type == "Monthly") {
       let t = new Date(rep.hour);
       return "Monthly: Every 15th " + t.toTimeString().split(" ")[0];
     }
-  }
+  };
 
   const convertDate = (date) => {
     console.log(date);
     if (!date) return "Not set";
-    if(typeof(date)=='string') {
+    if (typeof date == "string") {
       let d = new Date(date);
       let t = new Date(date);
-      return t.toLocaleDateString() + " - " +t.toTimeString().split(" ")[0];
+      return t.toLocaleDateString() + " - " + t.toTimeString().split(" ")[0];
     }
-
-
-  }
+  };
   const bottomSheetModalReminderRef = useRef(null);
   // state
   const [isSheetClosedReminder, setIsSheetClosedReminder] = useState(true);
@@ -108,8 +106,6 @@ const DetailTask = ({ route, navigation }) => {
     bottomSheetModalReminderRef.current?.present();
   }, []);
 
- 
-
   const handleSaveTask = async () => {
     let update = task;
     update.title = title;
@@ -121,9 +117,9 @@ const DetailTask = ({ route, navigation }) => {
     await UpdateTaskFrontEnd(update);
     console.log("saved");
     navigation.navigate("HomeDrawer", {
-      task:null
+      task: null,
     });
-  }
+  };
 
   const handleSheetClose = () => {
     console.log("da bam");
@@ -141,25 +137,24 @@ const DetailTask = ({ route, navigation }) => {
   const [selectedItemReminder, setSelectedItemReminder] = useState(null);
 
   const handleItemSelectReminder = (item) => {
-    if(!due) {
+    if (!due) {
       alert("cannot set reminder if due is not set");
       return;
     }
     let check = new Date(due);
-    if(check.getTime()-item.getTime() <= 360000) {
+    if (check.getTime() - item.getTime() <= 360000) {
       console.log(check.getTime());
       console.log(item.getTime());
-      console.log(check.getTime()-item.getTime() );
+      console.log(check.getTime() - item.getTime());
       alert("cannot set reminder prior less than 1 hour");
       return;
-
     }
-    if (check.getTime()-Date.now() <= 0){
+    if (check.getTime() - Date.now() <= 0) {
       alert("cannot set reminder when due is passed");
       return;
     }
 
-    if (item.getTime()-Date.now() <= 0){
+    if (item.getTime() - Date.now() <= 0) {
       alert("cannot set reminder when prior than moment");
       return;
     }
@@ -235,12 +230,12 @@ const DetailTask = ({ route, navigation }) => {
     setSelectedItemAttach(item);
   };
   /*code using for BottomSheetModalRepeat:*/
-  
-  const handlePresentModalPressLocation= () => {
-    navigation.navigate("AddLocation" , {
-      task:task
-    })
-  }
+
+  const handlePresentModalPressLocation = () => {
+    navigation.navigate("AddLocation", {
+      task: task,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -254,7 +249,7 @@ const DetailTask = ({ route, navigation }) => {
             color="blue"
             placeholder="Title task"
             value={title}
-            onChangeText={(text)=>setTitle(text)}
+            onChangeText={(text) => setTitle(text)}
             leftIcon={
               <MaterialCommunityIcons
                 name="format-title"
@@ -276,20 +271,20 @@ const DetailTask = ({ route, navigation }) => {
             marginHorizontal={5}
             marginVertical={5}
           />
-          <Text>Reminder: {reminder? convertDate(reminder) : "Not set"}</Text>
+          <Text>Reminder: {reminder ? convertDate(reminder) : "Not set"}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.reminder}
+          style={styles.location}
           onPress={handlePresentModalPressLocation}
         >
           <MaterialIcons
-            name="circle-notifications"
+            name="add-location"
             size={25}
             color="purple"
             marginHorizontal={5}
             marginVertical={5}
           />
-          <Text>{location ? location.name : "Not set" }</Text>
+          <Text>{location ? location.name : "Not set location"}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -303,11 +298,7 @@ const DetailTask = ({ route, navigation }) => {
             marginHorizontal={5}
             marginVertical={5}
           />
-          <Text
-          >Due:  {
-            due? convertDate(due) : "Not set"
-            }
-            </Text>
+          <Text>Due: {due ? convertDate(due) : "Not set"}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.repeat}
@@ -343,10 +334,7 @@ const DetailTask = ({ route, navigation }) => {
             marginHorizontal={5}
             marginVertical={5}
           />
-          <TextInput multiline
-          value={note}
-          onChangeText={(e)=>setNote(e)}
-          /> 
+          <TextInput multiline value={note} onChangeText={(e) => setNote(e)} />
         </View>
 
         <View style={styles.button}>
@@ -386,7 +374,10 @@ const DetailTask = ({ route, navigation }) => {
             // onChange={handleSheetChangesReminder}
             // onClose={handleSheetClose}
           >
-            <BSMReminder onItemSelectReminder={handleItemSelectReminder} reminder={reminder} />
+            <BSMReminder
+              onItemSelectReminder={handleItemSelectReminder}
+              reminder={reminder}
+            />
           </BottomSheetModal>
         </View>
         <View style={styles.containerBottomSheetDueTo}>
@@ -412,7 +403,10 @@ const DetailTask = ({ route, navigation }) => {
             // onChange={handleSheetChangesRepeat}
             // onClose={handleSheetClose}
           >
-            <BSMRepeat onItemSelectRepeat={handleItemSelectRepeat} repeat={repeat} />
+            <BSMRepeat
+              onItemSelectRepeat={handleItemSelectRepeat}
+              repeat={repeat}
+            />
           </BottomSheetModal>
         </View>
 
@@ -428,7 +422,7 @@ const DetailTask = ({ route, navigation }) => {
           >
             <BSMAttach navigation={navigation} task={task} />
           </BottomSheetModal>
-        </View> 
+        </View>
       </BottomSheetModalProvider>
     </View>
   );
