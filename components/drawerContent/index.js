@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -17,10 +17,20 @@ import {
   MaterialIcons,
   Ionicons,
 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // const Drawer = createDrawerNavigator();
 const DrawerContentComponent = () => {
   const navigation = useNavigation();
+  const [user, setUser] = useState(null);
+  useEffect(()=> {
+    async function getUser() {
+      let u = await AsyncStorage.getItem('user');
+      console.log(u);
+      setUser(u);
+    }
+    getUser();
+  })
   return (
     <DrawerContentScrollView style={styles.drawerstyle}>
       <View style={styles.drawerContent}>

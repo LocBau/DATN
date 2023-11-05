@@ -50,6 +50,7 @@ export default function AddLocation({ navigation, route }) {
         name += district ? district + " " : "";
         name += city ? city + " " : "";
         if (name !== "") {
+
           setLocName(name);
         } else {
           setLocName("Viet Nam");
@@ -79,6 +80,7 @@ export default function AddLocation({ navigation, route }) {
         latitudeDelta: 0.0322,
         longitudeDelta: 0.0221,
       };
+
       setFlag1(true);
       setRegion(newRegion);
     };
@@ -86,7 +88,9 @@ export default function AddLocation({ navigation, route }) {
     // getPermissions();
   });
   const geocode = async (address) => {
+
     const geocodedLocation = await Location.geocodeAsync(address);
+
     console.log("Geocoded Address:");
     console.log(geocodedLocation[0]);
     if (
@@ -94,6 +98,7 @@ export default function AddLocation({ navigation, route }) {
       geocodedLocation[0] &&
       geocodedLocation[0].latitude
     ) {
+
       let newRegion = {
         latitude: geocodedLocation[0].latitude,
         longitude: geocodedLocation[0].longitude,

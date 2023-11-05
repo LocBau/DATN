@@ -7,19 +7,85 @@ const BSMReminder = ({onItemSelectReminder, reminder}) => {
     const currentDate = selectedDate;
     onItemSelectReminder(currentDate);
   };
+  let nextDate = new Date();
+  nextDate.setDate(nextDate.getDate()+1);
+  nextDate.setHours(9);
+  nextDate.setMinutes(0);
+  nextDate.setSeconds(0);
+
+  let nextWeek = new Date();
+  nextWeek.setDate(nextWeek.getDate()+7);
+  nextWeek.setHours(9);
+  nextWeek.setMinutes(0);
+  nextWeek.setSeconds(0);
+
+  const handleNextDay = () => {
+    let d = new Date();
+    
+    d.setDate(d.getDate()+1);
+    d.setHours(9);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    onItemSelectReminder(d);
+  }
+  const handleNextWeek = () => {
+    let d = new Date();
+    
+    d.setDate(d.getDate()+7);
+    d.setHours(9);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    onItemSelectReminder(d);
+  }
+  
   return (
     <View style={styles.container}>
       <View style={styles.title}>
         <Text style={styles.title}>reminder</Text>
       </View>
-      <DateTimePicker
+      <TouchableOpacity style={[styles.row1, styles.row11]}
+      onPress={handleNextDay}
+      >
+        <MaterialCommunityIcons
+          name="calendar-today"
+          size={30}
+          color="purple"
+          marginHorizontal={5}
+          marginVertical={5}
+        />
+        <Text style={[styles.row1, styles.row12]}>Next Day</Text>
+        <Text style={[styles.row1, styles.row12]}>{nextDate.toLocaleDateString() + " - " + nextDate.toLocaleTimeString()}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.row1, styles.row11]}
+      onPress={handleNextWeek}
+      >
+        <MaterialCommunityIcons
+          name="calendar-today"
+          size={30}
+          color="purple"
+          marginHorizontal={5}
+          marginVertical={5}
+        />
+        <Text style={[styles.row1, styles.row12]}>Next Week</Text>
+        <Text style={[styles.row1, styles.row12]}>{nextWeek.toLocaleDateString() + " - " + nextWeek.toLocaleTimeString()}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.row1, styles.row11]}>
+        <MaterialCommunityIcons
+          name="calendar-today"
+          size={30}
+          color="purple"
+          marginHorizontal={5}
+          marginVertical={5}
+        />
+        <Text style={[styles.row1, styles.row12]}>Pick a Date</Text>
+        <DateTimePicker
             testID="dateTimePicker"
             value={reminder? new Date(reminder) : new Date(Date.now())}
             mode="datetime"
             is24Hour={true}
             onChange={onChangeDate}
           />
-
+      </TouchableOpacity>
     </View>
   );
 };
