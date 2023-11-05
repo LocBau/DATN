@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native';
 import UpdateTaskFrontEnd from '../../api/updateTaskFrontEnd';
 export default function AddLocation({navigation, route}) {
 
-    const [flag1, setFlag1] = useState(true);
+    const [flag1, setFlag1] = useState(false);
     const [locName,setLocName]  = useState('');
     const [query, setQuery] = useState('');
     const [region, setRegion] = useState({
@@ -83,13 +83,15 @@ export default function AddLocation({navigation, route}) {
         setRegion(newRegion);
       };
   
-      // getPermissions();
+      getPermissions();
     });
   const geocode = async (address) => {
-
+    console.log("search query:");
+    console.log(address);
     const geocodedLocation = await Location.geocodeAsync(address);
+
     console.log("Geocoded Address:");
-    console.log(geocodedLocation[0]);
+    console.log(geocodedLocation);
     if(geocodedLocation && geocodedLocation[0] && geocodedLocation[0].latitude ) {
       let newRegion = {
         latitude: geocodedLocation[0].latitude,

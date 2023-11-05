@@ -8,14 +8,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as DocumentPicker from 'expo-document-picker';
+import { useIsFocused } from "@react-navigation/native";
 const LinkFile = ({navigation, route}) => {
+  const isFocused = useIsFocused();
   useEffect(()=> {
-    pickDocument();
-  },[])
+    if (!file && isFocused) {
+      pickDocument();
+    }
+  },[isFocused])
   const  [file, setFile] = useState(null);
   pickDocument = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
-    if(result){
+    if(result && result.assets){
       console.log(result.assets[0]);
       setFile(result.assets[0]);
     }
@@ -24,6 +28,8 @@ const LinkFile = ({navigation, route}) => {
   };
   
   const saveLinkFile = () => {
+    console.log("press");
+    if(!file) return;
     let task = route.params.task;
     if (task.attachments) {
       task.attachments.push({uri: file.uri, name: file.name});

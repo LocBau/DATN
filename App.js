@@ -70,22 +70,7 @@ export default function App() {
     }
     registerForPushNotificationsAsync();
   });
-  // const [tasklist, setTasklist] = useState([]);
-  // const [tasklistDone, settasklistDone] = useState([]);
-  // const handleAddTask = (task) => {
-  //   setTasklist([...tasklist, task]);
-  // };
-  // const HomeStackScreen = () => {
-  //   return (
-  //     <Stack.Navigator>
-  //       <Stack.Screen
-  //         name="Home"
-  //         component={Home}
-  //         options={{ headerShown: false }}
-  //       />
-  //     </Stack.Navigator>
-  //   );
-  // };
+
 
   const HomeDrawerScreen = () => {
     return (
