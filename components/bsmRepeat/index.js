@@ -3,26 +3,43 @@ import React from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 const BSMRepeat = ({onItemSelectRepeat, repeat}) => {
-
   handleDaily = (event, selectedDate) => {
-    const currentDate = selectedDate;
+    const currentDate = new Date(selectedDate).toISOString();
     onItemSelectRepeat({
       type:"Daily",
       hour: currentDate
     })
   }
   handleWeekly = (event, selectedDate) => {
-    const currentDate = selectedDate;
+    const currentDate = new Date(selectedDate).toISOString();
     onItemSelectRepeat({
       type:"Weekly",
       hour: currentDate
     })
   }
   handlMonthly = (event, selectedDate) => {
-    const currentDate = selectedDate;
+    const currentDate = new Date(selectedDate).toISOString();
     onItemSelectRepeat({
       type:"Monthly",
       hour: currentDate
+    })
+  }
+  pressDaily = () => {
+    onItemSelectRepeat({
+      type:"Daily",
+      hour:  new Date('2023-11-05T02:00:00.000Z').toISOString()
+    })
+  }
+  pressWeekly = () => {
+    onItemSelectRepeat({
+      type:"Weekly",
+      hour:  new Date('2023-11-05T02:00:00.000Z').toISOString()
+    })
+  }
+  pressMonthly = () => {
+    onItemSelectRepeat({
+      type:"Monthly",
+      hour:  new Date('2023-11-05T02:00:00.000Z').toISOString()
     })
   }
   return (
@@ -30,7 +47,9 @@ const BSMRepeat = ({onItemSelectRepeat, repeat}) => {
       <View style={styles.title}>
         <Text style={styles.title}> Repeated</Text>
       </View>
-      <TouchableOpacity style={[styles.row1, styles.row11]}>
+      <TouchableOpacity style={[styles.row1, styles.row11]}
+      onPress={pressDaily}
+      >
         <MaterialCommunityIcons
           name="calendar-today"
           size={30}
@@ -50,7 +69,9 @@ const BSMRepeat = ({onItemSelectRepeat, repeat}) => {
           />
 
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.row1, styles.row11]}>
+      <TouchableOpacity style={[styles.row1, styles.row11]}
+      onPress={pressWeekly}
+      >
         <MaterialCommunityIcons
           name="calendar-week"
           size={30}
@@ -70,7 +91,9 @@ const BSMRepeat = ({onItemSelectRepeat, repeat}) => {
           />
 
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.row1, styles.row11]}>
+      <TouchableOpacity style={[styles.row1, styles.row11]}
+      onPress={pressMonthly}
+      >
         <MaterialCommunityIcons
           name="calendar-month"
           size={30}

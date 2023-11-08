@@ -48,6 +48,7 @@ import BSMAttach from "../../components/bsmAttachFile";
 import { bs } from "date-fns/locale";
 import UpdateTaskFrontEnd from "../../api/updateTaskFrontEnd";
 import { useIsFocused } from "@react-navigation/native";
+import DeleteTaskFrontEnd from "../../api/deleteTaskFrontEnd";
 const DetailTask = ({ route, navigation }) => {
   /**
    * code using for BottomSheetModalReminder:
@@ -64,7 +65,7 @@ const DetailTask = ({ route, navigation }) => {
     setTitle(route.params.task.title);
     setNote(route.params.task.note);
     setAttachments(route.params.task.attachments);
-
+    console.log(route.params.task.attachments);
     console.log("detail focus" + isFocused);
   }, [isFocused]);
 
@@ -76,7 +77,7 @@ const DetailTask = ({ route, navigation }) => {
   const [location, setLocation] = useState(route.params.task.location);
   const [repeat, setRepeat] = useState(route.params.task.repeat);
   const [attachments, setAttachments] = useState(route.params.task.attachments);
-  const [viewListAttach, setViewAttach] = useState([]);
+
 
   const convertRepeat = (rep) => {
     if (!rep || !rep.type || !rep.hour) return "Not set";
@@ -123,6 +124,7 @@ const DetailTask = ({ route, navigation }) => {
     update.location = location;
     update.repeat = repeat;
     update.reminder = reminder;
+    update.attachments = attachments;
     await UpdateTaskFrontEnd(update);
     console.log("saved");
     navigation.navigate("HomeDrawer", {
@@ -213,6 +215,8 @@ const DetailTask = ({ route, navigation }) => {
   const [selectedItemRepeat, setSelectedItemRepeat] = useState(null);
 
   const handleItemSelectRepeat = (item) => {
+    setreminder(null);
+    setdue(null);
     setRepeat(item);
   };
   /*code using for BottomSheetModalRepeat:*/
@@ -270,25 +274,16 @@ const DetailTask = ({ route, navigation }) => {
   };
   const attachReset = useRef();
   const handleDeleteAttach = () => {
-    let _task = task;
-    _task.attachments = [];
-    setTask(_task);
-    setView();
-  };
 
-  const setView = () => {
-    let view = [];
-    view = task.attachments.map((item, index) => {
-      return {
-        key: index,
-        name: item.name,
-        type: item.mimeType,
-        uri: item.uri,
-      };
-    });
-    setViewAttach(view);
+    setAttachments([]);
+
   };
-  setView();
+  const handleDeleteTask = async () => {
+    await DeleteTaskFrontEnd(task);
+    navigation.navigate("HomeDrawer", {task:null})
+  }
+
+  
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -442,7 +437,15 @@ const DetailTask = ({ route, navigation }) => {
         <View>
           <FlatList
             ref={attachReset}
-            data={viewListAttach}
+            data={ attachments ? attachments.map((item, index) => {
+              return {
+                key: index,
+                name: item.name,
+                type: item.mimeType,
+                uri: item.uri,
+              };
+            }) : []
+          }
             keyExtractor={(item) => item.key.toString()}
             renderItem={({ item }) => (
               <View style={styles.viewAttach}>
@@ -528,7 +531,7 @@ const DetailTask = ({ route, navigation }) => {
 
           <Button
             iconContainerStyle={{ marginRight: 10 }}
-            onPress={handleSaveTask}
+            onPress={handleDeleteTask}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{
               backgroundColor: "rgb(179, 55, 225)",

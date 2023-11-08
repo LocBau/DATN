@@ -9,7 +9,7 @@ const RealTimeFormatDate = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentDate(new Date());
-    }, 1000); // Cập nhật mỗi giây
+    }, 60000); // Cập nhật mỗi (giây) phut
 
     return () => clearInterval(intervalId);
   }, []);

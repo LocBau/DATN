@@ -6,7 +6,7 @@ import {StyleSheet, Alert, View, Text, TouchableOpacity, Button} from 'react-nat
 
 const AgendaItem = (props) => {
   const {item, info} = props;
-  console.log(item);
+  // console.log(item);
 
   const testIDs = {
     menu: {
