@@ -70,7 +70,8 @@ export default function MicroPhone() {
         const recordingUri = recording.getURI();
         const f  = await FileSystem.readAsStringAsync(recordingUri,{ encoding: FileSystem.EncodingType.Base64 });
         let intent = await SendAudioFile(f);
-        if (intent.intent == 'SHOW_TASK') {
+        console.log(intent);
+        if (intent == 'SHOW_TASK') {
           let tasks = await AsyncStorage.getItem('tasks');
           tasks = JSON.parse(tasks);
           console.log(tasks);
@@ -113,7 +114,7 @@ export default function MicroPhone() {
 
   async function handleRecordButtonPress() {
     console.log(recording);
-    if (recording) {
+    if (recording && recordingStatus==='recording' ) {
       const audioUri = await stopRecording(recording);
       if (audioUri) {
         console.log('Saved audio file to', audioUri);
