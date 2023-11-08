@@ -50,7 +50,6 @@ export default function AddLocation({ navigation, route }) {
         name += district ? district + " " : "";
         name += city ? city + " " : "";
         if (name !== "") {
-
           setLocName(name);
         } else {
           setLocName("Viet Nam");
@@ -85,10 +84,9 @@ export default function AddLocation({ navigation, route }) {
       setRegion(newRegion);
     };
 
-    // getPermissions();
+    getPermissions();
   });
   const geocode = async (address) => {
-
     const geocodedLocation = await Location.geocodeAsync(address);
 
     console.log("Geocoded Address:");
@@ -98,7 +96,6 @@ export default function AddLocation({ navigation, route }) {
       geocodedLocation[0] &&
       geocodedLocation[0].latitude
     ) {
-
       let newRegion = {
         latitude: geocodedLocation[0].latitude,
         longitude: geocodedLocation[0].longitude,
@@ -162,6 +159,7 @@ export default function AddLocation({ navigation, route }) {
           <Marker key={marker.key} coordinate={marker.coordinate}></Marker>
         )}
       </MapView>
+
       <View style={styles.searchBarContainer}>
         <SearchBar
           placeholder="Type here to search location..."
@@ -177,26 +175,21 @@ export default function AddLocation({ navigation, route }) {
           inputContainerStyle={styles.inputContainer}
         />
       </View>
-      {/* <TextInput
-        style={{ backgroundColor: "grey", height: "10%" }}
-        placeholder="Seach location"
-        value={query}
-        onChangeText={(e) => setQuery(e)}
-        onSubmitEditing={(e) => {
-          console.log(query);
-          geocode(query);
-        }}
-      /> */}
-      <TouchableOpacity onPress={HandleSaveLocation}>
-        <View style={styles.addLocationTask}>
+
+      <View style={styles.containerAdd}>
+        <TouchableOpacity
+          onPress={HandleSaveLocation}
+          style={styles.addLocationTask}
+          containerStyle={styles.buttonAdd}
+        >
           <MaterialIcons
             name="add-circle"
-            size={50}
+            size={60}
             color="purple"
             // style={{ backgroundColor: "transparent" }}
           />
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -207,7 +200,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: "80%",
+    height: "100%",
     flex: 1,
   },
   searchBarContainer: {
@@ -227,12 +220,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   addLocationTask: {
-    // height: 50,
-    // width: 50,
-    // borderRadius: 50,
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
-    alignContent: "center",
     alignItems: "center",
-    marginBottom: 5,
+    marginBottom: 15,
+  },
+  containerAdd: {
+    backgroundColor: "transparent",
+    position: "absolute",
+    bottom: 10,
+    left: 0,
+    right: 0,
+    zIndex: 1,
   },
 });

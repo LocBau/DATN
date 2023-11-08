@@ -10,6 +10,8 @@ import {
   KeyboardAvoidingView,
   LogBox,
   Alert,
+  Platform,
+  FlatList,
 } from "react-native";
 import React, {
   useState,
@@ -33,7 +35,11 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Feather,
+} from "@expo/vector-icons";
 import styles from "./style";
 import BSMReminder from "../../components/bsmReminder";
 import BSMDueTo from "../../components/bsmDueTo";
@@ -57,6 +63,7 @@ const DetailTask = ({ route, navigation }) => {
     setdue(route.params.task.due);
     setTitle(route.params.task.title);
     setNote(route.params.task.note);
+    setAttachments(route.params.task.attachments);
 
     console.log("detail focus" + isFocused);
   }, [isFocused]);
@@ -68,6 +75,8 @@ const DetailTask = ({ route, navigation }) => {
   const [reminder, setreminder] = useState(route.params.task.reminder);
   const [location, setLocation] = useState(route.params.task.location);
   const [repeat, setRepeat] = useState(route.params.task.repeat);
+  const [attachments, setAttachments] = useState(route.params.task.attachments);
+  const [viewListAttach, setViewAttach] = useState([]);
 
   const convertRepeat = (rep) => {
     if (!rep || !rep.type || !rep.hour) return "Not set";
@@ -237,15 +246,64 @@ const DetailTask = ({ route, navigation }) => {
     });
   };
 
+  const reminderReset = useRef(null);
+  const handleDeleteReminder = () => {
+    setreminder(null);
+    reminderReset.current.text = "Reminder:";
+  };
+
+  const locationReset = useRef(null);
+  const handleDeleteLocation = () => {
+    setLocation(null);
+    locationReset.current.text = "Not set location:";
+  };
+
+  const duetoReset = useRef(null);
+  const handleDeleteDueto = () => {
+    setdue(null);
+    duetoReset.current.text = "Due to:";
+  };
+  const repeatReset = useRef(null);
+  const handleDeleteRepeat = () => {
+    setRepeat(null);
+    repeatReset.current.text = "Repeat:";
+  };
+  const attachReset = useRef();
+  const handleDeleteAttach = () => {
+    let _task = task;
+    _task.attachments = [];
+    setTask(_task);
+    setView();
+  };
+
+  const setView = () => {
+    let view = [];
+    view = task.attachments.map((item, index) => {
+      return {
+        key: index,
+        name: item.name,
+        type: item.mimeType,
+        uri: item.uri,
+      };
+    });
+    setViewAttach(view);
+  };
+  setView();
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior="padding"
+      keyboardVerticalOffset={200}
+    >
       <View style={styles.viewTitleScreen}>
         <Text style={styles.titleScreenText}> Detail Task</Text>
         <MaterialCommunityIcons name="subtitles" size={40} color="purple" />
       </View>
+
       <View style={styles.viewBody}>
         <View style={styles.titleTask}>
           <Input
+            inputStyle={{ fontSize: 20 }}
             color="blue"
             placeholder="Title task"
             value={title}
@@ -253,88 +311,194 @@ const DetailTask = ({ route, navigation }) => {
             leftIcon={
               <MaterialCommunityIcons
                 name="format-title"
-                size={24}
+                size={30}
                 color="purple"
               />
             }
           />
         </View>
 
-        <TouchableOpacity
-          style={styles.reminder}
-          onPress={handlePresentModalPressReminder}
-        >
-          <MaterialIcons
-            name="circle-notifications"
-            size={25}
+        <View style={styles.reminder}>
+          <TouchableOpacity
+            style={styles.touchreminder}
+            onPress={handlePresentModalPressReminder}
+          >
+            <MaterialIcons
+              name="circle-notifications"
+              size={28}
+              color="purple"
+              marginHorizontal={5}
+              marginVertical={5}
+            />
+            <Text style={{ fontSize: 18 }} ref={reminderReset}>
+              Reminder: {reminder ? convertDate(reminder) : "Not set"}
+            </Text>
+          </TouchableOpacity>
+          <Feather
+            name="delete"
+            size={20}
             color="purple"
-            marginHorizontal={5}
-            marginVertical={5}
+            marginHorizontal={10}
+            onPress={handleDeleteReminder}
           />
-          <Text>Reminder: {reminder ? convertDate(reminder) : "Not set"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.location}
-          onPress={handlePresentModalPressLocation}
-        >
-          <MaterialIcons
-            name="add-location"
-            size={25}
-            color="purple"
-            marginHorizontal={5}
-            marginVertical={5}
-          />
-          <Text>{location ? location.name : "Not set location"}</Text>
-        </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity
-          style={styles.dueto}
-          onPress={handlePresentModalPressDueTo}
-        >
-          <MaterialCommunityIcons
-            name="calendar"
-            size={25}
+        <View style={styles.location}>
+          <TouchableOpacity
+            style={styles.touchlocation}
+            onPress={handlePresentModalPressLocation}
+          >
+            <MaterialIcons
+              name="add-location"
+              size={28}
+              color="purple"
+              marginHorizontal={5}
+              marginVertical={5}
+            />
+            <Text style={{ fontSize: 18 }} ref={locationReset}>
+              Location: {location ? location.name : "Not set"}
+            </Text>
+          </TouchableOpacity>
+          <Feather
+            name="delete"
+            size={20}
             color="purple"
-            marginHorizontal={5}
-            marginVertical={5}
+            marginHorizontal={10}
+            onPress={handleDeleteLocation}
           />
-          <Text>Due: {due ? convertDate(due) : "Not set"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.repeat}
-          onPress={handlePresentModalPressRepeat}
-        >
-          <MaterialCommunityIcons
-            name="repeat"
-            size={25}
+        </View>
+        <View style={styles.dueto}>
+          <TouchableOpacity
+            style={styles.touchdueto}
+            onPress={handlePresentModalPressDueTo}
+          >
+            <MaterialCommunityIcons
+              name="calendar"
+              size={28}
+              color="purple"
+              marginHorizontal={5}
+              marginVertical={5}
+            />
+            <Text style={{ fontSize: 18 }} ref={duetoReset}>
+              Due: {due ? convertDate(due) : "Not set"}
+            </Text>
+          </TouchableOpacity>
+          <Feather
+            name="delete"
+            size={20}
             color="purple"
-            marginHorizontal={5}
-            marginVertical={5}
+            marginHorizontal={10}
+            onPress={handleDeleteDueto}
           />
-          <Text>Repeat: {convertRepeat(repeat)}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.attackfile}
-          onPress={handlePresentModalPressAttach}
-        >
-          <MaterialCommunityIcons
-            name="attachment"
-            size={25}
+        </View>
+
+        <View style={styles.repeat}>
+          <TouchableOpacity
+            style={styles.touchrepeat}
+            onPress={handlePresentModalPressRepeat}
+          >
+            <MaterialCommunityIcons
+              name="repeat"
+              size={28}
+              color="purple"
+              marginHorizontal={5}
+              marginVertical={5}
+            />
+            <Text style={{ fontSize: 18 }} ref={repeatReset}>
+              Repeat: {convertRepeat(repeat)}
+            </Text>
+          </TouchableOpacity>
+          <Feather
+            name="delete"
+            size={20}
             color="purple"
-            marginHorizontal={5}
-            marginVertical={5}
+            marginHorizontal={10}
+            onPress={handleDeleteRepeat}
           />
-          <Text>Attach File</Text>
-        </TouchableOpacity>
-        <View style={styles.note}>
+        </View>
+
+        <View style={styles.attackfile}>
+          <TouchableOpacity
+            style={styles.touchattach}
+            onPress={handlePresentModalPressAttach}
+          >
+            <MaterialCommunityIcons
+              name="attachment"
+              size={28}
+              color="purple"
+              marginHorizontal={5}
+              marginVertical={5}
+            />
+            <Text style={{ fontSize: 18 }}>Attach Files</Text>
+          </TouchableOpacity>
+          <Feather
+            name="delete"
+            size={20}
+            color="purple"
+            marginHorizontal={10}
+            onPress={handleDeleteAttach}
+          />
+        </View>
+        <View>
+          <FlatList
+            ref={attachReset}
+            data={viewListAttach}
+            keyExtractor={(item) => item.key.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.viewAttach}>
+                <Feather
+                  style={{ flex: 1, marginVertical: 5 }}
+                  name={
+                    item.type == "jpg"
+                      ? "image"
+                      : item.type == "txt"
+                      ? "file-text"
+                      : item.type == "m4r"
+                      ? "audio"
+                      : "grid"
+                  }
+                  size={22}
+                  color="purple"
+                  marginHorizontal={10}
+                  // onPress={}
+                />
+                <Text style={{ flex: 3 }}>
+                  Name: {item.type == "jpg" ? "image-name " : item.name}
+                </Text>
+                <Text style={{ flex: 3 }}>- Type: {item.type}</Text>
+              </View>
+            )}
+          />
+        </View>
+        <View style={styles.noteView}>
+          {/* <Input
+            multiline={true}
+            leftIcon={
+              <MaterialCommunityIcons
+                name="note-plus-outline"
+                size={25}
+                color="purple"
+                marginHorizontal={2}
+                marginVertical={2}
+              />
+            }
+            value={note}
+            onChangeText={(e) => setNote(e)}
+          /> */}
           <MaterialCommunityIcons
             name="note-plus-outline"
-            size={25}
+            size={28}
             color="purple"
-            marginHorizontal={5}
-            marginVertical={5}
+            marginHorizontal={2}
+            marginVertical={2}
           />
-          <TextInput multiline value={note} onChangeText={(e) => setNote(e)} />
+          <TextInput
+            fontSize={18}
+            placeholder="User noted is here...."
+            value={note}
+            onChangeText={(e) => setNote(e)}
+            multiline={true}
+          />
         </View>
 
         <View style={styles.button}>
@@ -349,11 +513,11 @@ const DetailTask = ({ route, navigation }) => {
               borderRadius: 30,
             }}
             containerStyle={{
-              width: 200,
-              marginHorizontal: 50,
+              width: 120,
+              marginHorizontal: 5,
               marginVertical: 10,
             }}
-            title="Save Task"
+            title="Save"
             icon={{
               name: "save",
               type: "font-awesome",
@@ -361,8 +525,33 @@ const DetailTask = ({ route, navigation }) => {
               color: "white",
             }}
           />
+
+          <Button
+            iconContainerStyle={{ marginRight: 10 }}
+            onPress={handleSaveTask}
+            titleStyle={{ fontWeight: "700" }}
+            buttonStyle={{
+              backgroundColor: "rgb(179, 55, 225)",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              width: 120,
+              marginHorizontal: 5,
+              marginVertical: 10,
+            }}
+            title="Delete"
+            icon={{
+              name: "delete",
+              type: "MaterialCommunityIcons",
+              size: 15,
+              color: "white",
+            }}
+          />
         </View>
       </View>
+
       <BottomSheetModalProvider>
         <View style={styles.containerBottomSheetReminder}>
           <BottomSheetModal
@@ -424,7 +613,7 @@ const DetailTask = ({ route, navigation }) => {
           </BottomSheetModal>
         </View>
       </BottomSheetModalProvider>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 export default DetailTask;

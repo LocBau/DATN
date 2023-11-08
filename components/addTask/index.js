@@ -22,10 +22,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
-import { v4 as uuidv4 } from 'uuid';
-import 'react-native-get-random-values';
+import { v4 as uuidv4 } from "uuid";
+import "react-native-get-random-values";
 const AddTask = (props) => {
-
   const [task, setTask] = useState("");
   const handleAddTask = async () => {
     if (task.length == 0) {
@@ -33,14 +32,17 @@ const AddTask = (props) => {
       return false;
     }
     console.log(uuidv4());
+    let create = new Date();
+    create = create.toISOString();
     let _task = {
       title: task,
       done: false,
-      due:  null,
+      due: null,
       reminder: false,
       repeat: null,
-      _id:  uuidv4(),
+      _id: uuidv4(),
       location: null,
+      create_at: create,
     };
     // let token = await AsyncStorage.getItem('token');
     // let res = await CreateTaskApi(token,task, "description",111,222,undefined);
@@ -56,11 +58,7 @@ const AddTask = (props) => {
   };
   return (
     <View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={5}
-        style={styles.container}
-      >
+      <KeyboardAvoidingView style={styles.container}>
         <TextInput
           placeholder="Add quick task"
           style={styles.inputTask}

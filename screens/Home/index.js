@@ -42,20 +42,19 @@ import BackGround from "../../components/backGround";
 import RealTimeFormatDate from "../../components/realTimeFormatDate";
 import UpdateTaskApi from "../../api/updateTaskApi";
 import DetailTask from "../../screens/DetailTask";
-import { useIsFocused } from '@react-navigation/native'
+import { useIsFocused } from "@react-navigation/native";
 const Home = ({ navigation }) => {
-  
   const [tasklist, setTasklist] = useState([]);
   const [trigger, setTrigger] = useState(0);
 
   const [viewTaskDone, setviewTaskDone] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
   useEffect(() => {
     async function fetchToken() {
       // console.log(tasklist);
       // await AsyncStorage.removeItem("tasks");
-      console.log("focus"+ isFocused);
+      console.log("focus" + isFocused);
       if (!isFocused) return;
       let flag = await AsyncStorage.getItem("flag");
       console.log(flag);
@@ -121,7 +120,7 @@ const Home = ({ navigation }) => {
       // console.log(tasklist);
     }
     fetchToken();
-  },[isFocused]);
+  }, [isFocused]);
 
   const handleAddTask = async (task) => {
     let t = [...tasklist, task];
@@ -272,10 +271,13 @@ const Home = ({ navigation }) => {
               console.log(item.done);
               if (!item.done)
                 return (
-                  <TouchableOpacity key={index}
-                    onPress={() => navigation.navigate("DetailTask" , {
-                      task:item
-                    }) }
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() =>
+                      navigation.navigate("DetailTask", {
+                        task: item,
+                      })
+                    }
                   >
                     <Task
                       key={index}
@@ -309,7 +311,7 @@ const Home = ({ navigation }) => {
                   if (item.done)
                     return (
                       <Task
-                        key={index}                                      
+                        key={index}
                         id={index}
                         _id={item._id}
                         title={item.title}
@@ -324,7 +326,14 @@ const Home = ({ navigation }) => {
           </ScrollView>
         </View>
 
-        <AddTask onAddTask={handleAddTask} />
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          // keyboardVerticalOffset={10}
+        >
+          <AddTask onAddTask={handleAddTask} />
+        </KeyboardAvoidingView>
+
         <BottomSheetModalProvider>
           <View style={styles.containerBottomSheet}>
             <BottomSheetModal

@@ -81,5 +81,8 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignItems: "center",
   },
+  keyboardView: {
+    padding: 1,
+  },
 });
 export default styles;

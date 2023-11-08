@@ -1,11 +1,11 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 50,
     alignItems: "center",
-    // justifyContent: "center",
+    justifyContent: "center",
   },
   viewTitleScreen: {
     marginHorizontal: 20,
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleScreenText: {
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: "bold",
   },
   viewBody: {
@@ -32,6 +32,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
   },
+  touchreminder: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   location: {
     flexDirection: "row",
     width: "100%",
@@ -41,6 +45,10 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     marginVertical: 5,
+  },
+  touchlocation: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   dueto: {
     flexDirection: "row",
@@ -52,6 +60,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
   },
+  touchdueto: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   repeat: {
     flexDirection: "row",
     width: "100%",
@@ -61,6 +73,10 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     marginVertical: 5,
+  },
+  touchrepeat: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   attackfile: {
     flexDirection: "row",
@@ -72,16 +88,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
   },
-  note: {
+  viewAttach: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 18,
+  },
+  touchattach: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  noteView: {
     flexDirection: "row",
     width: "100%",
-    height: 200,
+    height: "auto",
     borderColor: "gray",
     borderWidth: 1,
     marginVertical: 5,
   },
+
+  // keyboardView: {
+  //   flex: 1,
+  // },
   button: {
-    marginHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "center",
   },
   containerBottomSheetReminder: {
     flex: 1,
