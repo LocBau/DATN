@@ -49,10 +49,10 @@ const AgendaItem = (props) => {
   }
 
 
-  const itemPressed = () => {
-    console.log(item.title);
-    info(item);
-  }
+  // const itemPressed = () => {
+  //   console.log(item.title);
+  //   info(item);
+  // }
 
 
   if (!item) {
@@ -67,7 +67,7 @@ const AgendaItem = (props) => {
     // console.log(props.item.title);
     // cho nay em tạo them 1 props 'item.source' nào để biết từ GGCalendar bỏ dzo đây nhé!
     // code nay a để ví dụ cho item.title thôi..!!
-    if (props.item.title == "GGcalendar") {
+    if (item.data.gmail ) {
       return (
         <View style={styles.viewGcalendar}>
           <Ionicons

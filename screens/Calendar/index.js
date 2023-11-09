@@ -173,7 +173,7 @@ const Calendar = ({navigation, route}) => {
           const element = data[k];
           _mark[k] = { marked: true };
         }
-
+      }
 
         for (const i of data["repeat"]) {
           console.log("test");
@@ -260,8 +260,8 @@ const Calendar = ({navigation, route}) => {
         setMark(_mark);
         setSelectDate(d);
         setView(_view);
-        
-    }
+      }
+      
     x();
     if (load) return;
     console.log("effect");
