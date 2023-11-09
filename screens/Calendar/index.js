@@ -1,10 +1,15 @@
-import React, {useRef, useCallback, useState, useEffect} from 'react';
-import {StyleSheet, View,Text} from 'react-native';
-import {ExpandableCalendar, AgendaList, CalendarProvider, WeekCalendar} from 'react-native-calendars';
-import { Button, Card } from 'react-native-paper';
-import AgendaItem from '../../components/agendaItem/index'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import React, { useRef, useCallback, useState, useEffect } from "react";
+import { StyleSheet, View, Text } from "react-native";
+import {
+  ExpandableCalendar,
+  AgendaList,
+  CalendarProvider,
+  WeekCalendar,
+} from "react-native-calendars";
+import { Button, Card } from "react-native-paper";
+import AgendaItem from "../../components/agendaItem/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 
 
 const Calendar = ({navigation, route}) => {
@@ -112,48 +117,63 @@ const Calendar = ({navigation, route}) => {
           if(i.create_at) timestamp = i.create_at
           if (i.due && !i.repeat)timestamp =  i.due
 
-          if(i.reminder && !i.repeat) timestamp = i.reminder
-          let _date = timestamp.split('T');
-          let temp = new Date(timestamp);
-          
-          let _hour = temp.toTimeString().split(':');
-          if(i.repeat) {
 
-            let t = new Date(i.repeat.hour);
-            let _timestamp = new Date(timestamp);
+        if (i.reminder && !i.repeat) timestamp = i.reminder;
+        let _date = timestamp.split("T");
+        let temp = new Date(timestamp);
 
-            _timestamp.setHours(t.getHours());
-            _timestamp.setMinutes(t.getMinutes());
-            timestamp = _timestamp.toISOString();
-            _hour = _timestamp.toTimeString().split(':');
-            console.log(_hour);
-            data["repeat"].push({hour: _hour[0] + ":" + _hour[1], title: i.repeat.type + "-" + i.title, data: i, timestamp:timestamp, repeat: i.repeat})
-            continue;
-          }
-          if (!data[_date[0]]) {
+        let _hour = temp.toTimeString().split(":");
+        if (i.repeat) {
+          let t = new Date(i.repeat.hour);
+          let _timestamp = new Date(timestamp);
 
-            data[_date[0]] = [{hour: _hour[0] + ":" + _hour[1], title: i.title, data: i, timestamp:timestamp}];
-            
-          } else {
-            data[_date[0]].push({hour: _hour[0] + ":" + _hour[1], title: i.title,data: i, timestamp:timestamp});
-          }
+          _timestamp.setHours(t.getHours());
+          _timestamp.setMinutes(t.getMinutes());
+          timestamp = _timestamp.toISOString();
+          _hour = _timestamp.toTimeString().split(":");
+          console.log(_hour);
+          data["repeat"].push({
+            hour: _hour[0] + ":" + _hour[1],
+            title: i.repeat.type + "-" + i.title,
+            data: i,
+            timestamp: timestamp,
+            repeat: i.repeat,
+          });
+          continue;
         }
-        let _data = [];
-        function compareDate(a, b) {
-          let a_date = new Date(a.timestamp).getTime();
-          let b_date = new Date(b.timestamp).getTime();
-          return a_date - b_date;
+        if (!data[_date[0]]) {
+          data[_date[0]] = [
+            {
+              hour: _hour[0] + ":" + _hour[1],
+              title: i.title,
+              data: i,
+              timestamp: timestamp,
+            },
+          ];
+        } else {
+          data[_date[0]].push({
+            hour: _hour[0] + ":" + _hour[1],
+            title: i.title,
+            data: i,
+            timestamp: timestamp,
+          });
         }
-        _view[0].data = data[d] || [];
-        console.log(_view);
-        console.log(data[d]);
-        for (const k in data) {
-          if (Object.hasOwnProperty.call(data, k)) {
-            const element = data[k];
-            _mark[k] = {marked:true}
-          }
+      }
+      let _data = [];
+      function compareDate(a, b) {
+        let a_date = new Date(a.timestamp).getTime();
+        let b_date = new Date(b.timestamp).getTime();
+        return a_date - b_date;
+      }
+      _view[0].data = data[d] || [];
+      console.log(_view);
+      console.log(data[d]);
+      for (const k in data) {
+        if (Object.hasOwnProperty.call(data, k)) {
+          const element = data[k];
+          _mark[k] = { marked: true };
         }
-        
+
 
         for (const i of data["repeat"]) {
           console.log("test");
@@ -241,56 +261,72 @@ const Calendar = ({navigation, route}) => {
         setSelectDate(d);
         setView(_view);
         
-      }
-      x();
-      if(load) return;
-      console.log("effect");
+    }
+    x();
+    if (load) return;
+    console.log("effect");
 
-      // getTask();
-    },[selectDate])
+    // getTask();
+  }, [selectDate]);
 
-
-
-     const onDateChanged = useCallback( async (date, updateSource) => {
-    console.log('ExpandableCalendarScreen onDateChanged: ', date, updateSource);
-      setSelectDate(date);
-      // setView([]);
-      console.log(selectDate);
-      await AsyncStorage.setItem('selectdate',date);
+  const onDateChanged = useCallback(async (date, updateSource) => {
+    console.log("ExpandableCalendarScreen onDateChanged: ", date, updateSource);
+    setSelectDate(date);
+    // setView([]);
+    console.log(selectDate);
+    await AsyncStorage.setItem("selectdate", date);
   }, []);
-    function renderItem  ({item}) {
-      return <AgendaItem item={item} info={info}/>;
-    };
+  function renderItem({ item }) {
+    return <AgendaItem item={item} info={info} />;
+  }
 
-      return (
-        <CalendarProvider
-          style={innerHeight="90%"}
-          date={today}
-          // onDateChanged={(date)=> {
-          //   setSelectDate(date)
+  return (
+    <CalendarProvider
+      style={(innerHeight = "90%")}
+      date={today}
+      // onDateChanged={(date)=> {
+      //   setSelectDate(date)
 
+      // }}
+      onDateChanged={onDateChanged}
+      // onMonthChange={onMonthChange}
+      showTodayButton
+      // disabledOpacity={0.6}
+      // theme={todayBtnTheme.current}
+      // todayBottomMargin={16}
+    >
+      <View style={styles.header}>
+        <Text style={styles.titleScreen}>Calendar</Text>
+        <FontAwesome name="calendar" size={40} color="purple" />
+      </View>
 
-          // }}
-          onDateChanged={onDateChanged}
-          // onMonthChange={onMonthChange}
-          showTodayButton
-          // disabledOpacity={0.6}
-          // theme={todayBtnTheme.current}
-          // todayBottomMargin={16}
-        > 
-        {
-          weekview  ? (<View>
-            <Text style={{textAlign:'center', fontSize:'18px'}}>--</Text>
-            <Text style={{textAlign:'center', fontSize:'18px'}}>{selectDate ? new Date(selectDate).toString().split(' ')[1]  + " " + new Date(selectDate).toString().split(' ')[3]: "----"}</Text>
-          <WeekCalendar
-            testID={testIDs.expandableCalendar.CONTAINER}/>
+      {weekview ? (
+        <View style={styles.calendarWeek}>
+          <View style={{ alignItems: "center" }}>
+            <View style={styles.framecalendarWeek}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: "18px",
+                  color: "blue",
+                  marginVertical: 5,
+                }}
+              >
+                {selectDate
+                  ? new Date(selectDate).toString().split(" ")[1] +
+                    " " +
+                    new Date(selectDate).toString().split(" ")[3]
+                  : "----"}
+              </Text>
+            </View>
           </View>
-          ) : (
-            <View>
-              <Text style={{textAlign:'center', fontSize:'18px'}}>--</Text>
+
+          <WeekCalendar testID={testIDs.expandableCalendar.CONTAINER} />
+        </View>
+      ) : (
+        <View style={styles.calendarMonth}>
           <ExpandableCalendar
             testID={testIDs.expandableCalendar.CONTAINER}
-
             // horizontal={false}
             // hideArrows
             disablePan
@@ -308,38 +344,64 @@ const Calendar = ({navigation, route}) => {
             // animateScroll
             // closeOnDayPress={false}
           />
-          </View>
-          )
-        }
+        </View>
+      )}
 
-          <Button
-          onPress={()=>{setweekview(!weekview)}}
-          >Change to {weekview ? "Month View" : "Week View"}</Button>
-          <AgendaList
-            sections={view}  
-            renderItem={renderItem}
-            // scrollToNextEvent
-            sectionStyle={styles.section}
-            // dayFormat={'yyyy-MM-d'}
-          />
-        </CalendarProvider>
-      );
-    }
-
-
+      <Button
+        onPress={() => {
+          setweekview(!weekview);
+        }}
+      >
+        Change to {weekview ? "Month View" : "Week View"}
+      </Button>
+      <AgendaList
+        sections={view}
+        renderItem={renderItem}
+        // scrollToNextEvent
+        sectionStyle={styles.section}
+        // dayFormat={'yyyy-MM-d'}
+      />
+    </CalendarProvider>
+  );
+};
 
 const styles = StyleSheet.create({
-  calendar: {
-    paddingLeft: 20,
-    paddingRight: 20
+  calendarMonth: {
+    marginVertical: 5,
   },
+  calendarWeek: {},
   header: {
-    backgroundColor: 'lightgrey'
+    marginTop: 50,
+    alignContent: "center",
+    alignItems: "center",
+  },
+  titleScreen: {
+    fontWeight: "bold",
+    fontSize: 30,
   },
   section: {
-    backgroundColor: '#f2f7f7',
-    color: 'grey',
-    textTransform: 'capitalize'
-  }
+    backgroundColor: "#f2f7f7",
+    color: "grey",
+    textTransform: "capitalize",
+  },
+  framecalendarWeek: {
+    alignItems: "center",
+    marginVertical: 10,
+    width: "25%",
+    height: 40,
+    backgroundColor: "#efefef",
+    borderRadius: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 3.84,
+      },
+      android: {
+        elevation: 25,
+      },
+    }),
+  },
 });
 export default Calendar;

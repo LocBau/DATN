@@ -78,7 +78,6 @@ const DetailTask = ({ route, navigation }) => {
   const [repeat, setRepeat] = useState(route.params.task.repeat);
   const [attachments, setAttachments] = useState(route.params.task.attachments);
 
-
   const convertRepeat = (rep) => {
     if (!rep || !rep.type || !rep.hour) return "Not set";
     if (rep.type == "Daily") {
@@ -134,7 +133,7 @@ const DetailTask = ({ route, navigation }) => {
 
   const handleSheetClose = () => {
     console.log("da bam");
-    bottomSheetModalReminderRef.current?.dismiss(); // Đóng BottomSheet khi người dùng bấm bên ngoài
+    bottomSheetModalReminderRef.current?.dismiss(); // Close BottomSheet when user touch screen outside
   };
   const handleSheetChangesReminder = useCallback((index) => {
     if (index === -1) {
@@ -274,16 +273,28 @@ const DetailTask = ({ route, navigation }) => {
   };
   const attachReset = useRef();
   const handleDeleteAttach = () => {
-
     setAttachments([]);
-
   };
+
+  const alertNotiDelete = () => {
+    Alert.alert("Warning!!!", "Are you sure delete Task? ", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: () => handleDeleteTask(),
+      },
+    ]);
+  };
+
   const handleDeleteTask = async () => {
     await DeleteTaskFrontEnd(task);
-    navigation.navigate("HomeDrawer", {task:null})
-  }
+    navigation.navigate("HomeDrawer", { task: null });
+  };
 
-  
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -437,15 +448,18 @@ const DetailTask = ({ route, navigation }) => {
         <View>
           <FlatList
             ref={attachReset}
-            data={ attachments ? attachments.map((item, index) => {
-              return {
-                key: index,
-                name: item.name,
-                type: item.mimeType,
-                uri: item.uri,
-              };
-            }) : []
-          }
+            data={
+              attachments
+                ? attachments.map((item, index) => {
+                    return {
+                      key: index,
+                      name: item.name,
+                      type: item.mimeType,
+                      uri: item.uri,
+                    };
+                  })
+                : []
+            }
             keyExtractor={(item) => item.key.toString()}
             renderItem={({ item }) => (
               <View style={styles.viewAttach}>
@@ -531,7 +545,7 @@ const DetailTask = ({ route, navigation }) => {
 
           <Button
             iconContainerStyle={{ marginRight: 10 }}
-            onPress={handleDeleteTask}
+            onPress={alertNotiDelete}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{
               backgroundColor: "rgb(179, 55, 225)",

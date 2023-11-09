@@ -23,14 +23,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const DrawerContentComponent = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
-  useEffect(()=> {
+  useEffect(() => {
     async function getUser() {
-      let u = await AsyncStorage.getItem('user');
+      let u = await AsyncStorage.getItem("user");
       console.log(u);
       setUser(u);
     }
     getUser();
-  })
+  });
   return (
     <DrawerContentScrollView style={styles.drawerstyle}>
       <View style={styles.drawerContent}>
@@ -84,7 +84,7 @@ const DrawerContentComponent = () => {
             label="Task Location"
             onPress={() => {
               navigation.navigate("TaskLocation", {
-                task:null
+                task: null,
               });
             }}
           />
@@ -119,12 +119,18 @@ const DrawerContentComponent = () => {
           />
         </Drawer.Section>
         <DrawerItem
-            icon={() => <Ionicons name="location" size={22} color="purple" />}
-            label="Microphone"
-            onPress={() => {
-              navigation.navigate("Microphone");
-            }}
-          />
+          icon={() => (
+            <MaterialCommunityIcons
+              name="account-tie-voice"
+              size={22}
+              color="purple"
+            />
+          )}
+          label="Voice Command"
+          onPress={() => {
+            navigation.navigate("Microphone");
+          }}
+        />
       </View>
     </DrawerContentScrollView>
   );
