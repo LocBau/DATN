@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Calendar = ({navigation, route}) => {
+    const WEEKDAY = ["SU" , "MO" , "TU" , "WE" , "TH" , "FR" , "SA"];
+    const ADDDATEVALUE = 86400000;
     const testIDs = {
       menu: {
         CONTAINER: 'menu',
@@ -89,10 +91,18 @@ const Calendar = ({navigation, route}) => {
       async function x() {
         let d = await AsyncStorage.getItem('selectdate');
         let tasks = await AsyncStorage.getItem('tasks');
+        let google_events = await AsyncStorage.getItem('google_events');
+        if(google_events) {
+          google_events = JSON.parse(google_events);
+        }
+        
         tasks = JSON.parse(tasks);
         
         tasks= tasks.task;
-        // console.log(tasks);
+        if(google_events && tasks) {
+          tasks = tasks.concat(google_events);
+        }
+        console.log(google_events);
         let _mark = {};
         let data = {repeat:[]};
         let _view = [{title:d, data:[]}];
@@ -153,26 +163,75 @@ const Calendar = ({navigation, route}) => {
             let _timestamp = new Date(d);
             _timestamp.setHours(t.getHours());
             _timestamp.setMinutes(t.getMinutes());
+            _timestamp.setSeconds(t.getSeconds());
+            _timestamp.setMilliseconds(t.getMilliseconds());
             let temp = i;
             temp.timestamp = _timestamp.toISOString();
-            _view[0].data.push(temp);
+            if(!i.gmail || !i.repeat.info || !i.repeat.info.INTERVAL) {
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              _view[0].data.push(temp);
+              continue;
+            } else {
+              let interval = parseInt(i.repeat.info.INTERVAL);
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              if (count % interval !=0) continue;
+              _view[0].data.push(temp);
+            }
           }
           if (i.repeat.type.includes("Weekly")) {
             let t = new Date(i.repeat.hour);
             let _timestamp = new Date(d);
             _timestamp.setHours(t.getHours());
+            _timestamp.setMinutes(t.getMinutes());
+            _timestamp.setSeconds(t.getSeconds());
+            _timestamp.setMilliseconds(t.getMilliseconds());
             let temp = i;
             temp.timestamp = _timestamp.toISOString();
-            if(_timestamp.getDay() ==1) _view[0].data.push(temp);
-            
+            if(_timestamp.getDay() ==1 && !i.gmail) {
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              _view[0].data.push(temp);
+              continue;
+            }
+            if(i.gmail && i.repeat.info && i.repeat.info.BYDAY) {
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              let byday = i.repeat.info.BYDAY.split(",");
+              for (const i of byday) {
+                if(_timestamp.getDay() == WEEKDAY.indexOf(i)){
+                  _view[0].data.push(temp);
+                  break;
+                };
+              }
+
+            } 
           }
+          
           if (i.repeat.type.includes("Monthly")) {
             let t = new Date(i.repeat.hour);
             let _timestamp = new Date(d);
             _timestamp.setHours(t.getHours());
+            _timestamp.setMinutes(t.getMinutes());
+            _timestamp.setSeconds(t.getSeconds());
+            _timestamp.setMilliseconds(t.getMilliseconds());
             let temp = i;
             temp.timestamp = _timestamp.toISOString();
-            if(_timestamp.getDate() ==15) _view[0].data.push(temp);
+            if(_timestamp.getDate() ==15 && !i.gmail && (!i.repeat.info)) {
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              _view[0].data.push(temp);
+            } else if (i.gmail || i.repeat.info){
+              let interval = parseInt(i.repeat.info.INTERVAL) || 1;
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              if (_timestamp.getDate() !== 6) continue;
+              let check = _timestamp.getMonth() + (_timestamp.getFullYear()-t.getFullYear())*12 - t.getMonth();
+              if (check % interval !=0) continue;
+              _view[0].data.push(temp);
+            }
+            
           }
         };
         _view[0].data.sort(compareDate);
