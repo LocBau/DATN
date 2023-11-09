@@ -11,98 +11,112 @@ import AgendaItem from "../../components/agendaItem/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 
-const Calendar = ({ navigation, route }) => {
-  const testIDs = {
-    menu: {
-      CONTAINER: "menu",
-      CALENDARS: "calendars_btn",
-      CALENDAR_LIST: "calendar_list_btn",
-      HORIZONTAL_LIST: "horizontal_list_btn",
-      AGENDA: "agenda_btn",
-      EXPANDABLE_CALENDAR: "expandable_calendar_btn",
-      WEEK_CALENDAR: "week_calendar_btn",
-      TIMELINE_CALENDAR: "timeline_calendar_btn",
-      PLAYGROUND: "playground_btn",
-    },
-    calendars: {
-      CONTAINER: "calendars",
-      FIRST: "first_calendar",
-      LAST: "last_calendar",
-    },
-    calendarList: { CONTAINER: "calendarList" },
-    horizontalList: { CONTAINER: "horizontalList" },
-    agenda: {
-      CONTAINER: "agenda",
-      ITEM: "item",
-    },
-    expandableCalendar: { CONTAINER: "expandableCalendar" },
-    weekCalendar: { CONTAINER: "weekCalendar" },
-  };
 
-  const theme = {
-    // arrows
-    arrowColor: "black",
-    arrowStyle: { padding: 0 },
-    // knob
-    expandableKnobColor: "#00AAAF",
-    // month
-    monthTextColor: "black",
-    textMonthFontSize: 16,
-    textMonthFontFamily: "HelveticaNeue",
-    textMonthFontWeight: "bold",
-    // day names
-    textSectionTitleColor: "black",
-    textDayHeaderFontSize: 12,
-    textDayHeaderFontFamily: "HelveticaNeue",
-    textDayHeaderFontWeight: "normal",
-    // dates
-    dayTextColor: "#00AAAF",
-    todayTextColor: "#af0078",
-    textDayFontSize: 18,
-    textDayFontFamily: "HelveticaNeue",
-    textDayFontWeight: "500",
-    textDayStyle: { marginTop: Platform.OS === "android" ? 2 : 4 },
-    // selected date
-    selectedDayBackgroundColor: "#00AAAF",
-    selectedDayTextColor: "white",
-    // disabled date
-    textDisabledColor: "#f2f7f7",
-    // dot (marked date)
-    dotColor: "#00AAAF",
-    selectedDotColor: "white",
-    disabledDotColor: "#f2f7f7",
-    dotStyle: { marginTop: -2 },
-  };
-  const today = new Date().toISOString().split("T")[0];
-  const [view, setView] = useState([]);
-  const [load, setLoad] = useState(false);
-  const [selectDate, setSelectDate] = useState();
-  const [mark, setMark] = useState({});
-  const [weekview, setweekview] = useState(false);
+const Calendar = ({navigation, route}) => {
+    const WEEKDAY = ["SU" , "MO" , "TU" , "WE" , "TH" , "FR" , "SA"];
+    const ADDDATEVALUE = 86400000;
+    const testIDs = {
+      menu: {
+        CONTAINER: 'menu',
+        CALENDARS: 'calendars_btn',
+        CALENDAR_LIST: 'calendar_list_btn',
+        HORIZONTAL_LIST: 'horizontal_list_btn',
+        AGENDA: 'agenda_btn',
+        EXPANDABLE_CALENDAR: 'expandable_calendar_btn',
+        WEEK_CALENDAR: 'week_calendar_btn',
+        TIMELINE_CALENDAR: 'timeline_calendar_btn',
+        PLAYGROUND: 'playground_btn'
+      },
+      calendars: {
+        CONTAINER: 'calendars',
+        FIRST: 'first_calendar',
+        LAST: 'last_calendar'
+      },
+      calendarList: {CONTAINER: 'calendarList'},
+      horizontalList: {CONTAINER: 'horizontalList'},
+      agenda: {
+        CONTAINER: 'agenda',
+        ITEM: 'item'
+      },
+      expandableCalendar: {CONTAINER: 'expandableCalendar'},
+      weekCalendar: {CONTAINER: 'weekCalendar'}
+    };
 
-  const info = (item) => {
-    navigation.navigate("DetailTask", {
-      task: item.data,
-    });
-  };
-  console.log("change");
-  useEffect(() => {
-    console.log("items");
-    async function x() {
-      let d = await AsyncStorage.getItem("selectdate");
-      let tasks = await AsyncStorage.getItem("tasks");
-      tasks = JSON.parse(tasks);
+    const theme = {
+      // arrows
+      arrowColor: 'black',
+      arrowStyle: {padding: 0},
+      // knob
+      expandableKnobColor: '#00AAAF',
+      // month
+      monthTextColor: 'black',
+      textMonthFontSize: 16,
+      textMonthFontFamily: 'HelveticaNeue',
+      textMonthFontWeight: 'bold',
+      // day names
+      textSectionTitleColor: 'black',
+      textDayHeaderFontSize: 12,
+      textDayHeaderFontFamily: 'HelveticaNeue',
+      textDayHeaderFontWeight: 'normal',
+      // dates
+      dayTextColor: '#00AAAF',
+      todayTextColor: '#af0078',
+      textDayFontSize: 18,
+      textDayFontFamily: 'HelveticaNeue',
+      textDayFontWeight: '500' ,
+      textDayStyle: {marginTop: Platform.OS === 'android' ? 2 : 4},
+      // selected date
+      selectedDayBackgroundColor: '#00AAAF',
+      selectedDayTextColor: 'white',
+      // disabled date
+      textDisabledColor: '#f2f7f7',
+      // dot (marked date)
+      dotColor: '#00AAAF',
+      selectedDotColor: 'white',
+      disabledDotColor: '#f2f7f7',
+      dotStyle: {marginTop: -2}
+    }
+    const today = new Date().toISOString().split('T')[0];
+    const [view, setView] = useState([]);
+    const[load, setLoad] = useState(false);
+    const [selectDate, setSelectDate] = useState();
+    const [mark,setMark] = useState({});
+    const [weekview,setweekview] = useState(false);
 
-      tasks = tasks.task;
-      // console.log(tasks);
-      let _mark = {};
-      let data = { repeat: [] };
-      let _view = [{ title: d, data: [] }];
-      for (const i of tasks) {
-        if (!i.create_at && !i.due && !i.repeat) continue;
-        let timestamp = "";
-        if (i.create_at) timestamp = i.create_at;
-        if (i.due && !i.repeat) timestamp = i.due;
+
+    const info = (item) => {
+
+      navigation.navigate('DetailTask' ,{
+        task:item.data
+      })
+    }
+    console.log("change");
+    useEffect(()=> {
+      console.log("items");
+      async function x() {
+        let d = await AsyncStorage.getItem('selectdate');
+        let tasks = await AsyncStorage.getItem('tasks');
+        let google_events = await AsyncStorage.getItem('google_events');
+        if(google_events) {
+          google_events = JSON.parse(google_events);
+        }
+        
+        tasks = JSON.parse(tasks);
+        
+        tasks= tasks.task;
+        if(google_events && tasks) {
+          tasks = tasks.concat(google_events);
+        }
+        console.log(google_events);
+        let _mark = {};
+        let data = {repeat:[]};
+        let _view = [{title:d, data:[]}];
+        for (const i of tasks) {
+          if(!i.create_at && !i.due && !i.repeat) continue;
+          let timestamp = "";
+          if(i.create_at) timestamp = i.create_at
+          if (i.due && !i.repeat)timestamp =  i.due
+
 
         if (i.reminder && !i.repeat) timestamp = i.reminder;
         let _date = timestamp.split("T");
@@ -159,42 +173,94 @@ const Calendar = ({ navigation, route }) => {
           const element = data[k];
           _mark[k] = { marked: true };
         }
-      }
 
-      for (const i of data["repeat"]) {
-        console.log("test");
-        if (i.repeat.type.includes("Daily")) {
-          let t = new Date(i.repeat.hour);
-          let _timestamp = new Date(d);
-          _timestamp.setHours(t.getHours());
-          _timestamp.setMinutes(t.getMinutes());
-          let temp = i;
-          temp.timestamp = _timestamp.toISOString();
-          _view[0].data.push(temp);
-        }
-        if (i.repeat.type.includes("Weekly")) {
-          let t = new Date(i.repeat.hour);
-          let _timestamp = new Date(d);
-          _timestamp.setHours(t.getHours());
-          let temp = i;
-          temp.timestamp = _timestamp.toISOString();
-          if (_timestamp.getDay() == 1) _view[0].data.push(temp);
-        }
-        if (i.repeat.type.includes("Monthly")) {
-          let t = new Date(i.repeat.hour);
-          let _timestamp = new Date(d);
-          _timestamp.setHours(t.getHours());
-          let temp = i;
-          temp.timestamp = _timestamp.toISOString();
-          if (_timestamp.getDate() == 15) _view[0].data.push(temp);
-        }
-      }
-      _view[0].data.sort(compareDate);
-      console.log(_view[0].data);
-      setLoad(true);
-      setMark(_mark);
-      setSelectDate(d);
-      setView(_view);
+
+        for (const i of data["repeat"]) {
+          console.log("test");
+          if (i.repeat.type.includes("Daily")) {
+            
+            let t = new Date(i.repeat.hour);
+            let _timestamp = new Date(d);
+            _timestamp.setHours(t.getHours());
+            _timestamp.setMinutes(t.getMinutes());
+            _timestamp.setSeconds(t.getSeconds());
+            _timestamp.setMilliseconds(t.getMilliseconds());
+            let temp = i;
+            temp.timestamp = _timestamp.toISOString();
+            if(!i.gmail || !i.repeat.info || !i.repeat.info.INTERVAL) {
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              _view[0].data.push(temp);
+              continue;
+            } else {
+              let interval = parseInt(i.repeat.info.INTERVAL);
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              if (count % interval !=0) continue;
+              _view[0].data.push(temp);
+            }
+          }
+          if (i.repeat.type.includes("Weekly")) {
+            let t = new Date(i.repeat.hour);
+            let _timestamp = new Date(d);
+            _timestamp.setHours(t.getHours());
+            _timestamp.setMinutes(t.getMinutes());
+            _timestamp.setSeconds(t.getSeconds());
+            _timestamp.setMilliseconds(t.getMilliseconds());
+            let temp = i;
+            temp.timestamp = _timestamp.toISOString();
+            if(_timestamp.getDay() ==1 && !i.gmail) {
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              _view[0].data.push(temp);
+              continue;
+            }
+            if(i.gmail && i.repeat.info && i.repeat.info.BYDAY) {
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              let byday = i.repeat.info.BYDAY.split(",");
+              for (const i of byday) {
+                if(_timestamp.getDay() == WEEKDAY.indexOf(i)){
+                  _view[0].data.push(temp);
+                  break;
+                };
+              }
+
+            } 
+          }
+          
+          if (i.repeat.type.includes("Monthly")) {
+            let t = new Date(i.repeat.hour);
+            let _timestamp = new Date(d);
+            _timestamp.setHours(t.getHours());
+            _timestamp.setMinutes(t.getMinutes());
+            _timestamp.setSeconds(t.getSeconds());
+            _timestamp.setMilliseconds(t.getMilliseconds());
+            let temp = i;
+            temp.timestamp = _timestamp.toISOString();
+            if(_timestamp.getDate() ==15 && !i.gmail && (!i.repeat.info)) {
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              _view[0].data.push(temp);
+            } else if (i.gmail || i.repeat.info){
+              let interval = parseInt(i.repeat.info.INTERVAL) || 1;
+              let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+              if (count < 0 ) continue;
+              if (_timestamp.getDate() !== 6) continue;
+              let check = _timestamp.getMonth() + (_timestamp.getFullYear()-t.getFullYear())*12 - t.getMonth();
+              if (check % interval !=0) continue;
+              _view[0].data.push(temp);
+            }
+            
+          }
+        };
+        _view[0].data.sort(compareDate);
+        console.log(_view[0].data);
+        setLoad(true);
+        setMark(_mark);
+        setSelectDate(d);
+        setView(_view);
+        
     }
     x();
     if (load) return;

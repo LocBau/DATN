@@ -43,13 +43,17 @@ const AgendaItem = (props) => {
     expandableCalendar: { CONTAINER: "expandableCalendar" },
     weekCalendar: { CONTAINER: "weekCalendar" },
   };
-  const buttonPressed = useCallback(() => {
+  const buttonPressed = () => {
+    console.log(item.title);
     info(item);
-  }, []);
+  }
 
-  // const itemPressed = useCallback(() => {
-  //   info(item);
-  // }, []);
+
+  const itemPressed = () => {
+    console.log(item.title);
+    info(item);
+  }
+
 
   if (!item) {
     return (
