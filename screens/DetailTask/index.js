@@ -65,11 +65,15 @@ const DetailTask = ({ route, navigation }) => {
     setTitle(route.params.task.title);
     setNote(route.params.task.note);
     setAttachments(route.params.task.attachments);
-    console.log(route.params.task.attachments);
+    setIsGoogle(route.params.task.gmail);
+
+    console.log("eff" + isGoogle);
     console.log("detail focus" + isFocused);
   }, [isFocused]);
 
   const [task, setTask] = useState(route.params.task);
+  const [isGoogle, setIsGoogle] = useState(route.params.task.gmail);
+  console.log("isgoogle" +isGoogle);
   const [note, setNote] = useState(route.params.note);
   const [title, setTitle] = useState(route.params.task.title);
   const [due, setdue] = useState(route.params.task.due);
@@ -111,11 +115,14 @@ const DetailTask = ({ route, navigation }) => {
 
   // callbacks
   const handlePresentModalPressReminder = useCallback(() => {
+    console.log("press" + route.params.task.gmail);
+    if (route.params.task.gmail) return;
     setIsSheetClosedReminder(false);
     bottomSheetModalReminderRef.current?.present();
   }, []);
 
   const handleSaveTask = async () => {
+    if (route.params.task.gmail) return;
     let update = task;
     update.title = title;
     update.due = due;
@@ -131,22 +138,9 @@ const DetailTask = ({ route, navigation }) => {
     });
   };
 
-  const handleSheetClose = () => {
-    console.log("da bam");
-    bottomSheetModalReminderRef.current?.dismiss(); // Close BottomSheet when user touch screen outside
-  };
-  const handleSheetChangesReminder = useCallback((index) => {
-    if (index === -1) {
-      bottomSheetModalReminderRef.current?.dismiss();
-      console.log("da dong");
-    } else {
-      console.log("da mo");
-      bottomSheetModalReminderRef.current?.present();
-    }
-  }, []);
-  const [selectedItemReminder, setSelectedItemReminder] = useState(null);
 
   const handleItemSelectReminder = (item) => {
+    if (route.params.task.gmail) return;
     if (!due) {
       alert("cannot set reminder if due is not set");
       return;
@@ -185,6 +179,8 @@ const DetailTask = ({ route, navigation }) => {
 
   // callbacks
   const handlePresentModalPressDueTo = useCallback(() => {
+    console.log("press" + route.params.task.gmail);
+    if (route.params.task.gmail) return;
     setIsSheetClosedDueto(false);
     bottomSheetModalDueToRef.current?.present();
   }, []);
@@ -192,6 +188,7 @@ const DetailTask = ({ route, navigation }) => {
   const [selectedItemDueTo, setSelectedItemDueTo] = useState(null);
 
   const handleItemSelectDueTo = (item) => {
+    if (route.params.task.gmail) return;
     console.log(item.toISOString());
     setdue(item.toISOString());
   };
@@ -207,6 +204,8 @@ const DetailTask = ({ route, navigation }) => {
 
   // callbacks
   const handlePresentModalPressRepeat = useCallback(() => {
+    console.log("press" + route.params.task.gmail);
+    if (route.params.task.gmail) return;
     setIsSheetClosedRepeat(false);
     bottomSheetModalRepeatRef.current?.present();
   }, []);
@@ -214,6 +213,7 @@ const DetailTask = ({ route, navigation }) => {
   const [selectedItemRepeat, setSelectedItemRepeat] = useState(null);
 
   const handleItemSelectRepeat = (item) => {
+    if (route.params.task.gmail) return;
     setreminder(null);
     setdue(null);
     setRepeat(item);
@@ -230,20 +230,14 @@ const DetailTask = ({ route, navigation }) => {
 
   // callbacks
   const handlePresentModalPressAttach = useCallback(() => {
+    if (route.params.task.gmail) return;
     setIsSheetClosedAttach(false);
     bottomSheetModalAttachRef.current?.present();
   }, []);
-
-  const [selectedItemAttach, setSelectedItemAttach] = useState(null);
-
-  const handleItemSelectAttach = (item) => {
-    setSelectedItemAttach(item);
-    console.log("component cha:", item);
-    setSelectedItemAttach(item);
-  };
   /*code using for BottomSheetModalRepeat:*/
 
   const handlePresentModalPressLocation = () => {
+    // if (route.params.task.gmail) return;
     navigation.navigate("AddLocation", {
       task: task,
     });
@@ -251,28 +245,33 @@ const DetailTask = ({ route, navigation }) => {
 
   const reminderReset = useRef(null);
   const handleDeleteReminder = () => {
+    if (route.params.task.gmail) return;
     setreminder(null);
     reminderReset.current.text = "Reminder:";
   };
 
   const locationReset = useRef(null);
   const handleDeleteLocation = () => {
+    if (route.params.task.gmail) return;
     setLocation(null);
     locationReset.current.text = "Not set location:";
   };
 
   const duetoReset = useRef(null);
   const handleDeleteDueto = () => {
+    if (route.params.task.gmail) return;
     setdue(null);
     duetoReset.current.text = "Due to:";
   };
   const repeatReset = useRef(null);
   const handleDeleteRepeat = () => {
+    if (route.params.task.gmail) return;
     setRepeat(null);
     repeatReset.current.text = "Repeat:";
   };
   const attachReset = useRef();
   const handleDeleteAttach = () => {
+    if (route.params.task.gmail) return;
     setAttachments([]);
   };
 
@@ -291,6 +290,7 @@ const DetailTask = ({ route, navigation }) => {
   };
 
   const handleDeleteTask = async () => {
+    if (route.params.task.gmail) return;
     await DeleteTaskFrontEnd(task);
     navigation.navigate("HomeDrawer", { task: null });
   };
@@ -303,12 +303,13 @@ const DetailTask = ({ route, navigation }) => {
     >
       <View style={styles.viewTitleScreen}>
         <Text style={styles.titleScreenText}> Detail Task</Text>
-        <MaterialCommunityIcons name="subtitles" size={40} color="purple" />
+        <MaterialCommunityIcons name={route.params.task.gmail ? "google" : "subtitles"} size={40} color={route.params.task.gmail ? "green" : "purple"} />
       </View>
 
       <View style={styles.viewBody}>
         <View style={styles.titleTask}>
           <Input
+            disabled={route.params.task.gmail}
             inputStyle={{ fontSize: 20 }}
             color="blue"
             placeholder="Title task"
@@ -510,6 +511,7 @@ const DetailTask = ({ route, navigation }) => {
             marginVertical={2}
           />
           <TextInput
+            editable={!route.params.task.gmail}
             fontSize={18}
             placeholder="User noted is here...."
             value={note}
@@ -517,8 +519,7 @@ const DetailTask = ({ route, navigation }) => {
             multiline={true}
           />
         </View>
-
-        <View style={styles.button}>
+          {!route.params.task.gmail  && <View style={styles.button}>
           <Button
             iconContainerStyle={{ marginRight: 10 }}
             onPress={handleSaveTask}
@@ -566,7 +567,8 @@ const DetailTask = ({ route, navigation }) => {
               color: "white",
             }}
           />
-        </View>
+        </View>}
+        
       </View>
 
       <BottomSheetModalProvider>

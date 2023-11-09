@@ -19,7 +19,13 @@ export default function AddLocation({ navigation, route }) {
     latitudeDelta: 0.0322,
     longitudeDelta: 0.0221,
   });
-  const [marker, setMarker] = useState("");
+  const [marker, setMarker] = useState((route.params.task.location && route.params.task.location.latitude) ? {
+    coordinate: {
+      latitude: route.params.task.location.latitude,
+      longitude:route.params.task.location.longitude,
+    },
+    key: 0,
+  } : "");
   // const [modalVisible, setModalVisible] = useState(false);
 
   // Location.setGoogleApiKey("AIzaSyD5GUOMMrDY5Ml8JOQ5j7z7p9f8GaGCDBg");
@@ -59,11 +65,29 @@ export default function AddLocation({ navigation, route }) {
     }
   };
   useEffect(() => {
-    if (flag1) {
-      return;
-    }
+    setMarker((route.params.task.location && route.params.task.location.latitude) ? {
+      coordinate: {
+        latitude: route.params.task.location.latitude,
+        longitude:route.params.task.location.longitude,
+      },
+      key: 0,
+    } : "")
     const getPermissions = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      let newRegion = "";
+      if(!marker && route.params.task.location && route.params.task.location.name) {
+       await geocode(route.params.task.location.name);
+
+      } else if(marker) {
+
+
+      newRegion = {
+        latitude: marker.coordinate.latitude,
+        longitude: marker.coordinate.longitude,
+        latitudeDelta: 0.0322,
+        longitudeDelta: 0.0221,
+      };
+      } else  {
+        let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Please grant location permissions");
         return;
@@ -73,19 +97,20 @@ export default function AddLocation({ navigation, route }) {
       // setRegion(currentLocation);
       console.log("Location:");
       console.log(currentLocation);
-      let newRegion = {
+      newRegion = {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
         latitudeDelta: 0.0322,
         longitudeDelta: 0.0221,
       };
+      }
 
       setFlag1(true);
       setRegion(newRegion);
     };
 
     getPermissions();
-  });
+  },[route.params.task]);
   const geocode = async (address) => {
     const geocodedLocation = await Location.geocodeAsync(address);
 
@@ -130,6 +155,13 @@ export default function AddLocation({ navigation, route }) {
   };
 
   const HandleSaveLocation = async () => {
+    if(route.params.task.gmail) {
+      navigation.navigate("DetailTask", {
+        task: route.params.task,
+      });
+      return;
+    
+    }
     let location = marker
       ? {
           latitude: marker.coordinate.latitude,
@@ -162,7 +194,8 @@ export default function AddLocation({ navigation, route }) {
 
       <View style={styles.searchBarContainer}>
         <SearchBar
-          placeholder="Type here to search location..."
+
+          placeholder={(route.params.task.gmail && route.params.task.location) ? route.params.task.location.name : "Type here to search location..."}
           value={query}
           onChangeText={(e) => setQuery(e)}
           onSubmitEditing={(e) => {
@@ -183,7 +216,7 @@ export default function AddLocation({ navigation, route }) {
           containerStyle={styles.buttonAdd}
         >
           <MaterialIcons
-            name="add-circle"
+            name={route.params.task.gmail ? "keyboard-backspace" : "add-circle"}
             size={60}
             color="purple"
             // style={{ backgroundColor: "transparent" }}

@@ -15,9 +15,11 @@ const BSMAttach = ({ navigation, task }) => {
       <TouchableOpacity
         style={[styles.row]}
         onPress={() => {
-          navigation.navigate("Camera", {
-            task: task,
-          });
+          if (!task.gmail) {
+            navigation.navigate("Camera", {
+              task: task,
+            });
+          }
         }}
       >
         <FontAwesome
@@ -32,9 +34,11 @@ const BSMAttach = ({ navigation, task }) => {
       <TouchableOpacity
         style={[styles.row]}
         onPress={() => {
-          navigation.navigate("AccessGallery", {
-            task: task,
-          });
+          if (!task.gmail) {
+            navigation.navigate("AccessGallery", {
+              task: task,
+            });
+          }
         }}
       >
         <MaterialCommunityIcons
@@ -48,9 +52,11 @@ const BSMAttach = ({ navigation, task }) => {
       <TouchableOpacity
         style={[styles.row]}
         onPress={() => {
-          navigation.navigate("LinkFile", {
-            task: task,
-          });
+          if (!task.gmail) {
+            navigation.navigate("LinkFile", {
+              task: task,
+            });
+          }
         }}
       >
         <MaterialCommunityIcons
