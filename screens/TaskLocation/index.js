@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import openMap from 'react-native-open-maps';
 
-const MapScreen = ()=> {
+const MapScreen = ({navigation})=> {
   const [region, setRegion] = useState({
       latitude: 37.78825,
       longitude: -122.4324,
@@ -38,7 +38,16 @@ const MapScreen = ()=> {
   //   }
     const HandleCallout = (item) => {
       setSelect(item);
+      
       console.log(select);
+    }
+    const HandleDetail = () => {
+      
+      let i = select;
+      setSelect('');
+      // console.log("se"+JSON.stringify(i));
+      navigation.navigate('DetailTask', {task:i.task})
+
     }
     const HandleDirectMap = () => {
       if(!select) return;
@@ -70,7 +79,7 @@ const MapScreen = ()=> {
       if (tasks) {
         for (const i of tasks) {
           if(i.location) {
-            list.push({coordinate:i.location, title: i.title, key:k++, due: i.due, done:i.done, color: i.done ? 'rgba(60, 179, 113, 0.7)' : 'rgba(255, 99, 71, 0.7)'})
+            list.push({coordinate:i.location, task:i,title: i.title, key:k++, due: i.due, done:i.done, color: i.done ? 'rgba(60, 179, 113, 0.7)' : 'rgba(255, 99, 71, 0.7)'})
             sumLat+=i.location.latitude;
             sumLong+=i.location.longitude;
             maxLat = i.location.latitude > maxLat ? i.location.latitude : maxLat;
@@ -133,6 +142,13 @@ const MapScreen = ()=> {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setSelect('')}>
               <Text style={styles.textStyle}>Done</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {
+                HandleDetail();
+              }}>
+              <Text style={styles.textStyle}>Details</Text>
             </Pressable>
           </View>
         </View>

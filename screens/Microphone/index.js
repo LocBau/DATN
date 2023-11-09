@@ -68,6 +68,8 @@ export default function MicroPhone() {
         // console.log(Audio.RecordingOptionsPresets.HIGH_QUALITY);
         await recording.stopAndUnloadAsync();
         const recordingUri = recording.getURI();
+        setRecording(null);
+        setRecordingStatus('stopped');
         const f  = await FileSystem.readAsStringAsync(recordingUri,{ encoding: FileSystem.EncodingType.Base64 });
         let intent = await SendAudioFile(f);
         console.log(intent);
@@ -85,26 +87,7 @@ export default function MicroPhone() {
           Speech.speak("Please repeat");
         }
 
-        
-        // console.log(f);
-        // Create a file name for the recording
-        // const fileName = `recording-${Date.now()}.caf`;
 
-        // // Move the recording to the new directory with the new file name
-        // await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'recordings/', { intermediates: true });
-        // await FileSystem.moveAsync({
-        //   from: recordingUri,
-        //   to: FileSystem.documentDirectory + 'recordings/' + `${fileName}`
-        // });
-
-        // // This is for simply playing the sound back
-        // const playbackObject = new Audio.Sound();
-        // await playbackObject.loadAsync({ uri: FileSystem.documentDirectory + 'recordings/' + `${fileName}` });
-        // await playbackObject.playAsync();
-
-        // resert our states to record again
-        setRecording(null);
-        setRecordingStatus('stopped');
       }
 
     } catch (error) {

@@ -27,6 +27,7 @@ import CameraScreen from "./components/camera";
 import AccessGallery from "./components/accessGallery";
 import AddLocation from "./components/addLocation/addLocation";
 import LinkFile from "./components/linkFile";
+import Search from "./components/search";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -92,6 +93,7 @@ export default function App() {
         <Drawer.Screen name="AccessGallery" component={AccessGallery} />
         <Drawer.Screen name="AddLocation" component={AddLocation} />
         <Stack.Screen name="LinkFile" component={LinkFile} />
+        <Drawer.Screen name="Search" component={Search} />
       </Drawer.Navigator>
     );
   };
@@ -110,6 +112,7 @@ export default function App() {
           headerTitleAlign: "center",
         }}
       >
+        
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen
           name="Home"

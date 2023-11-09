@@ -35,7 +35,11 @@ const Login = ({ navigation }) => {
     }
     await AsyncStorage.setItem("user", res.data.user);
     await AsyncStorage.setItem("token", res.data.token);
+    if (res.data.name ) await AsyncStorage.setItem("name", res.data.name);
+    if (res.data.phone ) await AsyncStorage.setItem("phone", res.data.phone);
+
     await AsyncStorage.setItem("settings",JSON.stringify(res.data.settings))
+    if (res.data.google_ref )await AsyncStorage.setItem("google_ref",JSON.stringify(res.data.google_ref))
     await AsyncStorage.removeItem("flag");
     await AsyncStorage.removeItem("flag1");
     // console.log(a);

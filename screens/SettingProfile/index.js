@@ -10,9 +10,15 @@ const Setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [appNotification, setAppNotification] = useState(false);
   const [emailNotification, setEmailNotification] = useState(false);
+  const [user,setUser] = useState('example@gmail.com');
+  const [name, setName] = useState('#user3756');
   useEffect(()=> {
     async function fetchSettings()  {
       let settings = await AsyncStorage.getItem('settings');
+      let user = await AsyncStorage.getItem('user');
+      let n = await AsyncStorage.getItem("name");
+      if(n) setName(n);
+      setUser(user);
       let flag1 = await AsyncStorage.getItem('flag1');
       console.log("setting"+settings);
       if(settings && !flag1){
@@ -89,8 +95,8 @@ const Setting = () => {
           />
         </View>
         <View style={styles.viewTextUser}>
-          <Text style={styles.usersName}>Trung Tran</Text>
-          <Text style={styles.email}>tqtrung1210@gmail.com</Text>
+          <Text style={styles.usersName}>{name}</Text>
+          <Text style={styles.email}>{user}</Text>
         </View>
         <View style={styles.viewButton}>
           <Button

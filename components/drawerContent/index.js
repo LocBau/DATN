@@ -22,12 +22,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // const Drawer = createDrawerNavigator();
 const DrawerContentComponent = () => {
   const navigation = useNavigation();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState("example@gmail.com");
+  const [name, setName] = useState('#user3756');
   useEffect(() => {
     async function getUser() {
       let u = await AsyncStorage.getItem("user");
-      console.log(u);
+      let n = await AsyncStorage.getItem("name");
       setUser(u);
+      
+      if(n) setName(n);
     }
     getUser();
   });
@@ -44,8 +47,8 @@ const DrawerContentComponent = () => {
             }}
           />
           <View style={styles.userInfoSection2}>
-            <Title style={styles.title}>Trung Tran</Title>
-            <Caption style={styles.caption}>tqtrung1210@gmail.com</Caption>
+            <Title style={styles.title}>{name}</Title>
+            <Caption style={styles.caption}>{user}</Caption>
           </View>
         </View>
 
@@ -115,7 +118,9 @@ const DrawerContentComponent = () => {
           <DrawerItem
             icon={() => <Ionicons name="search" size={22} color="purple" />}
             label="Search Task"
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate("Search");
+            }}
           />
         </Drawer.Section>
         <DrawerItem

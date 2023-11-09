@@ -83,16 +83,17 @@ export default function AddLocation({ navigation, route }) {
       newRegion = {
         latitude: marker.coordinate.latitude,
         longitude: marker.coordinate.longitude,
-        latitudeDelta: 0.0322,
-        longitudeDelta: 0.0221,
+        latitudeDelta: 0.0422,
+        longitudeDelta: 0.0421,
       };
+      console.log("set" + JSON.stringify(newRegion));
       } else  {
         let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Please grant location permissions");
         return;
       }
-
+      console.log("set2");
       let currentLocation = await Location.getCurrentPositionAsync({});
       // setRegion(currentLocation);
       console.log("Location:");
@@ -100,8 +101,8 @@ export default function AddLocation({ navigation, route }) {
       newRegion = {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
-        latitudeDelta: 0.0322,
-        longitudeDelta: 0.0221,
+        latitudeDelta: 0.0422,
+        longitudeDelta: 0.0291,
       };
       }
 
@@ -124,8 +125,8 @@ export default function AddLocation({ navigation, route }) {
       let newRegion = {
         latitude: geocodedLocation[0].latitude,
         longitude: geocodedLocation[0].longitude,
-        latitudeDelta: 0.0322,
-        longitudeDelta: 0.0221,
+        latitudeDelta: 0.0422,
+        longitudeDelta: 0.0291,
       };
       // setFlag1(true);
       let m = {
