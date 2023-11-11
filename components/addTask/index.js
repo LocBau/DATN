@@ -42,6 +42,7 @@ const AddTask = (props) => {
       _id: uuidv4(),
       location: null,
       create_at: create,
+      attachfiles: null,
     };
     // let token = await AsyncStorage.getItem('token');
     // let res = await CreateTaskApi(token,task, "description",111,222,undefined);

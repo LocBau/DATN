@@ -15,7 +15,8 @@ import {
 } from "@expo/vector-icons";
 const AgendaItem = (props) => {
   const { item, info } = props;
-  // console.log(item);
+  console.log("vo calendar...");
+  console.log(props.item.data.done);
 
   const testIDs = {
     menu: {
@@ -46,14 +47,12 @@ const AgendaItem = (props) => {
   const buttonPressed = () => {
     console.log(item.title);
     info(item);
-  }
-
+  };
 
   // const itemPressed = () => {
   //   console.log(item.title);
   //   info(item);
   // }
-
 
   if (!item) {
     return (
@@ -65,9 +64,7 @@ const AgendaItem = (props) => {
 
   const viewSource = () => {
     // console.log(props.item.title);
-    // cho nay em tạo them 1 props 'item.source' nào để biết từ GGCalendar bỏ dzo đây nhé!
-    // code nay a để ví dụ cho item.title thôi..!!
-    if (item.data.gmail ) {
+    if (item.data.gmail) {
       return (
         <View style={styles.viewGcalendar}>
           <Ionicons
@@ -99,7 +96,11 @@ const AgendaItem = (props) => {
         <Text style={styles.itemHourText}>{item.hour}</Text>
       </View>
       <View style={styles.viewTitle}>
-        <Text style={styles.itemTitleText}>{item.title}</Text>
+        {props.item.data.done ? (
+          <Text style={styles.itemTitleTextDone}>{item.title}</Text>
+        ) : (
+          <Text style={styles.itemTitleText}>{item.title}</Text>
+        )}
       </View>
 
       <View style={styles.viewSource}>{viewSource()}</View>
@@ -139,6 +140,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontWeight: "bold",
     fontSize: 14,
+  },
+  itemTitleTextDone: {
+    color: "green",
+    marginLeft: 10,
+    fontWeight: "bold",
+    fontSize: 14,
+    textDecorationLine: "line-through",
   },
   viewSource: {
     flex: 1,

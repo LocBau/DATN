@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    marginTop: 50,
+    marginTop: 30,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -32,10 +32,14 @@ const styles = StyleSheet.create({
   email: {
     fontSize: 15,
     fontWeight: "80",
+    color: "blue",
   },
   viewButton: {
     flex: 1,
     justifyContent: "center",
+  },
+  editCalendar: {
+    flex: 1,
   },
 
   editGroup: {
@@ -46,10 +50,10 @@ const styles = StyleSheet.create({
   },
   frame: {
     flexDirection: "row",
-    marginHorizontal: 20,
-    marginVertical: 10,
-    width: "90%",
-    height: 80,
+    marginHorizontal: 10,
+    marginVertical: 5,
+    width: "95%",
+    height: 50,
     backgroundColor: "#efefef",
     borderRadius: 10,
     ...Platform.select({
@@ -68,18 +72,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginHorizontal: 5,
   },
   viewText: {
-    flex: 2,
+    flex: 6,
     justifyContent: "center",
   },
   viewSwitch: {
-    flex: 1,
+    flex: 1.5,
     justifyContent: "center",
     alignItems: "center",
   },
   titleFrame: {
-    fontSize: 19,
+    fontSize: 17,
     fontWeight: "bold",
     marginBottom: 10,
     marginLeft: 20,

@@ -17,16 +17,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Task = (props) => {
   // const { task } = props;
-  console.log(props.id);
+  console.log("bat dau tư day");
+  console.log(props.attachfiles);
+  console.log("ket thuc");
   // const { check } = props.status;
   const [checktask, setChecktask] = useState(props.status);
   let date = null;
   const handleCheck = async () => {
-    let token = await AsyncStorage.getItem('token');
+    let token = await AsyncStorage.getItem("token");
 
     // let res = await UpdateTaskApi(token,{_id:props._id,status: props.status ? "notdone": "done"})
     props.onUpdate(props.id);
-    
+
     // if(!res || res.status !== 200) {
     //   alert("failed to add task");
     //   return;
@@ -41,12 +43,30 @@ const Task = (props) => {
   };
   if (props.due) {
     date = new Date(props.due);
-    date = "due: " + date.getHours() + ":" +date.getMinutes();
+    date = "Due: " + date.getHours() + ":" + date.getMinutes();
   }
   const checktaskStyles =
     checktask == true ? styles.contentText1Done : styles.contentText1;
   const containerDoneStyle =
     checktask == false ? styles.container : styles.containerDone;
+
+  function viewiconAttach() {
+    if (props.attachfiles) {
+      if (props.attachfiles.length > 0) {
+        return (
+          <MaterialIcons
+            name="attach-file"
+            size={18}
+            color="blue"
+            style={{ marginHorizontal: 4 }}
+          />
+        );
+      } else if (props.attachfiles.length === 0) {
+        return <Text></Text>;
+      }
+    }
+  }
+
   return (
     <View style={[styles.container, containerDoneStyle]}>
       <View style={styles.status}>
@@ -66,15 +86,43 @@ const Task = (props) => {
         <Text style={[styles.contentText1, checktaskStyles]}>
           {props.title}
         </Text>
-        <Text style={styles.contentText2}>{props.due ? date : "09am - 10am" }</Text>
+        <View style={styles.detailContent}>
+          <Text style={styles.contentText2}>{props.due ? date : ""}</Text>
+          {props.reminder ? (
+            <MaterialIcons
+              name="alarm"
+              size={19}
+              color="blue"
+              style={{ marginHorizontal: 4 }}
+            />
+          ) : (
+            ""
+          )}
+          {props.repeat ? (
+            <MaterialIcons
+              name="repeat-on"
+              size={17}
+              color="blue"
+              style={{ marginHorizontal: 4 }}
+            />
+          ) : (
+            ""
+          )}
+          {props.location ? (
+            <MaterialIcons
+              name="location-pin"
+              size={18}
+              color="blue"
+              style={{ marginHorizontal: 4 }}
+            />
+          ) : (
+            ""
+          )}
+          {viewiconAttach()}
+        </View>
       </View>
+
       <View style={styles.icon}>
-        <MaterialIcons
-          name="alarm"
-          size={20}
-          color="red"
-          style={{ marginHorizontal: 2 }}
-        />
         <MaterialIcons
           name="favorite-outline"
           size={20}
