@@ -6,13 +6,19 @@ const UpdateTaskFrontEnd = async ( task) => {
   if (!newTask) return;
   newTask = JSON.parse(newTask);
   newTask = newTask.task;
+  let nochange = true;
   for (let i = 0; i < newTask.length; i++) {
     if (newTask[i]._id == task._id) {
       newTask[i] = task;
+      nochange = false;
       break;
     }
     
   }
+  if (nochange) newTask.push(task);
+  
+  console.log(newTask);
+  console.log(task);
   await AsyncStorage.setItem(
     "tasks",
     JSON.stringify({ timestamp: Date.now(), task: newTask })

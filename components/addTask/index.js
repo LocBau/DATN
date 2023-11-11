@@ -31,7 +31,6 @@ const AddTask = (props) => {
       alert("Please input ....");
       return false;
     }
-    console.log(uuidv4());
     let create = new Date();
     create = create.toISOString();
     let _task = {
