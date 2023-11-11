@@ -21,7 +21,7 @@ const SendAudioFile = async (audio) => {
       try {
         const res = await axios(config)
         console.log(res.data)
-        return res.data;
+        return res;
       } catch (e) {
           console.log(e)
           return e

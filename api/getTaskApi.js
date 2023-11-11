@@ -16,7 +16,7 @@ const GetTaskApi = async (token) => {
       
       try {
         const res = await axios(config)
-        console.log(res.data)
+        // console.log(res.data)
         return res;
       } catch (e) {
           console.log(e)
