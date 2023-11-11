@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginHorizontal: 5,
-    marginVertical: 10,
+    marginVertical: 5,
     alignItems: "center",
   },
   containerDone: {
@@ -21,14 +21,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   content: {
-    flex: 5,
+    flex: 6,
+    justifyContent: "space-evenly",
   },
   contentText1: {
     fontWeight: "bold",
     fontSize: 15,
+    marginVertical: 2,
+  },
+  detailContent: {
+    flexDirection: "row",
   },
   contentText2: {
-    fontSize: 12,
+    fontSize: 13,
+    marginVertical: 2,
   },
   contentText1Done: {
     textDecorationLine: "line-through",

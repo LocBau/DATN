@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { React, useEffect, useState } from "react";
 import styles from "./style";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
@@ -6,73 +6,64 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UpdateSetingApi from "../../api/updateSettingApi";
+import SyncedEmail from "../../components/syncedEmail";
 const Setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [appNotification, setAppNotification] = useState(false);
   const [emailNotification, setEmailNotification] = useState(false);
-  const [user,setUser] = useState('example@gmail.com');
-  const [name, setName] = useState('#user3756');
-  useEffect(()=> {
-    async function fetchSettings()  {
-      let settings = await AsyncStorage.getItem('settings');
-      let user = await AsyncStorage.getItem('user');
+  const [user, setUser] = useState("example@gmail.com");
+  const [name, setName] = useState("#user3756");
+  useEffect(() => {
+    async function fetchSettings() {
+      let settings = await AsyncStorage.getItem("settings");
+      let user = await AsyncStorage.getItem("user");
       let n = await AsyncStorage.getItem("name");
-      if(n) setName(n);
+      if (n) setName(n);
       setUser(user);
-      let flag1 = await AsyncStorage.getItem('flag1');
-      console.log("setting"+settings);
-      if(settings && !flag1){
+      let flag1 = await AsyncStorage.getItem("flag1");
+      console.log("setting" + settings);
+      if (settings && !flag1) {
         try {
-          
           settings = JSON.parse(settings);
           setAppNotification(settings.appNotification);
           setEmailNotification(settings.emailNotification);
-          await AsyncStorage.setItem("flag1","true");
-        } catch (e) {
-          
-        }
+          await AsyncStorage.setItem("flag1", "true");
+        } catch (e) {}
       }
-
     }
     fetchSettings();
-  })
+  });
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const toggleAppNotification = async () => {
     let state = appNotification;
-    let settings = await AsyncStorage.getItem('settings');
-    let device = await AsyncStorage.getItem('device');
-    let token = await AsyncStorage.getItem('token');
+    let settings = await AsyncStorage.getItem("settings");
+    let device = await AsyncStorage.getItem("device");
+    let token = await AsyncStorage.getItem("token");
     if (settings) {
       try {
-        settings= JSON.parse(settings);
-        settings.appNotification = !state
-        await AsyncStorage.setItem("settings",JSON.stringify(settings))
-        setAppNotification((previousState)=>!previousState)
+        settings = JSON.parse(settings);
+        settings.appNotification = !state;
+        await AsyncStorage.setItem("settings", JSON.stringify(settings));
+        setAppNotification((previousState) => !previousState);
         UpdateSetingApi(token, settings, device);
-
-      } catch (e) {
-        
-      }
+      } catch (e) {}
     }
-  }
-  const toggleEmailNotification  = async () => {
+  };
+  const toggleEmailNotification = async () => {
     let state = emailNotification;
-    let settings = await AsyncStorage.getItem('settings');
-    let device = await AsyncStorage.getItem('device');
-    let token = await AsyncStorage.getItem('token');
+    let settings = await AsyncStorage.getItem("settings");
+    let device = await AsyncStorage.getItem("device");
+    let token = await AsyncStorage.getItem("token");
     if (settings) {
       try {
-        settings= JSON.parse(settings);
-        settings.emailNotification = !state
-        await AsyncStorage.setItem("settings",JSON.stringify(settings))
-        setEmailNotification((previousState)=>!previousState)
+        settings = JSON.parse(settings);
+        settings.emailNotification = !state;
+        await AsyncStorage.setItem("settings", JSON.stringify(settings));
+        setEmailNotification((previousState) => !previousState);
         UpdateSetingApi(token, settings, device);
-
-      } catch (e) {
-        
-      }
+      } catch (e) {}
     }
-  }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -124,6 +115,41 @@ const Setting = () => {
           />
         </View>
       </View>
+      <View style={styles.editCalendar}>
+        <View>
+          <Text style={styles.titleFrame}>Google Calendar</Text>
+        </View>
+        <View style={styles.frame}>
+          <View style={styles.viewIcon}>
+            <Avatar
+              size={35}
+              rounded
+              containerStyle={{ marginHorizontal: 10 }}
+              // source={{
+              //   uri: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+              // }}
+              source={require("../../assets/GGcalendar-96.png")}
+            />
+          </View>
+
+          <View style={styles.viewText}>
+            <Text style={styles.frameText}>Add account to sync</Text>
+          </View>
+          <View style={styles.viewSwitch}>
+            <MaterialCommunityIcons
+              name="link-plus"
+              size={30}
+              color="purple"
+              onPress={() => {
+                console.log("them acc ggcalendar");
+              }}
+            />
+          </View>
+        </View>
+        <View>
+          <FlatList />
+        </View>
+      </View>
       <View style={styles.editGroup}>
         <View>
           <Text style={styles.titleFrame}>Manage Group</Text>
@@ -131,7 +157,7 @@ const Setting = () => {
         <View style={styles.frame}>
           <View style={styles.viewIcon}>
             <Avatar
-              size={40}
+              size={30}
               rounded
               containerStyle={{ marginLeft: 20 }}
               source={{
@@ -162,7 +188,7 @@ const Setting = () => {
           <View style={styles.viewIcon}>
             <MaterialIcons
               name="circle-notifications"
-              size={40}
+              size={30}
               color="purple"
             />
           </View>
@@ -185,7 +211,7 @@ const Setting = () => {
           <View style={styles.viewIcon}>
             <MaterialCommunityIcons
               name="email-alert"
-              size={32}
+              size={25}
               color="purple"
             />
           </View>

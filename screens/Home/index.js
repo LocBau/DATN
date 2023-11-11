@@ -65,19 +65,19 @@ const Home = ({ navigation }) => {
         console.log("cannot get tasks");
       }
       res = res.data;
-      if(res && res.google_events) {
+      if (res && res.google_events) {
         // console.log(res.google_events);
         let google_events = [];
         for (const k in res.google_events) {
           if (Object.hasOwnProperty.call(res.google_events, k)) {
             for (const i of res.google_events[k]) {
               let due = null;
-              if(i.end && i.end.dateTime) due = i.end.dateTime;
-              if(i.end && i.end.date) due = i.end.date;
-              if(due) {
+              if (i.end && i.end.dateTime) due = i.end.dateTime;
+              if (i.end && i.end.date) due = i.end.date;
+              if (due) {
                 let temp = new Date(due);
                 due = temp.toISOString();
-              };
+              }
               let repeat = null;
               if (i.recurrence && i.recurrence[0]) {
                 let type = "";
@@ -85,14 +85,23 @@ const Home = ({ navigation }) => {
                 if (i.recurrence[0].includes("DAILY")) type = "Daily";
                 if (i.recurrence[0].includes("MONTHLY")) type = "Monthly";
                 let info = {};
-                if (i.recurrence[0].includes("BYDAY=")) info['BYDAY'] = i.recurrence[0].split("BYDAY=")[1].split(";")[0];
-                if (i.recurrence[0].includes("INTERVAL=")) info['INTERVAL'] = i.recurrence[0].split("INTERVAL=")[1].split(";")[0];
-                if (i.recurrence[0].includes("WKST=")) info['WKST'] = i.recurrence[0].split("WKST=")[1].split(";")[0];
+                if (i.recurrence[0].includes("BYDAY="))
+                  info["BYDAY"] = i.recurrence[0]
+                    .split("BYDAY=")[1]
+                    .split(";")[0];
+                if (i.recurrence[0].includes("INTERVAL="))
+                  info["INTERVAL"] = i.recurrence[0]
+                    .split("INTERVAL=")[1]
+                    .split(";")[0];
+                if (i.recurrence[0].includes("WKST="))
+                  info["WKST"] = i.recurrence[0]
+                    .split("WKST=")[1]
+                    .split(";")[0];
                 repeat = {
                   type: type,
                   hour: due,
-                  info: info
-                }
+                  info: info,
+                };
               }
               let location = null;
               if (i.location) {
@@ -100,7 +109,7 @@ const Home = ({ navigation }) => {
                   name: i.location,
                   latitude: 10.861387059389518,
                   longitude: 106.7656611593152,
-                }
+                };
               }
               let t = {
                 gmail: k,
@@ -113,16 +122,14 @@ const Home = ({ navigation }) => {
                 location: location,
                 create_at: i.created,
                 // note : i.description || "",
-                hangoutLink: i.hangoutLink || null
-                
-              }
+                hangoutLink: i.hangoutLink || null,
+              };
               google_events.push(t);
             }
-            
           }
         }
         console.log(JSON.stringify(google_events));
-        AsyncStorage.setItem('google_events', JSON.stringify(google_events));
+        AsyncStorage.setItem("google_events", JSON.stringify(google_events));
       }
       // console.log(res.data);
 
@@ -347,6 +354,10 @@ const Home = ({ navigation }) => {
                       due={item.due}
                       onUpdate={hanldeUpdate}
                       trigger={triggerF}
+                      reminder={item.reminder}
+                      repeat={item.repeat}
+                      location={item.location}
+                      attachfiles={item.attachments}
                     />
                   </TouchableOpacity>
                 );
@@ -378,6 +389,10 @@ const Home = ({ navigation }) => {
                         due={item.due}
                         onUpdate={hanldeUpdate}
                         trigger={triggerF}
+                        reminder={item.reminder}
+                        repeat={item.repeat}
+                        location={item.location}
+                        attachfiles={item.attachments}
                       />
                     );
                 })}
