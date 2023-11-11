@@ -51,7 +51,8 @@
     "react-native-virtualized-view": "^1.0.0",
     "react-native-webview": "13.2.2",
     "rn-crypto-js": "^1.1.2",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "expo-linking": "~5.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

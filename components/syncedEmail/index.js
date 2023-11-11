@@ -3,10 +3,10 @@ import { React, useEffect, useState } from "react";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-const SyncedEmail = () => {
+const SyncedEmail = ({item}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>SyncedEmail</Text>
+      {/* <Text style={styles.title}>SyncedEmail</Text> */}
       <View style={styles.frame}>
         <View style={styles.viewIcon}>
           <Avatar
@@ -21,7 +21,7 @@ const SyncedEmail = () => {
         </View>
 
         <View style={styles.viewText}>
-          <Text style={styles.frameText}>Email Synced</Text>
+          <Text style={styles.frameText}>{item.email}</Text>
         </View>
         <View style={styles.viewBtAdd}>
           <MaterialCommunityIcons
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: "15",
+    fontSize: 15,
   },
   frame: {
     flexDirection: "row",

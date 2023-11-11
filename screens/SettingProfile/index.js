@@ -7,17 +7,64 @@ import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UpdateSetingApi from "../../api/updateSettingApi";
 import SyncedEmail from "../../components/syncedEmail";
+import * as Linking from 'expo-linking';
+import { useIsFocused } from "@react-navigation/native";
+import GetUserProfileApi from "../../api/getuserprofileApi";
+import { serverUrl } from "../../api/link";
+
 const Setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [appNotification, setAppNotification] = useState(false);
   const [emailNotification, setEmailNotification] = useState(false);
   const [user, setUser] = useState("example@gmail.com");
   const [name, setName] = useState("#user3756");
+  const isFocused = useIsFocused();
+  const [refresh, setrefresh] = useState(false);
+  const [googleSyncEmail, setGoogleSyncEmail] = useState([]);
   useEffect(() => {
+    
     async function fetchSettings() {
       let settings = await AsyncStorage.getItem("settings");
       let user = await AsyncStorage.getItem("user");
       let n = await AsyncStorage.getItem("name");
+      let google = await AsyncStorage.getItem('google_ref');
+      if(refresh) 
+      {
+        let res = await GetUserProfileApi();
+        if (res.data.name ) await AsyncStorage.setItem("name", res.data.name);
+        if (res.data.user ) await AsyncStorage.setItem("user", res.data.user);
+    
+        if(res.data.settings) await AsyncStorage.setItem("settings",JSON.stringify(res.data.settings))
+        if (res.data.google_ref )await AsyncStorage.setItem("google_ref",JSON.stringify(res.data.google_ref))
+        settings = JSON.stringify(res.data.settings)
+        user = res.data.user;
+        n = res.data.name;
+        google = JSON.stringify(res.data.google_ref);
+      } else {
+        settings = await AsyncStorage.getItem("settings");
+        user = await AsyncStorage.getItem("user");
+        n = await AsyncStorage.getItem("name");
+        google = await AsyncStorage.getItem('google_ref');
+      }
+
+      if(google) {
+        google = JSON.parse(google);
+        if(google) {
+          let google_array = [];
+          for (const k in google) {
+            if (Object.hasOwnProperty.call(google, k)) {
+              const e = google[k];
+              // console.log(k);
+              google_array.push(e);
+              
+            }
+          }
+          setGoogleSyncEmail(google_array);
+          console.log(googleSyncEmail);
+
+        }
+      }
+
       if (n) setName(n);
       setUser(user);
       let flag1 = await AsyncStorage.getItem("flag1");
@@ -31,8 +78,9 @@ const Setting = () => {
         } catch (e) {}
       }
     }
+    setrefresh(false);
     fetchSettings();
-  });
+  },[isFocused, refresh]);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const toggleAppNotification = async () => {
     let state = appNotification;
@@ -64,6 +112,16 @@ const Setting = () => {
       } catch (e) {}
     }
   };
+  const renderItem = ({item}) => {
+   
+    return (
+      <SyncedEmail
+        item={item}
+        
+      />
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -91,6 +149,7 @@ const Setting = () => {
         </View>
         <View style={styles.viewButton}>
           <Button
+          onPress={()=>setrefresh(true)}
             iconContainerStyle={{ marginRight: 10 }}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{
@@ -105,7 +164,7 @@ const Setting = () => {
               marginHorizontal: 10,
               marginVertical: 10,
             }}
-            title="Edit"
+            title="Reload"
             icon={{
               name: "edit",
               type: "font-awesome",
@@ -141,13 +200,22 @@ const Setting = () => {
               size={30}
               color="purple"
               onPress={() => {
-                console.log("them acc ggcalendar");
+                console.log("sync " + user);
+                setrefresh(true);
+                Linking.openURL(`${serverUrl}/auth/google?appemail=${user}`);
               }}
             />
           </View>
         </View>
         <View>
-          <FlatList />
+          <FlatList
+          data={googleSyncEmail}
+              keyExtractor={(item)=>item.email}
+              renderItem={renderItem}
+          >
+
+          </FlatList>
+          
         </View>
       </View>
       <View style={styles.editGroup}>
