@@ -3,9 +3,10 @@ import { React, useEffect, useState } from "react";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-const SyncedEmail = ({ item }) => {
-  const handleRemoveAcc = () => {
-    console.log(item);
+const SyncedEmail = ({ item , handle}) => {
+  const handleRemoveAcc = (email) => {
+    console.log(email);
+    handle(email);
   };
   return (
     <View style={styles.container}>
@@ -25,7 +26,7 @@ const SyncedEmail = ({ item }) => {
             color="purple"
             onPress={() => {
               console.log("xoa acc ggcalendar");
-              handleRemoveAcc();
+              handleRemoveAcc(item.email);
             }}
           />
         </View>

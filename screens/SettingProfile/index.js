@@ -11,6 +11,7 @@ import * as Linking from "expo-linking";
 import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 import GetUserProfileApi from "../../api/getuserprofileApi";
 import { serverUrl } from "../../api/link";
+import RemoveSyncedEmailApi from "../../api/removeSyncedEmailApi";
 
 const Setting = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -116,8 +117,23 @@ const Setting = ({ navigation }) => {
       } catch (e) {}
     }
   };
+
+  const handleRemoveSyncEmail = async (remove_email) => {
+    let res = await RemoveSyncedEmailApi(remove_email);
+    if(!res || res.status !== 200) {
+      alert("Error");
+      return;
+    }
+    let ref = googleSyncEmail;
+    ref.filter((item)=> {
+      if(item.email !== remove_email) return item;
+    })
+    setGoogleSyncEmail(ref);
+    setrefresh(true);
+  }
+
   const renderItem = ({ item }) => {
-    return <SyncedEmail item={item} />;
+    return <SyncedEmail item={item} handle={handleRemoveSyncEmail} />;
   };
 
   return (
