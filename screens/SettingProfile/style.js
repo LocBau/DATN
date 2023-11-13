@@ -39,21 +39,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   editCalendar: {
-    flex: 1,
-  },
-
-  editGroup: {
-    flex: 1,
-  },
-  noti: {
-    flex: 2,
+    // flex: 1,
+    height: "auto",
   },
   frame: {
-    flexDirection: "row",
     marginHorizontal: 10,
     marginVertical: 5,
     width: "95%",
-    height: 50,
+    height: "auto",
+    padding: 3,
     backgroundColor: "#efefef",
     borderRadius: 10,
     ...Platform.select({
@@ -68,6 +62,36 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  viewlistGG: {},
+  editGroup: {
+    flex: 1,
+  },
+  noti: {
+    flex: 2,
+  },
+  frameItem: {
+    flexDirection: "row",
+    marginHorizontal: 10,
+    marginVertical: 5,
+    alignItems: "center",
+    width: "95%",
+    height: 45,
+    backgroundColor: "#efefef",
+    borderBottomColor: "purple",
+    borderBottomWidth: 1,
+
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: "#000",
+    //     shadowOffset: { width: 0, height: 2 },
+    //     shadowOpacity: 0.5,
+    //     shadowRadius: 3.84,
+    //   },
+    //   android: {
+    //     elevation: 25,
+    //   },
+    // }),
+  },
   viewIcon: {
     flex: 1,
     justifyContent: "center",
@@ -80,18 +104,23 @@ const styles = StyleSheet.create({
   },
   viewSwitch: {
     flex: 1.5,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
   titleFrame: {
     fontSize: 17,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginVertical: 5,
     marginLeft: 20,
+  },
+  titleListFrame: {
+    fontSize: 16,
+    marginBottom: 1,
+    marginLeft: 28,
   },
   frameText: {
     fontSize: 18,
-
     marginLeft: 20,
   },
   button: {

@@ -3,21 +3,16 @@ import { React, useEffect, useState } from "react";
 import { Avatar, Button, Switch, Input, Icon } from "react-native-elements";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-const SyncedEmail = ({item}) => {
+const SyncedEmail = ({ item }) => {
+  const handleRemoveAcc = () => {
+    console.log(item);
+  };
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.title}>SyncedEmail</Text> */}
+      {/* <Text style={styles.title}>Synced Email</Text> */}
       <View style={styles.frame}>
         <View style={styles.viewIcon}>
-          <Avatar
-            size={35}
-            rounded
-            containerStyle={{ marginHorizontal: 10 }}
-            // source={{
-            //   uri: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-            // }}
-            source={require("../../assets/GGcalendar-96.png")}
-          />
+          <MaterialCommunityIcons name="account" size={25} color="purple" />
         </View>
 
         <View style={styles.viewText}>
@@ -30,6 +25,7 @@ const SyncedEmail = ({item}) => {
             color="purple"
             onPress={() => {
               console.log("xoa acc ggcalendar");
+              handleRemoveAcc();
             }}
           />
         </View>
@@ -47,6 +43,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     fontSize: 15,
+    marginVertical: 5,
   },
   frame: {
     flexDirection: "row",
@@ -54,19 +51,8 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     width: "95%",
     height: 40,
-    backgroundColor: "#efefef",
-    borderRadius: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 3.84,
-      },
-      android: {
-        elevation: 25,
-      },
-    }),
+    // borderBottomWidth: 1,
+    // borderBottomColor: "gray",
   },
   viewIcon: {
     flex: 1,
@@ -77,6 +63,9 @@ const styles = StyleSheet.create({
   viewText: {
     flex: 6,
     justifyContent: "center",
+  },
+  frameText: {
+    fontSize: 16,
   },
   viewBtAdd: {
     flex: 1.5,
