@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   StyleSheet,
   Alert,
@@ -6,17 +6,18 @@ import {
   Text,
   TouchableOpacity,
   Button,
-  Tooltip,
 } from "react-native";
 import {
   MaterialCommunityIcons,
   FontAwesome,
   Ionicons,
 } from "@expo/vector-icons";
+import Tooltip from "react-native-walkthrough-tooltip";
 const AgendaItem = (props) => {
   const { item, info } = props;
+
   console.log("vo calendar...");
-  console.log(props.item.data.done);
+  console.log(item.data.gmail);
 
   const testIDs = {
     menu: {
@@ -88,7 +89,14 @@ const AgendaItem = (props) => {
       );
     }
   };
-
+  const [showTip, setTip] = useState(false);
+  const viewcontentToolTip = () => {
+    if (item.data.gmail) {
+      return <Text>{props.item.data.gmail}</Text>;
+    } else {
+      return <Text>on app</Text>;
+    }
+  };
   return (
     <View style={styles.container}>
       {/* <TouchableOpacity onPress={itemPressed} testID={testIDs.agenda.ITEM}> */}
@@ -97,9 +105,43 @@ const AgendaItem = (props) => {
       </View>
       <View style={styles.viewTitle}>
         {props.item.data.done ? (
-          <Text style={styles.itemTitleTextDone}>{item.title}</Text>
+          <Tooltip
+            isVisible={showTip}
+            // animated
+            content={
+              <View style={{ width: "auto", backgroundColor: "light" }}>
+                {viewcontentToolTip()}
+              </View>
+            }
+            placement="top"
+            onClose={() => setTip(false)}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                setTip(true);
+              }}
+            >
+              <Text style={styles.itemTitleTextDone}>{item.title}</Text>
+            </TouchableOpacity>
+          </Tooltip>
         ) : (
-          <Text style={styles.itemTitleText}>{item.title}</Text>
+          <Tooltip
+            isVisible={showTip}
+            animated
+            content={
+              <View style={{ width: "auto" }}>{viewcontentToolTip()}</View>
+            }
+            placement="top"
+            onClose={() => setTip(false)}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                setTip(true);
+              }}
+            >
+              <Text style={styles.itemTitleText}>{item.title}</Text>
+            </TouchableOpacity>
+          </Tooltip>
         )}
       </View>
 
