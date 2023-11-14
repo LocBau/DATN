@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   email: {
-    fontSize: 15,
-    fontWeight: "80",
+    fontSize: 16,
+
     color: "blue",
   },
   viewButton: {

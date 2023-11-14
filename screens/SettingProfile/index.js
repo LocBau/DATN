@@ -22,12 +22,14 @@ const Setting = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [refresh, setrefresh] = useState(false);
   const [googleSyncEmail, setGoogleSyncEmail] = useState([]);
+
   useEffect(() => {
     async function fetchSettings() {
       let settings = await AsyncStorage.getItem("settings");
       let user = await AsyncStorage.getItem("user");
       let n = await AsyncStorage.getItem("name");
       let google = await AsyncStorage.getItem("google_ref");
+
       if (refresh) {
         let res = await GetUserProfileApi();
         if (res.data.name) await AsyncStorage.setItem("name", res.data.name);
@@ -120,17 +122,17 @@ const Setting = ({ navigation }) => {
 
   const handleRemoveSyncEmail = async (remove_email) => {
     let res = await RemoveSyncedEmailApi(remove_email);
-    if(!res || res.status !== 200) {
+    if (!res || res.status !== 200) {
       alert("Error");
       return;
     }
     let ref = googleSyncEmail;
-    ref.filter((item)=> {
-      if(item.email !== remove_email) return item;
-    })
+    ref.filter((item) => {
+      if (item.email !== remove_email) return item;
+    });
     setGoogleSyncEmail(ref);
     setrefresh(true);
-  }
+  };
 
   const renderItem = ({ item }) => {
     return <SyncedEmail item={item} handle={handleRemoveSyncEmail} />;
@@ -231,7 +233,13 @@ const Setting = ({ navigation }) => {
             </View>
           </View>
           <View style={styles.viewlistGG}>
-            <Text style={styles.titleListFrame}>Accounts Synced:</Text>
+            {console.log("bat dau!!!!")}
+            {console.log(googleSyncEmail.length)}
+            {googleSyncEmail.length > 0 ? (
+              <Text style={styles.titleListFrame}>Accounts Synced:</Text>
+            ) : (
+              <Text></Text>
+            )}
             <FlatList
               data={googleSyncEmail}
               keyExtractor={(item) => item.email}

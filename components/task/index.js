@@ -17,10 +17,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Task = (props) => {
   // const { task } = props;
-  console.log("bat dau tư day");
-  console.log(props.attachfiles);
-  console.log("ket thuc");
-  // const { check } = props.status;
   const [checktask, setChecktask] = useState(props.status);
   let date = null;
   const handleCheck = async () => {
