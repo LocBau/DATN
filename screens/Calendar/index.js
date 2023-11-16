@@ -130,7 +130,7 @@ const Calendar = ({ navigation, route }) => {
           console.log(_hour);
           data["repeat"].push({
             hour: _hour[0] + ":" + _hour[1],
-            title: i.repeat.type + "-" + i.title,
+            title: i.title,
             data: i,
             timestamp: timestamp,
             repeat: i.repeat,

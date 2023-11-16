@@ -18,24 +18,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Task = (props) => {
   // const { task } = props;
   const [checktask, setChecktask] = useState(props.status);
+  const [favorite, setfavorite] = useState(props.favorite);
   let date = null;
   const handleCheck = async () => {
-    let token = await AsyncStorage.getItem("token");
+    
 
-    // let res = await UpdateTaskApi(token,{_id:props._id,status: props.status ? "notdone": "done"})
-    props.onUpdate(props.id);
-
-    // if(!res || res.status !== 200) {
-    //   alert("failed to add task");
-    //   return;
-    // }
-    // await AsyncStorage.setItem("flag","true");
+    
+    props.onUpdate(props._id);
+    
     props.trigger();
     if (checktask === false) {
       setChecktask(true);
     } else {
       setChecktask(false);
     }
+  };
+  const handleFavorite = async (favorite) => {
+    
+    props.onFavorite(props._id, favorite);
+    setfavorite(favorite);
+    props.trigger();
+    
   };
   if (props.due) {
     date = new Date(props.due);
@@ -119,12 +122,20 @@ const Task = (props) => {
       </View>
 
       <View style={styles.icon}>
+        {favorite ? 
         <MaterialIcons
-          name="favorite-outline"
-          size={20}
-          color="red"
-          style={{ marginHorizontal: 2 }}
-        />
+        name="favorite"
+        onPress={()=>{handleFavorite(false)}}
+        size={20}
+        color="red"
+        style={{ marginHorizontal: 2 }}
+      /> : <MaterialIcons
+      onPress={()=>{handleFavorite(true)}}
+      name="favorite-outline"
+      size={20}
+      color="red"
+      style={{ marginHorizontal: 2 }}
+    />}
       </View>
     </View>
   );

@@ -29,6 +29,7 @@ import AccessGallery from "./components/accessGallery";
 import AddLocation from "./components/addLocation/addLocation";
 import LinkFile from "./components/linkFile";
 import Search from "././screens/Search";
+import { Stats } from "./components/stats";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -113,6 +114,7 @@ export default function App() {
           headerTitleAlign: "center",
         }}
       >
+        {/* <Stack.Screen name="Stats" component={Stats} /> */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen
           name="Home"
