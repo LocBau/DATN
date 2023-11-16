@@ -44,7 +44,10 @@ import UpdateTaskApi from "../../api/updateTaskApi";
 import DetailTask from "../../screens/DetailTask";
 import { useIsFocused } from "@react-navigation/native";
 const Home = ({ navigation }) => {
+  const WEEKDAY = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+  const ADDDATEVALUE = 86400000;
   const [tasklist, setTasklist] = useState([]);
+  const [viewtask, setView] = useState([]);
   const [trigger, setTrigger] = useState(0);
 
   const [viewTaskDone, setviewTaskDone] = useState(false);
@@ -185,7 +188,175 @@ const Home = ({ navigation }) => {
       await AsyncStorage.setItem("flag", "true");
       // console.log(tasklist);
     }
+
+    async function getView() {
+      let d = new Date().toLocaleDateString().split('/');
+      d = "" + d[2] + '-' + d[1]  + '-' + d[0];
+      
+      let tasks = await AsyncStorage.getItem("tasks");
+      
+      
+      tasks = JSON.parse(tasks);
+
+      tasks = tasks.task;
+      
+      let data = {repeat:[]};
+      let _view = [{title:d, data:[]}];
+      for (const i of tasks) {
+        if(!i.create_at && !i.due && !i.repeat) continue;
+        let timestamp = "";
+        if(i.create_at) timestamp = i.create_at
+        if (i.due && !i.repeat)timestamp =  i.due
+
+
+      if (i.reminder && !i.repeat) timestamp = i.reminder;
+      let _date = timestamp.split("T");
+      let temp = new Date(timestamp);
+
+      let _hour = temp.toTimeString().split(":");
+      if (i.repeat) {
+        let t = new Date(i.repeat.hour);
+        let _timestamp = new Date(timestamp);
+
+        _timestamp.setHours(t.getHours());
+        _timestamp.setMinutes(t.getMinutes());
+        timestamp = _timestamp.toISOString();
+        _hour = _timestamp.toTimeString().split(":");
+        console.log(_hour);
+        data["repeat"].push({
+          hour: _hour[0] + ":" + _hour[1],
+          title: i.repeat.type + "-" + i.title,
+          data: i,
+          timestamp: timestamp,
+          repeat: i.repeat,
+        });
+        continue;
+      }
+      if (!data[_date[0]]) {
+        data[_date[0]] = [
+          {
+            hour: _hour[0] + ":" + _hour[1],
+            title: i.title,
+            data: i,
+            timestamp: timestamp,
+          },
+        ];
+      } else {
+        data[_date[0]].push({
+          hour: _hour[0] + ":" + _hour[1],
+          title: i.title,
+          data: i,
+          timestamp: timestamp,
+        });
+      }
+    }
+
+    function compareDate(a, b) {
+      let a_date = new Date(a.timestamp).getTime();
+      let b_date = new Date(b.timestamp).getTime();
+      return a_date - b_date;
+    }
+    _view[0].data = data[d] || [];
+
+
+
+      for (const i of data["repeat"]) {
+
+        if (i.repeat.type.includes("Daily")) {
+          
+          let t = new Date(i.repeat.hour);
+          let _timestamp = new Date(d);
+                console.log(_timestamp);
+          _timestamp.setHours(t.getHours());
+          _timestamp.setMinutes(t.getMinutes());
+          _timestamp.setSeconds(t.getSeconds());
+          _timestamp.setMilliseconds(t.getMilliseconds());
+          let temp = i;
+          temp.timestamp = _timestamp.toISOString();
+          if(!i.gmail || !i.repeat.info || !i.repeat.info.INTERVAL) {
+            let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+            if (count < 0 ) continue;
+            _view[0].data.push(temp);
+            continue;
+          } else {
+            let interval = parseInt(i.repeat.info.INTERVAL);
+            let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+            if (count < 0 ) continue;
+            if (count % interval !=0) continue;
+            _view[0].data.push(temp);
+          }
+        }
+
+        if (i.repeat.type.includes("Weekly")) {
+          let t = new Date(i.repeat.hour);
+          let _timestamp = new Date(d);
+          _timestamp.setHours(t.getHours());
+          _timestamp.setMinutes(t.getMinutes());
+          _timestamp.setSeconds(t.getSeconds());
+          _timestamp.setMilliseconds(t.getMilliseconds());
+          let temp = i;
+          temp.timestamp = _timestamp.toISOString();
+          if(_timestamp.getDay() ==1 && !i.gmail) {
+            let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+            if (count < 0 ) continue;
+            _view[0].data.push(temp);
+            continue;
+          }
+          if(i.gmail && i.repeat.info && i.repeat.info.BYDAY) {
+            let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+            if (count < 0 ) continue;
+            let byday = i.repeat.info.BYDAY.split(",");
+            for (const i of byday) {
+              if(_timestamp.getDay() == WEEKDAY.indexOf(i)){
+                _view[0].data.push(temp);
+                break;
+              };
+            }
+
+          } 
+        }
+
+        if (i.repeat.type.includes("Monthly")) {
+          let t = new Date(i.repeat.hour);
+          let _timestamp = new Date(d);
+          _timestamp.setHours(t.getHours());
+          _timestamp.setMinutes(t.getMinutes());
+          _timestamp.setSeconds(t.getSeconds());
+          _timestamp.setMilliseconds(t.getMilliseconds());
+          let temp = i;
+          temp.timestamp = _timestamp.toISOString();
+          if(_timestamp.getDate() ==15 && !i.gmail && (!i.repeat.info)) {
+            let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+            if (count < 0 ) continue;
+            _view[0].data.push(temp);
+          } else if (i.gmail || i.repeat.info){
+            let interval = parseInt(i.repeat.info.INTERVAL) || 1;
+            let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
+            if (count < 0 ) continue;
+            if (_timestamp.getDate() !== 6) continue;
+            let check = _timestamp.getMonth() + (_timestamp.getFullYear()-t.getFullYear())*12 - t.getMonth();
+            if (check % interval !=0) continue;
+            _view[0].data.push(temp);
+          }
+          
+        }
+      };
+
+      _view[0].data.sort(compareDate);
+    console.log("v"+ JSON.stringify(_view[0].data));
+    let view = [];
+    
+    for (const i of _view[0].data) {
+      view.push(i.data);
+    }
+    setView(view);
+    console.log("v2"+ JSON.stringify(viewtask));
+
+      return _view[0].data;
+}
+    getView();
     fetchToken();
+
   }, [isFocused]);
 
   const handleAddTask = async (task) => {
@@ -205,10 +376,46 @@ const Home = ({ navigation }) => {
   };
   const hanldeUpdate = async (index) => {
     let newTasklist = tasklist;
-    if (newTasklist[index].done) {
-      newTasklist[index].done = false;
-    } else {
-      newTasklist[index].done = true;
+    // if (newTasklist[index].done) {
+    //   newTasklist[index].done = false;
+    // } else {
+    //   newTasklist[index].done = true;
+    // }
+    if(newTasklist) {
+      for (let i = 0; i < newTasklist.length; i++) {
+        const e = newTasklist[i];
+        if (e._id == index) {
+          newTasklist[i].done =  !newTasklist[i].done;
+          break;
+        }
+      }
+    }
+    console.log(newTasklist[index]);
+    setTasklist(newTasklist);
+    AsyncStorage.setItem(
+      "tasks",
+      JSON.stringify({ timestamp: Date.now(), task: newTasklist })
+    );
+    let token = await AsyncStorage.getItem("token");
+    // console.log(tasklist[index]);
+    setviewTaskDone(true);
+    UpdateTaskApi(token, { timestamp: Date.now(), task: newTasklist });
+  };
+  const handleFavorite = async (index,favorite) => {
+    let newTasklist = tasklist;
+    // if (newTasklist[index].done) {
+    //   newTasklist[index].done = false;
+    // } else {
+    //   newTasklist[index].done = true;
+    // }
+    if(newTasklist) {
+      for (let i = 0; i < newTasklist.length; i++) {
+        const e = newTasklist[i];
+        if (e._id == index) {
+          newTasklist[i].favorite =  favorite;
+          break;
+        }
+      }
     }
     console.log(newTasklist[index]);
     setTasklist(newTasklist);
@@ -333,7 +540,7 @@ const Home = ({ navigation }) => {
             <Text style={styles.bodyAddText1}>My day</Text>
             {/* <Text style={styles.bodyAddText2}>Sunday, 28 April</Text> */}
             <RealTimeFormatDate />
-            {tasklist.map((item, index) => {
+            {viewtask.map((item, index) => {
               console.log(item.done);
               if (!item.done)
                 return (
@@ -353,6 +560,7 @@ const Home = ({ navigation }) => {
                       status={item.done}
                       due={item.due}
                       onUpdate={hanldeUpdate}
+                      onFavorite={handleFavorite}
                       trigger={triggerF}
                       reminder={item.reminder}
                       repeat={item.repeat}
@@ -377,7 +585,7 @@ const Home = ({ navigation }) => {
                 )}
               </TouchableOpacity>
               {isVisible &&
-                tasklist.map((item, index) => {
+                viewtask.map((item, index) => {
                   if (item.done)
                     return (
                       <Task
@@ -388,6 +596,7 @@ const Home = ({ navigation }) => {
                         status={item.done}
                         due={item.due}
                         onUpdate={hanldeUpdate}
+                        onFavorite={handleFavorite}
                         trigger={triggerF}
                         reminder={item.reminder}
                         repeat={item.repeat}
