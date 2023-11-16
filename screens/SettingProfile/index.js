@@ -22,14 +22,17 @@ const Setting = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [refresh, setrefresh] = useState(false);
   const [googleSyncEmail, setGoogleSyncEmail] = useState([]);
-
+  const [imageuri, setImageuri] = useState(
+    "https://images.unsplash.com/photo-1679679008383-6f778fe07828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2127&q=80"
+  );
   useEffect(() => {
     async function fetchSettings() {
       let settings = await AsyncStorage.getItem("settings");
       let user = await AsyncStorage.getItem("user");
       let n = await AsyncStorage.getItem("name");
       let google = await AsyncStorage.getItem("google_ref");
-
+      let a = await AsyncStorage.getItem("avatar");
+      setImageuri(a);
       if (refresh) {
         let res = await GetUserProfileApi();
         if (res.data.name) await AsyncStorage.setItem("name", res.data.name);
@@ -137,7 +140,20 @@ const Setting = ({ navigation }) => {
   const renderItem = ({ item }) => {
     return <SyncedEmail item={item} handle={handleRemoveSyncEmail} />;
   };
-
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("user");
+    await AsyncStorage.removeItem("device");
+    await AsyncStorage.removeItem("tasks");
+    await AsyncStorage.removeItem("flag");
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("phone");
+    await AsyncStorage.removeItem("google_ref");
+    await AsyncStorage.removeItem("flag1");
+    await AsyncStorage.removeItem("google_events");
+    await AsyncStorage.removeItem("selectdate");
+    await AsyncStorage.removeItem("reset");
+    navigation.navigate("Login");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -154,9 +170,10 @@ const Setting = ({ navigation }) => {
             size={64}
             rounded
             containerStyle={{ marginLeft: 20 }}
-            source={{
-              uri: "https://images.unsplash.com/photo-1679679008383-6f778fe07828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2127&q=80",
-            }}
+            // source={{
+            //   uri: "https://images.unsplash.com/photo-1679679008383-6f778fe07828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2127&q=80",
+            // }}
+            source={{ uri: imageuri }}
           />
         </View>
         <View style={styles.viewTextUser}>
@@ -165,7 +182,7 @@ const Setting = ({ navigation }) => {
         </View>
         <View style={styles.viewButton}>
           <Button
-            // onPress={() => setrefresh(true)}
+            onPress={handleLogout}
             iconContainerStyle={{ marginRight: 5 }}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{

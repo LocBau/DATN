@@ -23,14 +23,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const DrawerContentComponent = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState("example@gmail.com");
-  const [name, setName] = useState('#user3756');
+  const [name, setName] = useState("#user3756");
+  const [imageuri, setImageuri] = useState(
+    "https://images.unsplash.com/photo-1679679008383-6f778fe07828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2127&q=80"
+  );
   useEffect(() => {
     async function getUser() {
       let u = await AsyncStorage.getItem("user");
       let n = await AsyncStorage.getItem("name");
+      let a = await AsyncStorage.getItem("avatar");
+      setImageuri(a);
       setUser(u);
-      
-      if(n) setName(n);
+
+      if (n) setName(n);
     }
     getUser();
   });
@@ -42,9 +47,10 @@ const DrawerContentComponent = () => {
             size={46}
             rounded
             containerStyle={{ marginVertical: 10 }}
-            source={{
-              uri: "https://images.unsplash.com/photo-1679679008383-6f778fe07828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2127&q=80",
-            }}
+            // source={{
+            //   uri: "https://images.unsplash.com/photo-1679679008383-6f778fe07828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2127&q=80",
+            // }}
+            source={{ uri: imageuri }}
           />
           <View style={styles.userInfoSection2}>
             <Title style={styles.title}>{name}</Title>
@@ -166,6 +172,7 @@ const styles = StyleSheet.create({
   caption: {
     fontSize: 14,
     lineHeight: 14,
+    color: "blue",
   },
   drawerSection: {
     marginTop: 15,

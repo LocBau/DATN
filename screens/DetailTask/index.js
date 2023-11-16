@@ -73,7 +73,7 @@ const DetailTask = ({ route, navigation }) => {
 
   const [task, setTask] = useState(route.params.task);
   const [isGoogle, setIsGoogle] = useState(route.params.task.gmail);
-  console.log("isgoogle" +isGoogle);
+  console.log("isgoogle" + isGoogle);
   const [note, setNote] = useState(route.params.note);
   const [title, setTitle] = useState(route.params.task.title);
   const [due, setdue] = useState(route.params.task.due);
@@ -107,6 +107,7 @@ const DetailTask = ({ route, navigation }) => {
       return t.toLocaleDateString() + " - " + t.toTimeString().split(" ")[0];
     }
   };
+  //ref
   const bottomSheetModalReminderRef = useRef(null);
   // state
   const [isSheetClosedReminder, setIsSheetClosedReminder] = useState(true);
@@ -137,7 +138,6 @@ const DetailTask = ({ route, navigation }) => {
       task: null,
     });
   };
-
 
   const handleItemSelectReminder = (item) => {
     if (route.params.task.gmail) return;
@@ -303,7 +303,11 @@ const DetailTask = ({ route, navigation }) => {
     >
       <View style={styles.viewTitleScreen}>
         <Text style={styles.titleScreenText}> Detail Task</Text>
-        <MaterialCommunityIcons name={route.params.task.gmail ? "google" : "subtitles"} size={40} color={route.params.task.gmail ? "green" : "purple"} />
+        <MaterialCommunityIcons
+          name={route.params.task.gmail ? "google" : "subtitles"}
+          size={40}
+          color={route.params.task.gmail ? "green" : "purple"}
+        />
       </View>
 
       <View style={styles.viewBody}>
@@ -519,56 +523,57 @@ const DetailTask = ({ route, navigation }) => {
             multiline={true}
           />
         </View>
-          {!route.params.task.gmail  && <View style={styles.button}>
-          <Button
-            iconContainerStyle={{ marginRight: 10 }}
-            onPress={handleSaveTask}
-            titleStyle={{ fontWeight: "700" }}
-            buttonStyle={{
-              backgroundColor: "rgb(179, 55, 225)",
-              borderColor: "transparent",
-              borderWidth: 0,
-              borderRadius: 30,
-            }}
-            containerStyle={{
-              width: 120,
-              marginHorizontal: 5,
-              marginVertical: 10,
-            }}
-            title="Save"
-            icon={{
-              name: "save",
-              type: "font-awesome",
-              size: 15,
-              color: "white",
-            }}
-          />
+        {!route.params.task.gmail && (
+          <View style={styles.button}>
+            <Button
+              iconContainerStyle={{ marginRight: 10 }}
+              onPress={handleSaveTask}
+              titleStyle={{ fontWeight: "700" }}
+              buttonStyle={{
+                backgroundColor: "rgb(179, 55, 225)",
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 30,
+              }}
+              containerStyle={{
+                width: 120,
+                marginHorizontal: 5,
+                marginVertical: 10,
+              }}
+              title="Save"
+              icon={{
+                name: "save",
+                type: "font-awesome",
+                size: 15,
+                color: "white",
+              }}
+            />
 
-          <Button
-            iconContainerStyle={{ marginRight: 10 }}
-            onPress={alertNotiDelete}
-            titleStyle={{ fontWeight: "700" }}
-            buttonStyle={{
-              backgroundColor: "rgb(179, 55, 225)",
-              borderColor: "transparent",
-              borderWidth: 0,
-              borderRadius: 30,
-            }}
-            containerStyle={{
-              width: 120,
-              marginHorizontal: 5,
-              marginVertical: 10,
-            }}
-            title="Delete"
-            icon={{
-              name: "delete",
-              type: "MaterialCommunityIcons",
-              size: 15,
-              color: "white",
-            }}
-          />
-        </View>}
-        
+            <Button
+              iconContainerStyle={{ marginRight: 10 }}
+              onPress={alertNotiDelete}
+              titleStyle={{ fontWeight: "700" }}
+              buttonStyle={{
+                backgroundColor: "rgb(179, 55, 225)",
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 30,
+              }}
+              containerStyle={{
+                width: 120,
+                marginHorizontal: 5,
+                marginVertical: 10,
+              }}
+              title="Delete"
+              icon={{
+                name: "delete",
+                type: "MaterialCommunityIcons",
+                size: 15,
+                color: "white",
+              }}
+            />
+          </View>
+        )}
       </View>
 
       <BottomSheetModalProvider>

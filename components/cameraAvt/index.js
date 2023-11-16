@@ -12,14 +12,14 @@ import {
 import { Camera } from "expo-camera";
 
 let camera = Camera;
-export default function CameraScreen({ navigation, route, imageuri }) {
+export default function CameraScreenAvt({ navigation, route }) {
   const [previewVisible, setPreviewVisible] = React.useState(false);
   const [capturedImage, setCapturedImage] = React.useState(null);
   const [cameraType, setCameraType] = React.useState(
     Camera.Constants.Type.back
   );
   const [flashMode, setFlashMode] = React.useState("off");
-  console.log(route);
+  console.log("vo cammeraavt:", route);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
   const [imageUri, setImageUri] = useState("");
@@ -69,8 +69,8 @@ export default function CameraScreen({ navigation, route, imageuri }) {
       setCameraType("back");
     }
   };
-  const __savePhoto = async () => {
-    let task = route.params.task;
+  const __savePhoto = () => {
+    // let task = route.params.task;
     let arr_uri = capturedImage.uri.split(".");
     let type = arr_uri[arr_uri.length - 1];
     let splash = capturedImage.uri.lastIndexOf("/");
@@ -82,25 +82,28 @@ export default function CameraScreen({ navigation, route, imageuri }) {
       size: 1234,
       uri: capturedImage.uri,
     };
-    console.log(attachPhoto);
     setImageUri(attachPhoto.uri); // dung cho update Imgae avt
 
-    if (task.attachments) {
-      task.attachments.push(attachPhoto);
-    } else {
-      task.attachments = [attachPhoto];
-    }
-    console.log(task);
+    // if (task.attachments) {
+    //   task.attachments.push(attachPhoto);
+    // } else {
+    //   task.attachments = [attachPhoto];
+    // }
+    console.log("bien uri:", imageUri);
     console.log(capturedImage);
-    // UpdateTaskFrontEnd(task);
-    navigation.navigate("DetailTask", {
-      task: task,
-      imageuri: imageuri, // prop nay dung cho Update image avatar
+
+    // navigation.navigate({
+    //   name: "UpdateProfile",
+    //   params: { imageuri: imageUri },
+    //   merge: true,
+    // });
+    navigation.navigate("UpdateProfile", {
+      uri: attachPhoto.uri,
     });
   };
   const backtoTask = () => {
-    navigation.navigate("DetailTask", {
-      task: route.params.task,
+    navigation.navigate("UpdateProfile", {
+      imageuri: imageUri,
     });
   };
   return (
@@ -181,16 +184,15 @@ export default function CameraScreen({ navigation, route, imageuri }) {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("DetailTask", {
-                        task: route.params.task,
+                      console.log("chụp");
+                      navigation.navigate("UpdateProfile", {
+                        imageuri: imageUri,
                       });
                     }}
                     style={{
-                      width: 130,
+                      width: 100,
                       height: 40,
-
-                      alignItems: "center",
-                      borderRadius: 4,
+                      marginTop: 20,
                     }}
                   >
                     <Text
@@ -199,7 +201,7 @@ export default function CameraScreen({ navigation, route, imageuri }) {
                         fontSize: 20,
                       }}
                     >
-                      Back to task
+                      Back
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -296,7 +298,7 @@ const styles = StyleSheet.create({
 });
 
 const CameraPreview = ({ photo, retakePicture, savePhoto, backtoTask }) => {
-  console.log("sdsfds", photo);
+  console.log("CameraPreview:", photo);
   return (
     <View
       style={{
@@ -380,7 +382,7 @@ const CameraPreview = ({ photo, retakePicture, savePhoto, backtoTask }) => {
                   fontSize: 20,
                 }}
               >
-                Back to task
+                Back
               </Text>
             </TouchableOpacity>
           </View>

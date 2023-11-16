@@ -24,29 +24,37 @@ export default function AccessGallery({ navigation, route }) {
   };
   pickImage();
   const handleSave = async () => {
-    console.log(image);
-    let task = route.params.task;
-    let arr_uri = image.split(".");
-    let type = arr_uri[arr_uri.length - 1];
-    let splash = image.lastIndexOf("/");
+    if (route.params?.from !== "ChangeAvt") {
+      console.log(image);
+      let task = route.params.task;
+      let arr_uri = image.split(".");
+      let type = arr_uri[arr_uri.length - 1];
+      let splash = image.lastIndexOf("/");
 
-    let nameGallery = arr_uri[0].substring(splash + 1);
-    let attachGallery = {
-      mimeType: type,
-      name: nameGallery,
-      size: 1234,
-      uri: image,
-    };
-    console.log(attachGallery);
-    if (task.attachments) {
-      task.attachments.push(attachGallery);
+      let nameGallery = arr_uri[0].substring(splash + 1);
+      let attachGallery = {
+        mimeType: type,
+        name: nameGallery,
+        size: 1234,
+        uri: image,
+      };
+      console.log(attachGallery);
+      if (task.attachments) {
+        task.attachments.push(attachGallery);
+      } else {
+        task.attachments = [attachGallery];
+      }
+      // UpdateTaskFrontEnd(task);
+      navigation.navigate("DetailTask", {
+        task: task,
+      });
     } else {
-      task.attachments = [attachGallery];
+      console.log("xu ly tu changeavt");
+      console.log("xem:", image);
+      navigation.navigate("UpdateProfile", {
+        uri: image,
+      });
     }
-    // UpdateTaskFrontEnd(task);
-    navigation.navigate("DetailTask", {
-      task: task,
-    });
   };
 
   return (

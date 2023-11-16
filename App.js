@@ -24,6 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import MicroPhone from "./screens/Microphone";
 import DetailTask from "./screens/DetailTask";
 import CameraScreen from "./components/camera";
+import CameraScreenAvt from "./components/cameraAvt";
 import AccessGallery from "./components/accessGallery";
 import AddLocation from "./components/addLocation/addLocation";
 import LinkFile from "./components/linkFile";
@@ -89,6 +90,7 @@ export default function App() {
         <Drawer.Screen name="Microphone" component={MicroPhone} />
         <Drawer.Screen name="DetailTask" component={DetailTask} />
         <Drawer.Screen name="Camera" component={CameraScreen} />
+        <Drawer.Screen name="CameraAvt" component={CameraScreenAvt} />
         <Drawer.Screen name="AccessGallery" component={AccessGallery} />
         <Drawer.Screen name="AddLocation" component={AddLocation} />
         <Stack.Screen name="LinkFile" component={LinkFile} />
