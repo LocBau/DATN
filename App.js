@@ -29,7 +29,11 @@ import AccessGallery from "./components/accessGallery";
 import AddLocation from "./components/addLocation/addLocation";
 import LinkFile from "./components/linkFile";
 import Search from "././screens/Search";
-import { Stats } from "./components/stats";
+import Stats from "./components/stats";
+import Analysis from "./screens/Analysis";
+import PlanningTask from "./components/planningTask";
+import ItemTaskMonitor from "./components/itemTaskMonitor";
+import ItemPartTask from "./components/itemPartTask";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -83,7 +87,7 @@ export default function App() {
         drawerContent={() => <DrawerContentComponent />}
       >
         <Drawer.Screen name="HomeDrawer" component={Home} />
-        {/* <Drawer.Screen name="Analytisc" component={} /> */}
+        <Drawer.Screen name="Analytics" component={Analysis} />
         <Drawer.Screen name="Calendar" component={Calendar} />
         <Drawer.Screen name="TaskLocation" component={TaskLocation} />
         <Drawer.Screen name="UpdateProfile" component={UpdateProfile} />
@@ -114,8 +118,14 @@ export default function App() {
           headerTitleAlign: "center",
         }}
       >
-        {/* <Stack.Screen name="Stats" component={Stats} /> */}
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen
+          name="Analytics"
+          // name="ItemTaskMonitor"
+          // component={ItemTaskMonitor}
+          component={Analysis}
+          // options={{ headerShown: false }}
+        />
+        {/* <Stack.Screen name="Login" component={Login} />
         <Stack.Screen
           name="Home"
           component={HomeDrawerScreen}
@@ -123,7 +133,7 @@ export default function App() {
         />
         <Stack.Screen name="Registration" component={Register} />
         <Stack.Screen name="Forget Password" component={ForgetPass} />
-        <Stack.Screen name="Reset Password" component={ResetPassword} />
+        <Stack.Screen name="Reset Password" component={ResetPassword} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
