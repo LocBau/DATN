@@ -5,10 +5,7 @@ import Stats from "../../components/stats";
 import PlanningTask from "../../components/planningTask";
 
 const FirstRoute = () => (
-  <View>
-    <Text>First Tab</Text>
     <Stats />
-  </View>
 );
 
 const SecondRoute = () => (

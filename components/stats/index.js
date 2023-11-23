@@ -148,7 +148,6 @@ const Stats = () => {
   const [month, setmonth] = useState(10);
   const [year, setyear] = useState(2023);
   const [refresh, setrefresh] = useState(true);
-  const [viewstat, setview] = useState(true);
 
   let isFocused = useIsFocused();
   useEffect(() => {
@@ -332,13 +331,13 @@ const Stats = () => {
 
   const renderTitle = () => {
     return (
-      <View style={{ marginVertical: 10 }}>
+      <View >
         <View
           style={{
             flex: 1,
             flexDirection: "row",
             justifyContent: "space-evenly",
-            marginTop: 24,
+            marginTop: 15,
             backgroundColor: "yellow",
           }}
         >
@@ -395,41 +394,47 @@ const Stats = () => {
         flex: 1,
       }}
     >
-      {viewstat ? (
+
         <View style={styles.containerStats}>
           <View style={styles.viewmounth}>
-            <TouchableOpacity
-              onPress={() => {
-                setmonth((month + 1) % 12);
-              }}
+            <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' ,    marginRight:10}}
             >
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  textAlign: "center",
+
+              <TouchableOpacity
+                onPress={() => {
+                  setmonth((month - 1 < 0 ? 11 : month - 1) % 12);
                 }}
               >
-                +
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setmonth((month - 1 < 0 ? 11 : month - 1) % 12);
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  textAlign: "center",
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  ←
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setmonth((month + 1) % 12);
                 }}
               >
-                -
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  →
+                </Text>
+              </TouchableOpacity>
+            </View>
+            
             <Text
               style={{
                 color: "white",
@@ -482,22 +487,10 @@ const Stats = () => {
             {renderLegendComponent()}
           </View>
           <View style={styles.viewyear}>
-            <TouchableOpacity
-              onPress={() => {
-                setyear(year + 1);
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                +
-              </Text>
-            </TouchableOpacity>
+                <View
+                style={{ flexDirection: 'row', justifyContent: 'space-between' ,    marginRight:10}}
+                >
+
             <TouchableOpacity
               onPress={() => {
                 setyear(year - 1);
@@ -510,10 +503,27 @@ const Stats = () => {
                   fontWeight: "bold",
                   textAlign: "center",
                 }}
-              >
-                -
+              > ←
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+
+              onPress={() => {
+                setyear(year + 1);
+              }}
+              >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                →
+              </Text>
+              </TouchableOpacity>
+                </View>
             <Text
               style={{
                 color: "white",
@@ -540,44 +550,9 @@ const Stats = () => {
             />
             {renderTitle()}
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              setview(false);
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontSize: 16,
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              Switch view here
-            </Text>
-          </TouchableOpacity>
+
         </View>
-      ) : (
-        <View>
-          {/* add ana here ... */}
-          <TouchableOpacity
-            onPress={() => {
-              setview(true);
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontSize: 16,
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              Switch view here
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      
     </View>
   );
 };
@@ -586,7 +561,7 @@ export default Stats;
 const styles = StyleSheet.create({
   containerStats: {
     flex: 1,
-    marginVertical: 15,
+    marginVertical: 5,
     paddingBottom: 5,
   },
   viewyear: {

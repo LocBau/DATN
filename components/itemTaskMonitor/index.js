@@ -17,32 +17,48 @@ import {
 import BackGround from "../backGround";
 import ItemPartTask from "../../components/itemPartTask";
 
-const ItemTaskMonitor = ({ viewForHead, viewForBody, viewForFoot }) => {
-  const weekstart = 19;
-  const data = {
-    title: "demo planning task",
-    createtime: {
-      weekday: "Mon",
-      day: 20,
-      month: 11,
-      year: 2023,
-    },
-    dueTime: {
-      weekday: "Thu",
-      day: 24,
-      month: 11,
-      year: 2023,
-    },
+const ItemTaskMonitor = ({ data }) => {
+  let length = 0;
+  let pos = 0;
+  if(data.start && data.end) {
+    length = data.end - data.start + 1;
+    pos = data.start;
+  } else if (data.start ) {
+    length =  8 - data.start ;
+  } else if (data.end) {
+    length = data.end;
+    pos = 1;
+  } else {
+    pos = 1;
+    length = 7;
+  }
+  if (data.outside) {
+    length = 0;
+    pos = 0;
+  }
 
-    late: false,
-    done: false,
+  const viewForHead = {
+    pos: data.start || 0,
+    part: "head",
+    color: "rgb(222, 156, 156)",
   };
-  console.log("vo itemTaskMonitor");
+  const viewForBody = {
+    pos: pos,
+    part: "body",
+    color: "rgb(222, 156, 156)",
+    lenght: length, // day
+  };
+  const viewForFoot = {
+    pos: data.end || 0,
+    part: "foot",
+    color: "rgb(222, 156, 156)",
+    lenght: "",
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.titleTask}>
-        <Text style={{ color: "blue" }}> title task</Text>
+        <Text style={{ color: "blue" }}> {data.title}</Text>
         {data.late ? (
           <MaterialIcons
             name="warning"
@@ -52,7 +68,7 @@ const ItemTaskMonitor = ({ viewForHead, viewForBody, viewForFoot }) => {
           />
         ) : data.done ? (
           <MaterialCommunityIcons
-            name="check-circle-outlin"
+            name="check-circle-outline"
             size={18}
             color="green"
             style={{ marginLeft: 10 }}

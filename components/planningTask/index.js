@@ -80,7 +80,8 @@ const PlanningTask = () => {
   };
 
   const today = new Date().toISOString().split("T")[0];
-  const [selectDate, setSelectDate] = useState();
+  const [selectDate, setSelectDate] = useState(today);
+  const [task, setTask] = useState([]);
   const onDateChanged = useCallback(async (date, updateSource) => {
     console.log("ExpandableCalendarScreen onDateChanged: ", date, updateSource);
     setSelectDate(date);
@@ -92,42 +93,65 @@ const PlanningTask = () => {
   //   return <AgendaItem item={item} info={info} />;
   // }
 
-  const data = {
-    dayweek: isSunday,
-    title: "demo planning task",
-    createtime: {
-      weekday: "Mon",
-      day: 20,
-      month: 11,
-      year: 2023,
-    },
-    dueTime: {
-      weekday: "Thu",
-      day: 24,
-      month: 11,
-      year: 2023,
-    },
+  useEffect(() => {
+    console.log("asd");
+    async function getData() {
+      let _data = await AsyncStorage.getItem("tasks");
+      if (_data) {
+        _data = JSON.parse(_data);
+      }
+      if (_data) {
+        _data = _data.task;
+      }
 
-    late: false,
-    done: false,
-  };
-  const viewForHead = {
-    pos: 1,
-    part: "head",
-    color: "rgb(222, 156, 156)",
-  };
-  const viewForBody = {
-    pos: 1,
-    part: "body",
-    color: "rgb(222, 156, 156)",
-    lenght: 4, // day
-  };
-  const viewForFoot = {
-    pos: 4,
-    part: "foot",
-    color: "rgb(222, 156, 156)",
-    lenght: "",
-  };
+      console.log(_data);
+      if (_data) {
+
+        let d = new Date(selectDate);
+        d.setTime(d.getTime()-d.getDay()* 86400000  );
+        let e = new Date(d.getTime()+7* 86400000);
+        let _view = [];
+        for (const i of _data) {
+          let temp = i;
+          let create = new Date(i.create_at);
+          if(create.getTime() >= d.getTime() && create.getTime() < e.getTime()) {
+            temp.start = create.getDay() +1;
+
+          }
+          let due = new Date(i.due);
+          if(due.getTime() >= d.getTime() && due.getTime() < e.getTime()) {
+            temp.end = due.getDay() +1;
+          }
+          let reminder = new Date(i.reminder);
+          if(reminder.getTime() >= d.getTime() && reminder.getTime() < e.getTime()) {
+            temp.end = reminder.getDay() +1;
+          }
+          if(!temp.end && !temp.start) {
+            if(i.due && due.getTime() < d.getTime()  ) {
+              temp.outside = true;
+            }
+            if(i.reminder && reminder.getTime() < d.getTime()  ) {
+              temp.outside = true;
+            }
+
+            if(i.create_at &&  create.getTime() > e.getTime()) {
+              temp.outside = true;
+            }
+          }
+
+          if(i.due ||  i.reminder) {
+            
+            _view.push(temp);
+          }
+        }
+        setTask(_view);
+        console.log(_view);
+      }
+    }
+    getData();
+  }, [selectDate]);
+
+
   return (
     <View style={styles.container}>
       <View style={styles.containerCalendar}>
@@ -176,11 +200,13 @@ const PlanningTask = () => {
 
       <View style={styles.containertask}>
         <ScrollView>
-          <ItemTaskMonitor
-            viewForHead={viewForHead}
-            viewForBody={viewForBody}
-            viewForFoot={viewForFoot}
-          />
+          {
+            task.map((item) => {
+              if(!item.outside) return (<ItemTaskMonitor
+              data={item}
+              />)
+            })
+          }
         </ScrollView>
       </View>
     </View>
