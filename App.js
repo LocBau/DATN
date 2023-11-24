@@ -118,14 +118,14 @@ export default function App() {
           headerTitleAlign: "center",
         }}
       >
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Analytics"
           // name="ItemTaskMonitor"
           // component={ItemTaskMonitor}
           component={Analysis}
           // options={{ headerShown: false }}
-        />
-        {/* <Stack.Screen name="Login" component={Login} />
+        /> */}
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen
           name="Home"
           component={HomeDrawerScreen}
@@ -133,7 +133,7 @@ export default function App() {
         />
         <Stack.Screen name="Registration" component={Register} />
         <Stack.Screen name="Forget Password" component={ForgetPass} />
-        <Stack.Screen name="Reset Password" component={ResetPassword} /> */}
+        <Stack.Screen name="Reset Password" component={ResetPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );

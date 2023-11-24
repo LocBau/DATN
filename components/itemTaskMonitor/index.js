@@ -20,11 +20,12 @@ import ItemPartTask from "../../components/itemPartTask";
 const ItemTaskMonitor = ({ data }) => {
   let length = 0;
   let pos = 0;
-  if(data.start && data.end) {
+  if (data.start && data.end) {
     length = data.end - data.start + 1;
     pos = data.start;
-  } else if (data.start ) {
-    length =  8 - data.start ;
+  } else if (data.start) {
+    length = 8 - data.start;
+    pos = data.start;
   } else if (data.end) {
     length = data.end;
     pos = 1;
@@ -36,7 +37,8 @@ const ItemTaskMonitor = ({ data }) => {
     length = 0;
     pos = 0;
   }
-
+  console.log("dataaa:", data.title);
+  console.log("dataaa:", length);
   const viewForHead = {
     pos: data.start || 0,
     part: "head",

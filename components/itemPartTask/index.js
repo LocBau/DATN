@@ -471,7 +471,7 @@ const ItemPartTask = ({ pos, part, color, lenght }) => {
                     ...containerBox,
                     width: 55,
                     height: 35,
-                    left: 260,
+                    left: 275,
                   };
                   break;
                 case 3:
@@ -480,7 +480,16 @@ const ItemPartTask = ({ pos, part, color, lenght }) => {
                     ...containerBox,
                     width: 105,
                     height: 35,
-                    left: 260,
+                    left: 275,
+                  };
+                  break;
+                default:
+                  console.log("lengh > 3 day");
+                  containerBox = {
+                    ...containerBox,
+                    width: 105,
+                    height: 35,
+                    left: 275,
                   };
                   break;
               }
