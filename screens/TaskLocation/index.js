@@ -49,6 +49,11 @@ const MapScreen = ({navigation})=> {
       navigation.navigate('DetailTask', {task:i.task})
 
     }
+
+    const HandleBack = () => {
+      setSelect('');
+      navigation.navigate('HomeDrawer');
+    }
     const HandleDirectMap = () => {
       if(!select) return;
 
@@ -149,6 +154,13 @@ const MapScreen = ({navigation})=> {
                 HandleDetail();
               }}>
               <Text style={styles.textStyle}>Details</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {
+                HandleBack();
+              }}>
+              <Text style={styles.textStyle}>Back to Home</Text>
             </Pressable>
           </View>
         </View>
