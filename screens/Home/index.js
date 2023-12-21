@@ -55,8 +55,9 @@ const Home = ({ navigation }) => {
   const isFocused = useIsFocused();
 
   async function getView() {
-    let d = new Date().toLocaleDateString().split('/');
-    d = "" + d[2] + '-' + d[1]  + '-' + d[0];
+    let d = new Date();
+    console.log(d);
+    d = "" + d.getFullYear() + '-' + (d.getMonth()+1)  + '-' + (d.getDate() < 10  ? "0" + d.getDate()  : d.getDate());
     
     let tasks = await AsyncStorage.getItem("tasks");
     
@@ -64,7 +65,7 @@ const Home = ({ navigation }) => {
     tasks = JSON.parse(tasks);
 
     tasks = tasks.task;
-    
+    console.log(tasks);
     let data = {repeat:[]};
     let _view = [{title:d, data:[]}];
     for (const i of tasks) {
@@ -209,6 +210,7 @@ const Home = ({ navigation }) => {
 
     _view[0].data.sort(compareDate);
   console.log("v"+ JSON.stringify(_view[0].data));
+  console.log("d" + d + JSON.stringify(data[d]));
   let view = [];
   
   for (const i of _view[0].data) {

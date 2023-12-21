@@ -67,6 +67,9 @@ export default function AccessGallery({ navigation, route }) {
       <Button
         title="Back to task"
         onPress={() =>
+          route.params?.from == 'ChangeAvt'? navigation.navigate("UpdateProfile", {
+            task: route.params.task,
+          }) :
           navigation.navigate("DetailTask", {
             task: route.params.task,
           })
