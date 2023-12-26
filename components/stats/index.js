@@ -19,77 +19,77 @@ const Stats = () => {
 
   const barData = [
     {
-      value: 40,
+      value: 0,
       label: "Jan",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 20, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 50,
+      value: 0,
       label: "Feb",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 40, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 75,
+      value: 0,
       label: "Mar",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 25, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 30,
+      value: 0,
       label: "Apr",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 20, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 60,
+      value: 0,
       label: "May",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 40, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 65,
+      value: 0,
       label: "Jun",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 30, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 65,
+      value: 0,
       label: "Jul",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 30, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 65,
+      value: 0,
       label: "Aug",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 30, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
       value: 65,
       label: "Sep",
@@ -98,7 +98,7 @@ const Stats = () => {
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 30, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
       value: 65,
       label: "Oct",
@@ -107,25 +107,25 @@ const Stats = () => {
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 30, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 65,
+      value: 0,
       label: "Nov",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 30, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
     {
-      value: 65,
+      value: 0,
       label: "Dec",
       spacing: 2,
       labelWidth: 30,
       labelTextStyle: { color: "gray" },
       frontColor: "#177AD5",
     },
-    { value: 30, frontColor: "#ED6665" },
+    { value: 0, frontColor: "#ED6665" },
   ];
 
   const MONTH = [
@@ -142,11 +142,12 @@ const Stats = () => {
     "November",
     "December",
   ];
+  const to_day = new Date();
 
   const [pie, setpie] = useState(pieData);
   const [bar, setbar] = useState(barData);
-  const [month, setmonth] = useState(10);
-  const [year, setyear] = useState(2023);
+  const [month, setmonth] = useState(to_day.getMonth());
+  const [year, setyear] = useState(to_day.getFullYear());
   const [refresh, setrefresh] = useState(true);
 
   let isFocused = useIsFocused();
@@ -181,19 +182,27 @@ const Stats = () => {
     for (const i of _data) {
       if (i.due) {
         let due = new Date(i.due);
-        if (due.getMonth() != Math.abs(month)) continue;
+        if (due.getMonth() != Math.abs(month)) {
+
+
+          continue;
+        };
         if (i.done) {
           done++;
         } else {
           let j = new Date(i.due);
           j = j.getTime();
-          if (d >= j) {
+          if (j >= d) {
             inprogress++;
           } else {
             late++;
           }
         }
       } else {
+        let cre = new Date(i.create_at);
+        if(i.done && cre.getMonth() == Math.abs(month)) {
+          done++;
+        }
         let create_at = new Date(i.create_at);
         if (create_at.getMonth() != Math.abs(month)) continue;
         others++;
@@ -201,9 +210,9 @@ const Stats = () => {
     }
     let newPie = pieData;
     newPie[0].value = done;
-    newPie[1].value = inprogress;
+    newPie[1].value = inprogress + others;
     newPie[2].value = late;
-    newPie[3].value = others;
+    // newPie[3].value = others;
     console.log(others);
     if (!done && !inprogress && !late && !others) {
       setpie([
@@ -242,8 +251,8 @@ const Stats = () => {
           total++;
         }
       }
-      newbar[_month * 2].value = done;
-      newbar[_month * 2 + 1].value = total;
+      newbar[_month * 2].value = total;
+      newbar[_month * 2 + 1].value = done;
     }
 
     console.log(newbar);
@@ -307,12 +316,12 @@ const Stats = () => {
             {renderDot("#8F80F3")}
             <Text style={{ color: "white" }}>Late: {pie[2]?.value || 0}</Text>
           </View>
-          <View
+          {/* <View
             style={{ flexDirection: "row", alignItems: "center", width: 120 }}
           >
             {renderDot("#FF7F97")}
             <Text style={{ color: "white" }}>Others: {pie[3]?.value || 0}</Text>
-          </View>
+          </View> */}
           <View
             style={{ flexDirection: "row", alignItems: "center", width: 120 }}
           >

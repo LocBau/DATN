@@ -60,12 +60,101 @@ const Home = ({ navigation }) => {
     d = "" + d.getFullYear() + '-' + (d.getMonth()+1)  + '-' + (d.getDate() < 10  ? "0" + d.getDate()  : d.getDate());
     
     let tasks = await AsyncStorage.getItem("tasks");
-    
-    
-    tasks = JSON.parse(tasks);
+    // console.log("tasks" + tasks);
+    let google_events = await AsyncStorage.getItem("google_events");
 
+    if (google_events) {
+      console.log("gd"+google_events);
+      google_events = JSON.parse(google_events);
+    }
+    if (!tasks) {
+      let token = await AsyncStorage.getItem("token");
+      tasks = await GetTaskApi(token);
+      // console.log(tasks.data.google_events);
+      // google_events = tasks.data.google_events;
+      tasks = tasks.data;
+      tasks = JSON.stringify(tasks);
+      
+
+    }
+    tasks = JSON.parse(tasks);
+    // console.log(google_events[1]);
+    // console.log("g"+tasks.google_events);
+    // console.log(google_events);
+    if ( !google_events && tasks && tasks.google_events) {
+      // console.log(tasks.google_events);
+      google_events = [];
+      for (const k in tasks.google_events) {
+        if (Object.hasOwnProperty.call(tasks.google_events, k)) {
+          for (const i of tasks.google_events[k]) {
+            let due = null;
+            if (i.end && i.end.dateTime) due = i.end.dateTime;
+            if (i.end && i.end.date) due = i.end.date;
+            if (due) {
+              let temp = new Date(due);
+              due = temp.toISOString();
+            }
+            let repeat = null;
+            if (i.recurrence && i.recurrence[0]) {
+              let type = "";
+              if (i.recurrence[0].includes("WEEKLY")) type = "Weekly";
+              if (i.recurrence[0].includes("DAILY")) type = "Daily";
+              if (i.recurrence[0].includes("MONTHLY")) type = "Monthly";
+              let info = {};
+              if (i.recurrence[0].includes("BYDAY="))
+                info["BYDAY"] = i.recurrence[0]
+                  .split("BYDAY=")[1]
+                  .split(";")[0];
+              if (i.recurrence[0].includes("INTERVAL="))
+                info["INTERVAL"] = i.recurrence[0]
+                  .split("INTERVAL=")[1]
+                  .split(";")[0];
+              if (i.recurrence[0].includes("WKST="))
+                info["WKST"] = i.recurrence[0]
+                  .split("WKST=")[1]
+                  .split(";")[0];
+              repeat = {
+                type: type,
+                hour: due,
+                info: info,
+              };
+            }
+            let location = null;
+            if (i.location) {
+              location = {
+                name: i.location,
+                latitude: 10.861387059389518,
+                longitude: 106.7656611593152,
+              };
+            }
+            let t = {
+              gmail: k,
+              title: i.summary || "No title",
+              done: false,
+              due: repeat ? null : due,
+              reminder: false,
+              repeat: repeat,
+              _id: i.id,
+              location: location,
+              create_at: i.created,
+              // note : i.description || "",
+              hangoutLink: i.hangoutLink || null,
+            };
+            google_events.push(t);
+          }
+        }
+      }
+      // console.log(JSON.stringify(google_events));
+      AsyncStorage.setItem("google_events", JSON.stringify(google_events));
+    }
+    
     tasks = tasks.task;
-    console.log(tasks);
+    if (google_events && tasks) {
+      tasks = tasks.concat(google_events);
+      console.log(google_events);
+    }
+    
+    
     let data = {repeat:[]};
     let _view = [{title:d, data:[]}];
     for (const i of tasks) {
@@ -569,6 +658,7 @@ const Home = ({ navigation }) => {
                       _id={item._id}
                       title={item.title}
                       status={item.done}
+                      gmail={item.gmail}
                       due={item.due}
                       onUpdate={hanldeUpdate}
                       favorite={item.favorite}

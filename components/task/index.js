@@ -21,7 +21,7 @@ const Task = (props) => {
   const [favorite, setfavorite] = useState(props.favorite);
   let date = null;
   const handleCheck = async () => {
-    
+    if (props.gmail) return;
 
     
     props.onUpdate(props._id);
@@ -34,7 +34,7 @@ const Task = (props) => {
     }
   };
   const handleFavorite = async (favorite) => {
-    
+    if (props.gmail) return;
     props.onFavorite(props._id, favorite);
     setfavorite(favorite);
     props.trigger();
@@ -73,11 +73,11 @@ const Task = (props) => {
           <MaterialCommunityIcons
             name={
               checktask === false
-                ? "checkbox-blank-circle-outline"
+                ? (props.gmail ? "google" : "checkbox-blank-circle-outline")
                 : "checkbox-marked-circle-outline"
             }
             size={30}
-            color={checktask === false ? "red" : "green"}
+            color={checktask === false ? (props.gmail ? "green" : "red") : "green"}
           />
         </TouchableOpacity>
       </View>
