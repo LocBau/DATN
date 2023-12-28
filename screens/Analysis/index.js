@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Stats from "../../components/stats";
 import PlanningTask from "../../components/planningTask";
+import { Header } from "react-native/Libraries/NewAppScreen";
 
 const FirstRoute = () => (
     <Stats />
@@ -28,6 +29,10 @@ const Analysis = () => {
   });
 
   return (
+    // <View>
+    //   <Text>asd</Text>
+          
+    // </View>
     <TabView
       navigationState={{ index, routes }}
       renderScene={renderScene}

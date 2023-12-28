@@ -5,8 +5,9 @@ import { StyleSheet, View, Text ,  Modal, Pressable, Alert } from 'react-native'
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import openMap from 'react-native-open-maps';
-
+import { useIsFocused } from "@react-navigation/native";
 const MapScreen = ({navigation})=> {
+  let isFocused = useIsFocused();
   const [region, setRegion] = useState({
       latitude: 37.78825,
       longitude: -122.4324,
@@ -65,9 +66,9 @@ const MapScreen = ({navigation})=> {
   // Location.setGoogleApiKey("AIzaSyD5GUOMMrDY5Ml8JOQ5j7z7p9f8GaGCDBg");
 
   useEffect(()=>{
-    if (flag) {
-      return;
-    }
+    // if (flag) {
+    //   return;
+    // }
     const getTask = async () => {
       let k = 0;
       let list = [];
@@ -79,7 +80,7 @@ const MapScreen = ({navigation})=> {
       let minLong = 999;
 
       let tasks = await AsyncStorage.getItem('tasks');
-      console.log(tasks);
+      console.log("l"+tasks);
       if (tasks) tasks = JSON.parse(tasks).task;
       if (tasks) {
         for (const i of tasks) {
@@ -119,7 +120,7 @@ const MapScreen = ({navigation})=> {
     };
 
     getTask();
-  })
+  },[isFocused])
 
     if (markers.length != 0) {
       return (    

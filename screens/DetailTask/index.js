@@ -142,27 +142,27 @@ const DetailTask = ({ route, navigation }) => {
 
   const handleItemSelectReminder = (item) => {
     if (route.params.task.gmail) return;
-    if (!due) {
-      alert("cannot set reminder if due is not set");
-      return;
-    }
-    let check = new Date(due);
-    if (check.getTime() - item.getTime() <= 360000) {
-      console.log(check.getTime());
-      console.log(item.getTime());
-      console.log(check.getTime() - item.getTime());
-      alert("cannot set reminder prior less than 1 hour");
-      return;
-    }
-    if (check.getTime() - Date.now() <= 0) {
-      alert("cannot set reminder when due is passed");
-      return;
-    }
+    // if (!due) {
+    //   alert("cannot set reminder if due is not set");
+    //   return;
+    // }
+    // let check = new Date(due);
+    // if (check.getTime() - item.getTime() <= 360000) {
+    //   console.log(check.getTime());
+    //   console.log(item.getTime());
+    //   console.log(check.getTime() - item.getTime());
+    //   alert("cannot set reminder prior less than 1 hour");
+    //   return;
+    // }
+    // if (check.getTime() - Date.now() <= 0) {
+    //   alert("cannot set reminder when due is passed");
+    //   return;
+    // }
 
-    if (item.getTime() - Date.now() <= 0) {
-      alert("cannot set reminder when prior than moment");
-      return;
-    }
+    // if (item.getTime() - Date.now() <= 0) {
+    //   alert("cannot set reminder when prior than moment");
+    //   return;
+    // }
     console.log(item.toISOString());
     setreminder(item.toISOString());
   };

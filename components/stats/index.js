@@ -243,12 +243,19 @@ const Stats = () => {
           if (due.getMonth() != _month) continue;
           if (i.done) {
             done++;
+            total++
           } else {
             total++;
           }
         } else {
           if (create_at.getMonth() != _month) continue;
-          total++;
+          if (i.done) {
+            done++;
+            total++
+          } 
+          else {
+            total++;
+          }
         }
       }
       newbar[_month * 2].value = total;

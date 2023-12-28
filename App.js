@@ -87,7 +87,9 @@ export default function App() {
         drawerContent={() => <DrawerContentComponent />}
       >
         <Drawer.Screen name="HomeDrawer" component={Home} />
-        <Drawer.Screen name="Analytics" component={Analysis} />
+        <Drawer.Screen 
+         options={{ headerShown: true }}
+        name="Analytics" component={Analysis} />
         <Drawer.Screen name="Calendar" component={Calendar} />
         <Drawer.Screen name="TaskLocation" component={TaskLocation} />
         <Drawer.Screen name="UpdateProfile" component={UpdateProfile} />
