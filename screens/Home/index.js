@@ -70,9 +70,10 @@ const Home = ({ navigation }) => {
     if (!tasks) {
       let token = await AsyncStorage.getItem("token");
       tasks = await GetTaskApi(token);
-      // console.log(tasks.data.google_events);
+      console.log("fetch task be");
       // google_events = tasks.data.google_events;
       tasks = tasks.data;
+      await AsyncStorage.setItem('tasks',JSON.stringify(tasks))
       tasks = JSON.stringify(tasks);
       
 

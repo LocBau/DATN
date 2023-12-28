@@ -12,6 +12,7 @@ import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 import GetUserProfileApi from "../../api/getuserprofileApi";
 import { serverUrl } from "../../api/link";
 import RemoveSyncedEmailApi from "../../api/removeSyncedEmailApi";
+import SyncCalendarApi from "../../api/syncCalendarApi";
 
 const Setting = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -67,7 +68,9 @@ const Setting = ({ navigation }) => {
             if (Object.hasOwnProperty.call(google, k)) {
               const e = google[k];
               // console.log(k);
-              google_array.push(e);
+              if(e.sync) {
+                google_array.push(e);
+              }
             }
           }
           setGoogleSyncEmail(google_array);
@@ -134,6 +137,8 @@ const Setting = ({ navigation }) => {
       if (item.email !== remove_email) return item;
     });
     setGoogleSyncEmail(ref);
+    await AsyncStorage.removeItem('google_events');
+    await AsyncStorage.removeItem('tasks');
     setrefresh(true);
   };
 
@@ -154,6 +159,15 @@ const Setting = ({ navigation }) => {
     await AsyncStorage.removeItem("reset");
     navigation.navigate("Login");
   };
+  const handleSave = async () => {
+    await AsyncStorage.removeItem('google_events');
+    await AsyncStorage.removeItem('tasks');
+    navigation.navigate("HomeDrawer");
+  }
+  const handleRefresh = async () => {
+    await SyncCalendarApi();
+    setrefresh(true);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -234,7 +248,7 @@ const Setting = ({ navigation }) => {
                 size={28}
                 color="purple"
                 marginHorizontal={5}
-                onPress={() => setrefresh(true)}
+                onPress={handleRefresh}
               />
               <MaterialCommunityIcons
                 name="link-plus"
@@ -373,7 +387,8 @@ const Setting = ({ navigation }) => {
             size: 15,
             color: "white",
           }}
-          onPress={() => navigation.navigate("HomeDrawer")}
+          
+          onPress={handleSave}
         />
       </View>
     </View>
