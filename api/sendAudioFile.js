@@ -1,7 +1,7 @@
 // import { serverUrl } from './link';
 import axios from 'axios';
 
-const serverUrl = "https://40cb-103-199-22-82.ngrok-free.app";
+const serverUrl = "https://5dd9-113-161-74-106.ngrok-free.app";
 
 const SendAudioFile = async (audio) => {
 

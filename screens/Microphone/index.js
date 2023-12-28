@@ -377,10 +377,10 @@ export default function MicroPhone() {
         }
         else if (data.intent == 'SHOW_TASK') {
           // console.log(task);
-          let _phrase ="Here your today task ";
+          let _phrase ="Here your today task: \n ";
           let no_task = "you got no task";
           if(data.info.day=="NEXT_DAY") {
-            _phrase ="Here your tomorrow task ";
+            _phrase ="Here your tomorrow task : \n ";
             let nextday = new Date();
             nextday.setDate(nextday.getDate()+1);
             console.log(nextday.toLocaleDateString());
@@ -395,7 +395,7 @@ export default function MicroPhone() {
                 const e = view[i];
                 let from_google = '';
                 if (e.data.gmail) from_google = ' google task ';
-                _phrase +=  "number "  +  (i+1)+ ' '  + from_google +e.title  + ", ";
+                _phrase +=  "number "  +  (i+1)+ ' '  + from_google +e.title  + ", \n";
                 
                 
                 no_task='';
@@ -411,7 +411,7 @@ export default function MicroPhone() {
                 const e = view[i];
                 let from_google = '';
                 if (e.data.gmail) from_google = ' google task ';
-                _phrase +=  "number "  +  (i+1)+ ' '  + from_google +e.title  + ", ";
+                _phrase +=  "number "  +  (i+1)+ ' '  + from_google +e.title  + ", \n";
                 
                 
                 no_task='';

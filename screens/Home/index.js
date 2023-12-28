@@ -317,6 +317,11 @@ const Home = ({ navigation }) => {
       // console.log(tasklist);
       // await AsyncStorage.removeItem("tasks");
       console.log("focus" + isFocused);
+      let bg = await AsyncStorage.getItem('bg');
+      console.log("bg"+bg);
+      setSelectedItem(bg);
+      setBackground(bg);
+      setIsButton1Pressed(false);
       if (!isFocused) return;
       let flag = await AsyncStorage.getItem("flag");
       console.log(flag);
@@ -575,9 +580,11 @@ const Home = ({ navigation }) => {
    * code using for BottomSheetModal:
    *
    */
+
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleItemSelect = (item) => {
+    AsyncStorage.setItem('bg',item);
     setSelectedItem(item);
     console.log("component cha:", item);
     setBackground(item);

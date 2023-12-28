@@ -162,11 +162,13 @@ const Setting = ({ navigation }) => {
   const handleSave = async () => {
     await AsyncStorage.removeItem('google_events');
     await AsyncStorage.removeItem('tasks');
+    alert("Saved!")
     navigation.navigate("HomeDrawer");
   }
   const handleRefresh = async () => {
     await SyncCalendarApi();
     setrefresh(true);
+    alert("App Refreshed");
   }
   return (
     <View style={styles.container}>
