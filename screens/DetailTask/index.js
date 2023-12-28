@@ -12,6 +12,7 @@ import {
   Alert,
   Platform,
   FlatList,
+  Keyboard,
 } from "react-native";
 import React, {
   useState,
@@ -81,7 +82,7 @@ const DetailTask = ({ route, navigation }) => {
   const [location, setLocation] = useState(route.params.task.location);
   const [repeat, setRepeat] = useState(route.params.task.repeat);
   const [attachments, setAttachments] = useState(route.params.task.attachments);
-
+  const [noteFocus, setNoteFocus] = useState(false);
   const convertRepeat = (rep) => {
     if (!rep || !rep.type || !rep.hour) return "Not set";
     if (rep.type == "Daily") {
@@ -521,7 +522,30 @@ const DetailTask = ({ route, navigation }) => {
             value={note}
             onChangeText={(e) => setNote(e)}
             multiline={true}
+            onFocus={()=> {setNoteFocus(true)}}
           />
+          <View style={styles.button}>
+          {noteFocus ? <Button onPress={()=> {
+            setNoteFocus(false);
+            Keyboard.dismiss();
+          }}
+          titleStyle={{ fontWeight: "700" }}
+          buttonStyle={{
+            backgroundColor: "rgb(179, 55, 225)",
+            borderColor: "transparent",
+            borderWidth: 0,
+            borderRadius: 30,
+          }}
+          containerStyle={{
+            width: 120,
+            marginHorizontal: 5,
+            marginVertical: 10,
+          }}
+          title="Back"
+          
+          /> : ""}
+          </View>
+          
         </View>
         {!route.params.task.gmail && (
           <View style={styles.button}>
