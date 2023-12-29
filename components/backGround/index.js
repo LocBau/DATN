@@ -26,7 +26,7 @@ const BackGround = ({ onItemSelect }) => {
     async function proc () {
       setF(false);
       let l = [];
-      for (let i = 0; i < 9; i++) {
+      for (let i = 0; i < 6; i++) {
         console.log(BASE_URI+i);
         let p = await GetImgUrlApi(BASE_URI+i);
         l.push(p);

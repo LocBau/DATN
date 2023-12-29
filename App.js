@@ -34,6 +34,7 @@ import Analysis from "./screens/Analysis";
 import PlanningTask from "./components/planningTask";
 import ItemTaskMonitor from "./components/itemTaskMonitor";
 import ItemPartTask from "./components/itemPartTask";
+import ChangePassword from "./screens/ChangePassword";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -96,6 +97,7 @@ export default function App() {
         <Drawer.Screen name="Setting" component={Setting} />
         <Drawer.Screen name="Microphone" component={MicroPhone} />
         <Drawer.Screen name="DetailTask" component={DetailTask} />
+        <Drawer.Screen name="ChangePassword" component={ChangePassword} />
         <Drawer.Screen name="Camera" component={CameraScreen} />
         <Drawer.Screen name="CameraAvt" component={CameraScreenAvt} />
         <Drawer.Screen name="AccessGallery" component={AccessGallery} />

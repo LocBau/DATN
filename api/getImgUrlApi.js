@@ -13,7 +13,7 @@ const GetImgUrlApi = async (url) => {
       
       try {
         const res = await axios(config)
-        console.log(res.request.responseURL)
+        // console.log(res)
         return res.request.responseURL;
       } catch (e) {
           console.log(e)

@@ -18,6 +18,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
+  TouchableOpacity,
 } from "@gorhom/bottom-sheet";
 import BSMChangeAvt from "../../components/bsmChangeAvt";
 
@@ -151,7 +152,15 @@ const UpdateProfile = ({ navigation, task, route }) => {
       </View>
       <View style={styles.changePass}>
         <Text style={styles.changePasstext}>Password</Text>
-        <Text style={styles.changePasstextlink}>Change password</Text>
+        <TouchableOpacity onPress={()=> {
+            navigation.navigate("ChangePassword");
+          }}>
+        <Text style={styles.changePasstextlink}>
+
+          Change password
+
+        </Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.button}>
         <Button
