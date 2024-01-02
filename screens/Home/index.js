@@ -166,9 +166,10 @@ const Home = ({ navigation }) => {
       if (i.due && !i.repeat) timestamp = i.due;
 
       if (i.reminder && !i.repeat) timestamp = i.reminder;
-      let _date = timestamp.split("T");
-      let temp = new Date(timestamp);
 
+      let temp = new Date(timestamp);
+      let offsetdate = new Date(temp.getTime() + 7*3600000);
+      let _date = offsetdate.toJSON().split("T");
       let _hour = temp.toTimeString().split(":");
       if (i.repeat) {
         let t = new Date(i.repeat.hour);

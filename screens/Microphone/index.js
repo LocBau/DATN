@@ -33,6 +33,16 @@ export default function MicroPhone() {
   const [googleevent, setgoogleevent] = useState("");
   const isfocus = useIsFocused();
   const WEEKDAY = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+  const _WEEKDAY = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+  const _MONTHNAME = [ "January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December" ];
+
+  const getDateString = (date) =>{ 
+    const _DATE = [' th',' st' ,' nd', ' rd'];
+    if(date % 10 > 3) return date + ' th';
+    if(date / 10 >= 1 && date / 10 <= 2) return  date +' th';
+    return date + _DATE[date % 10];
+  }
   const ADDDATEVALUE = 86400000;
   useEffect(() => {
     console.log("microfocus" + isfocus);
@@ -157,11 +167,13 @@ export default function MicroPhone() {
       let timestamp = "";
       if (i.create_at) timestamp = i.create_at;
       if (i.due && !i.repeat) timestamp = i.due;
-
+      
       if (i.reminder && !i.repeat) timestamp = i.reminder;
-      let _date = timestamp.split("T");
+      
       let temp = new Date(timestamp);
-
+      
+      let offsetdate = new Date(temp.getTime() + 7*3600000);
+      let _date = offsetdate.toJSON().split("T");
       let _hour = temp.toTimeString().split(":");
       if (i.repeat) {
         let t = new Date(i.repeat.hour);
@@ -301,6 +313,7 @@ export default function MicroPhone() {
     }
 
     _view[0].data.sort(compareDate);
+    console.log("g" + d + JSON.stringify(data))
     return _view[0].data;
   }
 
@@ -358,7 +371,7 @@ export default function MicroPhone() {
         }
         setStatus(`you say: ${data.result}`);
         let today = new Date().toLocaleDateString().split("/");
-        today = "" + today[2] + "-" + today[1] + "-" + today[0];
+        today = "" + today[2] + "-" + (today[1] < 10 ? ("0" + today[1]): today[1]) + "-" + (today[0] < 10 ? ("0" + today[0]): today[0]) ;
         if (data.intent != "CANCEL" && create && data.result && !confirm) {
           setconfirm(data.result);
           setphrase(
@@ -418,7 +431,7 @@ export default function MicroPhone() {
             }
           } else {
             let view = await getView(today);
-            console.log("v" + view);
+            console.log("v" + JSON.stringify(view));
             if (view) {
               for (let i = 0; i < view.length; i++) {
                 const e = view[i];
@@ -458,12 +471,33 @@ export default function MicroPhone() {
           setflag(false);
         } else if (data.intent == "SHOW_DETAIL") {
           if (select) {
+            let today = new Date();
             let _temp = select;
+            let _reminder =  " , reminder not set ";
+            let _due =  " , due not set ";
+            let _repeat = " ,repeat not set ";
+            if (_temp.reminder) {
+              let reminder_date = new Date(_temp.reminder);
+              _reminder =  " reminder is set on " + _WEEKDAY[reminder_date.getDay()] + " " + getDateString(reminder_date.getDate()) + " " +_MONTHNAME[reminder_date.getMonth()];
+              _reminder =  _reminder + " at " +  reminder_date.getHours() +", ";
+            }
+            if (_temp.due) {
+              let due_date = new Date(_temp.due);
+              _due =   "due is set on " +_WEEKDAY[due_date.getDay()] + " " + getDateString(due_date.getDate()) + " " +_MONTHNAME[due_date.getMonth()];
+              _due =  _due + " at " +  due_date.getHours() +", ";
+            }
+            if (_temp.repeat) {
+              let repeat_date = new Date(_temp.repeat.hour);
+              _repeat =  " repeat is set " + _temp.repeat.type + " at " + repeat_date.toTimeString().split(' ')[0];
+
+            }
+            let _status = _temp.data.done ? ", status is done " : " status is not done ";
             delete _temp._id;
             delete _temp.create_at;
-
-            setphrase("here's detail " + JSON.stringify(select));
-            Speech.speak("here's detail " + JSON.stringify(select));
+            let _location = _temp.data.location ?  (" task location is :" + _temp.data.location.name) : " no location set";
+            let _res = "task title: " +  _temp.title + _repeat + _reminder + _due + _status + _location;
+            setphrase("here's detail " + JSON.stringify(_res));
+            Speech.speak("here's detail " + JSON.stringify(_res));
           } else {
             setphrase("no task is current selected");
             Speech.speak("no task is current selected");

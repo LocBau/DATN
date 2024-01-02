@@ -68,13 +68,13 @@ const DetailTask = ({ route, navigation }) => {
     setNote(route.params.task.note);
     setAttachments(route.params.task.attachments);
     setIsGoogle(route.params.task.gmail);
-    setStatus(route.params.task.status);
+    setStatus(route.params.task.done);
 
     console.log("eff" + isGoogle);
     console.log("detail focus" + isFocused);
   }, [isFocused]);
 
-  const [status, setStatus] = useState(route.params.status);
+  const [status, setStatus] = useState(route.params.task.done);
   const [task, setTask] = useState(route.params.task);
   const [isGoogle, setIsGoogle] = useState(route.params.task.gmail);
   console.log("isgoogle" + isGoogle);
