@@ -22,6 +22,20 @@ const styles = StyleSheet.create({
   titleTask: {
     color: "blue",
   },
+  status: {
+    flexDirection: "row",
+    width: "100%",
+    height: 40,
+    borderColor: "gray",
+    borderBottomWidth: 2,
+    alignContent: "center",
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  touchstatus: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   reminder: {
     flexDirection: "row",
     width: "100%",

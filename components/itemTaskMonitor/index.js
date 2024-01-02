@@ -65,7 +65,7 @@ const ItemTaskMonitor = ({ data }) => {
           <MaterialIcons
             name="warning"
             size={18}
-            color="yellow"
+            color="red"
             style={{ marginLeft: 10 }}
           />
         ) : data.done ? (
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     width: 350, //91%
     backgroundColor: "transparent",
     alignItems: "center",
+    marginVertical: 2,
   },
   titleTask: {
     flexDirection: "row",

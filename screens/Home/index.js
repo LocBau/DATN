@@ -57,14 +57,20 @@ const Home = ({ navigation }) => {
   async function getView() {
     let d = new Date();
     console.log(d);
-    d = "" + d.getFullYear() + '-' + ((d.getMonth() +1) < 10 ?   "0" + (d.getMonth() +1) : (d.getMonth() +1)) + '-' + (d.getDate() < 10  ? "0" + d.getDate()  : d.getDate());
-    
+    d =
+      "" +
+      d.getFullYear() +
+      "-" +
+      (d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1) +
+      "-" +
+      (d.getDate() < 10 ? "0" + d.getDate() : d.getDate());
+
     let tasks = await AsyncStorage.getItem("tasks");
     // console.log("tasks" + tasks);
     let google_events = await AsyncStorage.getItem("google_events");
 
     if (google_events) {
-      console.log("gd"+google_events);
+      console.log("gd" + google_events);
       google_events = JSON.parse(google_events);
     }
     if (!tasks) {
@@ -73,16 +79,14 @@ const Home = ({ navigation }) => {
       console.log("fetch task be");
       // google_events = tasks.data.google_events;
       tasks = tasks.data;
-      await AsyncStorage.setItem('tasks',JSON.stringify(tasks))
+      await AsyncStorage.setItem("tasks", JSON.stringify(tasks));
       tasks = JSON.stringify(tasks);
-      
-
     }
     tasks = JSON.parse(tasks);
     // console.log(google_events[1]);
     // console.log("g"+tasks.google_events);
     // console.log(google_events);
-    if ( !google_events && tasks && tasks.google_events) {
+    if (!google_events && tasks && tasks.google_events) {
       // console.log(tasks.google_events);
       google_events = [];
       for (const k in tasks.google_events) {
@@ -111,9 +115,7 @@ const Home = ({ navigation }) => {
                   .split("INTERVAL=")[1]
                   .split(";")[0];
               if (i.recurrence[0].includes("WKST="))
-                info["WKST"] = i.recurrence[0]
-                  .split("WKST=")[1]
-                  .split(";")[0];
+                info["WKST"] = i.recurrence[0].split("WKST=")[1].split(";")[0];
               repeat = {
                 type: type,
                 hour: due,
@@ -148,97 +150,95 @@ const Home = ({ navigation }) => {
       // console.log(JSON.stringify(google_events));
       AsyncStorage.setItem("google_events", JSON.stringify(google_events));
     }
-    
+
     tasks = tasks.task;
     if (google_events && tasks) {
       tasks = tasks.concat(google_events);
       console.log(google_events);
     }
-    
-    
-    let data = {repeat:[]};
-    let _view = [{title:d, data:[]}];
+
+    let data = { repeat: [] };
+    let _view = [{ title: d, data: [] }];
     for (const i of tasks) {
-      if(!i.create_at && !i.due && !i.repeat) continue;
+      if (!i.create_at && !i.due && !i.repeat) continue;
       let timestamp = "";
-      if(i.create_at) timestamp = i.create_at
-      if (i.due && !i.repeat)timestamp =  i.due
+      if (i.create_at) timestamp = i.create_at;
+      if (i.due && !i.repeat) timestamp = i.due;
 
+      if (i.reminder && !i.repeat) timestamp = i.reminder;
+      let _date = timestamp.split("T");
+      let temp = new Date(timestamp);
 
-    if (i.reminder && !i.repeat) timestamp = i.reminder;
-    let _date = timestamp.split("T");
-    let temp = new Date(timestamp);
+      let _hour = temp.toTimeString().split(":");
+      if (i.repeat) {
+        let t = new Date(i.repeat.hour);
+        let _timestamp = new Date(timestamp);
 
-    let _hour = temp.toTimeString().split(":");
-    if (i.repeat) {
-      let t = new Date(i.repeat.hour);
-      let _timestamp = new Date(timestamp);
-
-      _timestamp.setHours(t.getHours());
-      _timestamp.setMinutes(t.getMinutes());
-      timestamp = _timestamp.toISOString();
-      _hour = _timestamp.toTimeString().split(":");
-      console.log(_hour);
-      data["repeat"].push({
-        hour: _hour[0] + ":" + _hour[1],
-        title: i.repeat.type + "-" + i.title,
-        data: i,
-        timestamp: timestamp,
-        repeat: i.repeat,
-      });
-      continue;
-    }
-    if (!data[_date[0]]) {
-      data[_date[0]] = [
-        {
+        _timestamp.setHours(t.getHours());
+        _timestamp.setMinutes(t.getMinutes());
+        timestamp = _timestamp.toISOString();
+        _hour = _timestamp.toTimeString().split(":");
+        console.log(_hour);
+        data["repeat"].push({
+          hour: _hour[0] + ":" + _hour[1],
+          title: i.repeat.type + "-" + i.title,
+          data: i,
+          timestamp: timestamp,
+          repeat: i.repeat,
+        });
+        continue;
+      }
+      if (!data[_date[0]]) {
+        data[_date[0]] = [
+          {
+            hour: _hour[0] + ":" + _hour[1],
+            title: i.title,
+            data: i,
+            timestamp: timestamp,
+          },
+        ];
+      } else {
+        data[_date[0]].push({
           hour: _hour[0] + ":" + _hour[1],
           title: i.title,
           data: i,
           timestamp: timestamp,
-        },
-      ];
-    } else {
-      data[_date[0]].push({
-        hour: _hour[0] + ":" + _hour[1],
-        title: i.title,
-        data: i,
-        timestamp: timestamp,
-      });
+        });
+      }
     }
-  }
 
-  function compareDate(a, b) {
-    let a_date = new Date(a.timestamp).getTime();
-    let b_date = new Date(b.timestamp).getTime();
-    return a_date - b_date;
-  }
-  _view[0].data = data[d] || [];
-
-
+    function compareDate(a, b) {
+      let a_date = new Date(a.timestamp).getTime();
+      let b_date = new Date(b.timestamp).getTime();
+      return a_date - b_date;
+    }
+    _view[0].data = data[d] || [];
 
     for (const i of data["repeat"]) {
-
       if (i.repeat.type.includes("Daily")) {
-        
         let t = new Date(i.repeat.hour);
         let _timestamp = new Date(d);
-              console.log(_timestamp);
+        console.log(_timestamp);
         _timestamp.setHours(t.getHours());
         _timestamp.setMinutes(t.getMinutes());
         _timestamp.setSeconds(t.getSeconds());
         _timestamp.setMilliseconds(t.getMilliseconds());
         let temp = i;
         temp.timestamp = _timestamp.toISOString();
-        if(!i.gmail || !i.repeat.info || !i.repeat.info.INTERVAL) {
-          let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
-          if (count < 0 ) continue;
+        if (!i.gmail || !i.repeat.info || !i.repeat.info.INTERVAL) {
+          let count = Math.round(
+            (_timestamp.getTime() - t.getTime()) / ADDDATEVALUE
+          );
+          if (count < 0) continue;
           _view[0].data.push(temp);
           continue;
         } else {
           let interval = parseInt(i.repeat.info.INTERVAL);
-          let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
-          if (count < 0 ) continue;
-          if (count % interval !=0) continue;
+          let count = Math.round(
+            (_timestamp.getTime() - t.getTime()) / ADDDATEVALUE
+          );
+          if (count < 0) continue;
+          if (count % interval != 0) continue;
           _view[0].data.push(temp);
         }
       }
@@ -252,24 +252,27 @@ const Home = ({ navigation }) => {
         _timestamp.setMilliseconds(t.getMilliseconds());
         let temp = i;
         temp.timestamp = _timestamp.toISOString();
-        if(_timestamp.getDay() ==1 && !i.gmail) {
-          let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
-          if (count < 0 ) continue;
+        if (_timestamp.getDay() == 1 && !i.gmail) {
+          let count = Math.round(
+            (_timestamp.getTime() - t.getTime()) / ADDDATEVALUE
+          );
+          if (count < 0) continue;
           _view[0].data.push(temp);
           continue;
         }
-        if(i.gmail && i.repeat.info && i.repeat.info.BYDAY) {
-          let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
-          if (count < 0 ) continue;
+        if (i.gmail && i.repeat.info && i.repeat.info.BYDAY) {
+          let count = Math.round(
+            (_timestamp.getTime() - t.getTime()) / ADDDATEVALUE
+          );
+          if (count < 0) continue;
           let byday = i.repeat.info.BYDAY.split(",");
           for (const i of byday) {
-            if(_timestamp.getDay() == WEEKDAY.indexOf(i)){
+            if (_timestamp.getDay() == WEEKDAY.indexOf(i)) {
               _view[0].data.push(temp);
               break;
-            };
+            }
           }
-
-        } 
+        }
       }
 
       if (i.repeat.type.includes("Monthly")) {
@@ -281,44 +284,50 @@ const Home = ({ navigation }) => {
         _timestamp.setMilliseconds(t.getMilliseconds());
         let temp = i;
         temp.timestamp = _timestamp.toISOString();
-        if(_timestamp.getDate() ==15 && !i.gmail && (!i.repeat.info)) {
-          let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
-          if (count < 0 ) continue;
+        if (_timestamp.getDate() == 15 && !i.gmail && !i.repeat.info) {
+          let count = Math.round(
+            (_timestamp.getTime() - t.getTime()) / ADDDATEVALUE
+          );
+          if (count < 0) continue;
           _view[0].data.push(temp);
-        } else if (i.gmail || i.repeat.info){
+        } else if (i.gmail || i.repeat.info) {
           let interval = parseInt(i.repeat.info.INTERVAL) || 1;
-          let count = Math.round((_timestamp.getTime() - t.getTime())/ADDDATEVALUE);
-          if (count < 0 ) continue;
+          let count = Math.round(
+            (_timestamp.getTime() - t.getTime()) / ADDDATEVALUE
+          );
+          if (count < 0) continue;
           if (_timestamp.getDate() !== 6) continue;
-          let check = _timestamp.getMonth() + (_timestamp.getFullYear()-t.getFullYear())*12 - t.getMonth();
-          if (check % interval !=0) continue;
+          let check =
+            _timestamp.getMonth() +
+            (_timestamp.getFullYear() - t.getFullYear()) * 12 -
+            t.getMonth();
+          if (check % interval != 0) continue;
           _view[0].data.push(temp);
         }
-        
       }
-    };
+    }
 
     _view[0].data.sort(compareDate);
-  console.log("v"+ JSON.stringify(_view[0].data));
-  console.log("d" + d + JSON.stringify(data[d]));
-  let view = [];
-  
-  for (const i of _view[0].data) {
-    view.push(i.data);
-  }
-  setView(view);
-  console.log("v2"+ JSON.stringify(viewtask));
+    console.log("v" + JSON.stringify(_view[0].data));
+    console.log("d" + d + JSON.stringify(data[d]));
+    let view = [];
+
+    for (const i of _view[0].data) {
+      view.push(i.data);
+    }
+    setView(view);
+    console.log("v2" + JSON.stringify(viewtask));
 
     return _view[0].data;
-}
+  }
 
   useEffect(() => {
     async function fetchToken() {
       // console.log(tasklist);
       // await AsyncStorage.removeItem("tasks");
       console.log("focus" + isFocused);
-      let bg = await AsyncStorage.getItem('bg');
-      console.log("bg"+bg);
+      let bg = await AsyncStorage.getItem("bg");
+      console.log("bg" + bg);
       setSelectedItem(bg);
       setBackground(bg);
       setIsButton1Pressed(false);
@@ -453,10 +462,8 @@ const Home = ({ navigation }) => {
       // console.log(tasklist);
     }
 
-    
     getView();
     fetchToken();
-
   }, [isFocused]);
 
   const handleAddTask = async (task) => {
@@ -483,11 +490,11 @@ const Home = ({ navigation }) => {
     // } else {
     //   newTasklist[index].done = true;
     // }
-    if(newTasklist) {
+    if (newTasklist) {
       for (let i = 0; i < newTasklist.length; i++) {
         const e = newTasklist[i];
         if (e._id == index) {
-          newTasklist[i].done =  !newTasklist[i].done;
+          newTasklist[i].done = !newTasklist[i].done;
           break;
         }
       }
@@ -505,18 +512,18 @@ const Home = ({ navigation }) => {
     triggerF();
     UpdateTaskApi(token, { timestamp: Date.now(), task: newTasklist });
   };
-  const handleFavorite = async (index,favorite) => {
+  const handleFavorite = async (index, favorite) => {
     let newTasklist = tasklist;
     // if (newTasklist[index].done) {
     //   newTasklist[index].done = false;
     // } else {
     //   newTasklist[index].done = true;
     // }
-    if(newTasklist) {
+    if (newTasklist) {
       for (let i = 0; i < newTasklist.length; i++) {
         const e = newTasklist[i];
         if (e._id == index) {
-          newTasklist[i].favorite =  favorite;
+          newTasklist[i].favorite = favorite;
           break;
         }
       }
@@ -531,7 +538,7 @@ const Home = ({ navigation }) => {
     // console.log(tasklist[index]);
     setviewTaskDone(true);
     await getView();
-    triggerF()
+    triggerF();
     UpdateTaskApi(token, { timestamp: Date.now(), task: newTasklist });
   };
 
@@ -554,7 +561,7 @@ const Home = ({ navigation }) => {
   // state
   const [isSheetClosed, setIsSheetClosed] = useState(true);
   // variables
-  const snapPoints = useMemo(() => ["50%", "50%"], []);
+  const snapPoints = useMemo(() => ["30%", "30%"], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -584,7 +591,7 @@ const Home = ({ navigation }) => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleItemSelect = (item) => {
-    AsyncStorage.setItem('bg',item);
+    AsyncStorage.setItem("bg", item);
     setSelectedItem(item);
     console.log("component cha:", item);
     setBackground(item);

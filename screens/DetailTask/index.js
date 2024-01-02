@@ -50,6 +50,7 @@ import { bs } from "date-fns/locale";
 import UpdateTaskFrontEnd from "../../api/updateTaskFrontEnd";
 import { useIsFocused } from "@react-navigation/native";
 import DeleteTaskFrontEnd from "../../api/deleteTaskFrontEnd";
+import { setStatusBarBackgroundColor } from "expo-status-bar";
 const DetailTask = ({ route, navigation }) => {
   /**
    * code using for BottomSheetModalReminder:
@@ -67,11 +68,13 @@ const DetailTask = ({ route, navigation }) => {
     setNote(route.params.task.note);
     setAttachments(route.params.task.attachments);
     setIsGoogle(route.params.task.gmail);
+    setStatus(route.params.task.status);
 
     console.log("eff" + isGoogle);
     console.log("detail focus" + isFocused);
   }, [isFocused]);
 
+  const [status, setStatus] = useState(route.params.status);
   const [task, setTask] = useState(route.params.task);
   const [isGoogle, setIsGoogle] = useState(route.params.task.gmail);
   console.log("isgoogle" + isGoogle);
@@ -126,6 +129,7 @@ const DetailTask = ({ route, navigation }) => {
   const handleSaveTask = async () => {
     if (route.params.task.gmail) return;
     let update = task;
+    update.done = status;
     update.title = title;
     update.due = due;
     update.note = note;
@@ -244,6 +248,10 @@ const DetailTask = ({ route, navigation }) => {
     });
   };
 
+  const handCheckTask = () => {
+    status ? setStatus(false) : setStatus(true);
+  };
+
   const reminderReset = useRef(null);
   const handleDeleteReminder = () => {
     if (route.params.task.gmail) return;
@@ -328,6 +336,43 @@ const DetailTask = ({ route, navigation }) => {
               />
             }
           />
+        </View>
+
+        <View style={styles.status}>
+          <TouchableOpacity
+            style={styles.touchstatus}
+            // onPress={handlePresentModalPressReminder}
+          >
+            <MaterialIcons
+              name="file-download-done"
+              size={28}
+              color="purple"
+              marginHorizontal={5}
+              marginVertical={5}
+            />
+            <Text style={{ fontSize: 18 }}>
+              Status: {status ? "Done" : "In process"}
+            </Text>
+          </TouchableOpacity>
+          <View>
+            {status ? (
+              <MaterialCommunityIcons
+                name="check-circle"
+                size={20}
+                color="purple"
+                marginHorizontal={10}
+                onPress={handCheckTask}
+              />
+            ) : (
+              <MaterialCommunityIcons
+                name="checkbox-blank-circle-outline"
+                size={20}
+                color="purple"
+                marginHorizontal={10}
+                onPress={handCheckTask}
+              />
+            )}
+          </View>
         </View>
 
         <View style={styles.reminder}>
@@ -522,30 +567,35 @@ const DetailTask = ({ route, navigation }) => {
             value={note}
             onChangeText={(e) => setNote(e)}
             multiline={true}
-            onFocus={()=> {setNoteFocus(true)}}
+            onFocus={() => {
+              setNoteFocus(true);
+            }}
           />
-          <View style={styles.button}>
-          {noteFocus ? <Button onPress={()=> {
-            setNoteFocus(false);
-            Keyboard.dismiss();
-          }}
-          titleStyle={{ fontWeight: "700" }}
-          buttonStyle={{
-            backgroundColor: "rgb(179, 55, 225)",
-            borderColor: "transparent",
-            borderWidth: 0,
-            borderRadius: 30,
-          }}
-          containerStyle={{
-            width: 120,
-            marginHorizontal: 5,
-            marginVertical: 10,
-          }}
-          title="Back"
-          
-          /> : ""}
-          </View>
-          
+          {/* <View style={styles.button}>
+            {noteFocus ? (
+              <Button
+                onPress={() => {
+                  setNoteFocus(false);
+                  Keyboard.dismiss();
+                }}
+                titleStyle={{ fontWeight: "700" }}
+                buttonStyle={{
+                  backgroundColor: "rgb(179, 55, 225)",
+                  borderColor: "transparent",
+                  borderWidth: 0,
+                  borderRadius: 30,
+                }}
+                containerStyle={{
+                  width: 120,
+                  marginHorizontal: 5,
+                  marginVertical: 10,
+                }}
+                title="Back"
+              />
+            ) : (
+              ""
+            )}
+          </View> */}
         </View>
         {!route.params.task.gmail && (
           <View style={styles.button}>
