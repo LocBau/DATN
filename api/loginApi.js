@@ -1,12 +1,13 @@
 import { serverUrl } from './link';
 import axios from 'axios';
 
-const LoginApi = async (email, password, device) => {
+const LoginApi = async (email, password, device, from) => {
 
     var data = JSON.stringify({
         email: email,
         device: device,
-        password: password
+        password: password,
+        from: from
       });
       
       var config = {

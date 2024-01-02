@@ -23,12 +23,13 @@ const Login = ({ navigation }) => {
     console.log(email);
     console.log(password);
     let device = await AsyncStorage.getItem('device');
+    let from = await AsyncStorage.getItem('from');
     console.log(device);
     if (email == "" && password == "") {
       Alert.alert("Invalid input", "email or password cannot be blank");
       return;
     }
-    let res = await LoginApi(email, password, device);
+    let res = await LoginApi(email, password, device, from);
     if (!res || res.status !== 200) {
       Alert.alert("Error", "Server Error");
       return;
