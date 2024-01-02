@@ -57,7 +57,7 @@ const Home = ({ navigation }) => {
   async function getView() {
     let d = new Date();
     console.log(d);
-    d = "" + d.getFullYear() + '-' + (d.getMonth()+1)  + '-' + (d.getDate() < 10  ? "0" + d.getDate()  : d.getDate());
+    d = "" + d.getFullYear() + '-' + ((d.getMonth() +1) < 10 ?   "0" + (d.getMonth() +1) : (d.getMonth() +1)) + '-' + (d.getDate() < 10  ? "0" + d.getDate()  : d.getDate());
     
     let tasks = await AsyncStorage.getItem("tasks");
     // console.log("tasks" + tasks);
