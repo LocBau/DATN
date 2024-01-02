@@ -108,6 +108,7 @@ const PlanningTask = () => {
       if (_data) {
 
         let d = new Date(selectDate);
+        let td = new Date();
         d.setTime(d.getTime()-d.getDay()* 86400000  );
         let e = new Date(d.getTime()+7* 86400000);
         let _view = [];
@@ -121,6 +122,9 @@ const PlanningTask = () => {
           let due = new Date(i.due);
           if(due.getTime() >= d.getTime() && due.getTime() < e.getTime()) {
             temp.end = due.getDay() +1;
+          }
+          if(due && due.getTime() < td.getTime() && !temp.done) {
+            temp.late = true;
           }
           let reminder = new Date(i.reminder);
           if(reminder.getTime() >= d.getTime() && reminder.getTime() < e.getTime()) {
