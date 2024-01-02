@@ -45,9 +45,9 @@ const Task = (props) => {
     date = "Due: " + date.getHours() + ":" + date.getMinutes();
   }
   const checktaskStyles =
-    checktask == true ? styles.contentText1Done : styles.contentText1;
+    props.status == true ? styles.contentText1Done : styles.contentText1;
   const containerDoneStyle =
-    checktask == false ? styles.container : styles.containerDone;
+    props.status == false ? styles.container : styles.containerDone;
 
   function viewiconAttach() {
     if (props.attachfiles) {
@@ -72,12 +72,12 @@ const Task = (props) => {
         <TouchableOpacity onPress={handleCheck}>
           <MaterialCommunityIcons
             name={
-              checktask === false
+              props.status === false
                 ? (props.gmail ? "google" : "checkbox-blank-circle-outline")
                 : "checkbox-marked-circle-outline"
             }
             size={30}
-            color={checktask === false ? (props.gmail ? "green" : "red") : "green"}
+            color={props.status === false ? (props.gmail ? "green" : "red") : "green"}
           />
         </TouchableOpacity>
       </View>
