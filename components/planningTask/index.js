@@ -149,6 +149,17 @@ const PlanningTask = () => {
 
           if (i.due || i.reminder) {
             _view.push(temp);
+          } else {
+            if (i.create_at && create.getTime() < d.getTime()) {
+              temp.outside = true;
+            }
+
+            if (i.create_at && create.getTime() > e.getTime()) {
+              temp.outside = true;
+            }
+            temp.start = create.getDay() + 1;
+            temp.end = temp.start;
+            _view.push(temp);
           }
         }
         setTask(_view);

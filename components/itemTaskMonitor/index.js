@@ -23,6 +23,9 @@ const ItemTaskMonitor = ({ data }) => {
   if (data.start && data.end) {
     length = data.end - data.start + 1;
     pos = data.start;
+    if(data.start == data.end) {
+      length = 0;
+    }
   } else if (data.start) {
     length = 8 - data.start;
     pos = data.start;
