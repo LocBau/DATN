@@ -104,57 +104,59 @@ const PlanningTask = () => {
         _data = _data.task;
       }
 
-      console.log(_data);
+      console.log("vo planningTask:", _data);
       if (_data) {
-
         let d = new Date(selectDate);
         let td = new Date();
-        d.setTime(d.getTime()-d.getDay()* 86400000  );
-        let e = new Date(d.getTime()+7* 86400000);
+        d.setTime(d.getTime() - d.getDay() * 86400000);
+        let e = new Date(d.getTime() + 7 * 86400000);
         let _view = [];
         for (const i of _data) {
           let temp = i;
           let create = new Date(i.create_at);
-          if(create.getTime() >= d.getTime() && create.getTime() < e.getTime()) {
-            temp.start = create.getDay() +1;
-
+          if (
+            create.getTime() >= d.getTime() &&
+            create.getTime() < e.getTime()
+          ) {
+            temp.start = create.getDay() + 1;
           }
           let due = new Date(i.due);
-          if(due.getTime() >= d.getTime() && due.getTime() < e.getTime()) {
-            temp.end = due.getDay() +1;
+          if (due.getTime() >= d.getTime() && due.getTime() < e.getTime()) {
+            temp.end = due.getDay() + 1;
           }
-          if(due && due.getTime() < td.getTime() && !temp.done) {
+          if (due && due.getTime() < td.getTime() && !temp.done) {
             temp.late = true;
           }
           let reminder = new Date(i.reminder);
-          if(reminder.getTime() >= d.getTime() && reminder.getTime() < e.getTime()) {
-            temp.end = reminder.getDay() +1;
+          if (
+            reminder.getTime() >= d.getTime() &&
+            reminder.getTime() < e.getTime()
+          ) {
+            temp.end = reminder.getDay() + 1;
           }
-          if(!temp.end && !temp.start) {
-            if(i.due && due.getTime() < d.getTime()  ) {
+          if (!temp.end && !temp.start) {
+            if (i.due && due.getTime() < d.getTime()) {
               temp.outside = true;
             }
-            if(i.reminder && reminder.getTime() < d.getTime()  ) {
+            if (i.reminder && reminder.getTime() < d.getTime()) {
               temp.outside = true;
             }
 
-            if(i.create_at &&  create.getTime() > e.getTime()) {
+            if (i.create_at && create.getTime() > e.getTime()) {
               temp.outside = true;
             }
           }
 
-          if(i.due ||  i.reminder) {
-            
+          if (i.due || i.reminder) {
             _view.push(temp);
           }
         }
         setTask(_view);
-        console.log(_view);
+        console.log("view:", _view);
       }
     }
     getData();
   }, [selectDate]);
-
 
   return (
     <View style={styles.container}>
@@ -204,13 +206,10 @@ const PlanningTask = () => {
 
       <View style={styles.containertask}>
         <ScrollView>
-          {
-            task.map((item) => {
-              if(!item.outside) return (<ItemTaskMonitor
-              data={item}
-              />)
-            })
-          }
+          {task.map((item) => {
+            console.log("cxm:", item);
+            if (!item.outside) return <ItemTaskMonitor data={item} />;
+          })}
         </ScrollView>
       </View>
     </View>

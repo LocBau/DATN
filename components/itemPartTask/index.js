@@ -343,7 +343,7 @@ const ItemPartTask = ({ pos, part, color, lenght }) => {
                     ...containerBox,
                     width: 155,
                     height: 35,
-                    left: 155,
+                    left: 170,
                   };
                   break;
                 case 5:
