@@ -157,6 +157,13 @@ const PlanningTask = () => {
             if (i.create_at && create.getTime() > e.getTime()) {
               temp.outside = true;
             }
+            let temp_create = new Date(i.create_at);
+            temp_create.setTime(temp_create.getTime() + 86400000)
+            if (temp_create.getTime() < td.getTime() ) {
+              temp.late = true;
+            } else {
+              temp.late = false;
+            }
             temp.start = create.getDay() + 1;
             temp.end = temp.start;
             _view.push(temp);
